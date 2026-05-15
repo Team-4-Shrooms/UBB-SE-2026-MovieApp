@@ -1,0 +1,19 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using MovieApp.DataLayer.Models;
+
+namespace MovieApp.Logic.Interfaces.Services
+{
+    public interface IEventService
+    {
+        Task<List<MovieEvent>> GetAvailableEventsAsync();
+        Task<List<MovieEvent>> GetEventsByMovieIdAsync(int movieId);
+        Task PurchaseTicketAsync(int userId, int eventId);
+        Task<MovieEvent?> GetEventByIdAsync(int id);
+        Task<bool> UserHasTicketAsync(int userId, int eventId);
+    }
+}
+

@@ -1,0 +1,52 @@
+@model MovieApp.Web.Models.TournamentSetupViewModel
+@{
+    ViewData["Title"] = "Tournament Setup";
+    var sizes = new[] { (4, "Quick Game"), (8, "Standard Bracket"), (16, "Epic Showdown") };
+    var validSizes = sizes.Where(s => s.Item1 <= Model.AvailableCount).ToList();
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <h2 class="mb-4">Movie Tournament</h2>
+            <p class="lead">Select your tournament size to begin the showdown.</p>
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">@TempData["Error"]</div>
+            }
+
+            @if (validSizes.Count == 0)
+            {
+                <div class="alert alert-warning">
+                    You need at least 4 rated movies to start a tournament. You currently have @Model.AvailableCount.
+                    Rate more movies by swiping to unlock tournaments.
+                </div>
+            }
+            else
+            {
+                <p class="text-muted small">You have @Model.AvailableCount rated movies available.</p>
+                <form asp-action="Start" method="post" class="card p-4 shadow-sm">
+                    @Html.AntiForgeryToken()
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Select Bracket Size</label>
+                        <select name="poolSize" class="form-select form-select-lg">
+                            @foreach (var (size, label) in validSizes)
+                            {
+                                if (size == 8 && Model.AvailableCount >= 8)
+                                {
+                                    <option value="@size" selected="selected">@size Movies (@label)</option>
+                                }
+                                else
+                                {
+                                    <option value="@size">@size Movies (@label)</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg w-100">Start Tournament</button>
+                </form>
+            }
+        </div>
+    </div>
+</div>

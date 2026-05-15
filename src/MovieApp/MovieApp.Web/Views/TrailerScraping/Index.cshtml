@@ -1,0 +1,188 @@
+@model MovieApp.Web.ViewModels.TrailerScraping.TrailerScrapingIndexViewModel
+
+@{
+	ViewData["Title"] = "Trailer Scraping";
+
+	// Calculate stats just like the WinUI ViewModel does
+	int totalJobs = Model.RecentJobs.Count();
+	int runningJobs = Model.RecentJobs.Count(j => j.Status.Equals("running", StringComparison.OrdinalIgnoreCase) || j.Status.Equals("pending", StringComparison.OrdinalIgnoreCase));
+	int completedJobs = Model.RecentJobs.Count(j => j.Status.Equals("completed", StringComparison.OrdinalIgnoreCase));
+	int failedJobs = Model.RecentJobs.Count(j => j.Status.Equals("failed", StringComparison.OrdinalIgnoreCase));
+}
+
+<h2 class="mb-4">@ViewData["Title"]</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+	<div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+<div class="row mb-4 text-center">
+	<div class="col-md-3">
+		<div class="card bg-primary text-white">
+			<div class="card-body">
+				<h5>Total Jobs</h5>
+				<h3 class="mb-0">@totalJobs</h3>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="card bg-info text-white">
+			<div class="card-body">
+				<h5>Running</h5>
+				<h3 class="mb-0">@runningJobs</h3>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="card bg-success text-white">
+			<div class="card-body">
+				<h5>Completed</h5>
+				<h3 class="mb-0">@completedJobs</h3>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="card bg-danger text-white">
+			<div class="card-body">
+				<h5>Failed</h5>
+				<h3 class="mb-0">@failedJobs</h3>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="card mb-4 shadow-sm">
+	<div class="card-header bg-light fw-bold">Start New Scrape Job</div>
+	<div class="card-body">
+		<form asp-action="Scrape" asp-controller="TrailerScraping" method="post">
+			<div class="row align-items-end">
+				<div class="col-md-5 mb-3">
+					<label asp-for="Form.MovieId" class="form-label fw-bold">Select Movie</label>
+					<select asp-for="Form.MovieId" class="form-select" required>
+						<option value="">-- Choose a Movie --</option>
+						@foreach (var movie in Model.AvailableMovies)
+						{
+							<option value="@movie.Id">@movie.Title</option>
+						}
+					</select>
+				</div>
+
+				<div class="col-md-2 mb-3">
+					<label asp-for="Form.MaxResults" class="form-label fw-bold">Max Results</label>
+					<select asp-for="Form.MaxResults" class="form-select">
+						<option value="5">5</option>
+						<option value="10">10</option>
+						<option value="15">15</option>
+						<option value="25">25</option>
+						<option value="50">50</option>
+					</select>
+				</div>
+
+				<div class="col-md-3 mb-3">
+					<label asp-for="Form.YouTubeUrl" class="form-label fw-bold">Specific URL (Optional)</label>
+					<input asp-for="Form.YouTubeUrl" class="form-control" placeholder="Direct YouTube link" />
+				</div>
+
+				<div class="col-md-2 mb-3">
+					<button type="submit" class="btn btn-primary w-100">Start Scrape</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<h4 class="mb-3">Recent Jobs</h4>
+<div class="table-responsive">
+	<table class="table table-bordered table-hover align-middle" id="jobsTable">
+		<thead class="table-dark">
+			<tr>
+				<th>Job ID</th>
+				<th>Search Query</th>
+				<th>Status</th>
+				<th>Reels Created</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var job in Model.RecentJobs.OrderByDescending(j => j.Id))
+			{
+				<tr data-job-id="@job.Id" data-status="@job.Status">
+					<td>#@job.Id</td>
+					<td class="fw-bold">@job.SearchQuery</td>
+					<td class="status-cell">
+						@if (job.Status.Equals("pending", StringComparison.OrdinalIgnoreCase) ||
+											job.Status.Equals("running", StringComparison.OrdinalIgnoreCase))
+						{
+							<span class="spinner-border spinner-border-sm text-primary me-2" role="status"></span>
+						}
+						<span class="badge @(job.Status == "completed" ? "bg-success" : job.Status == "failed" ? "bg-danger" : "bg-primary") text-capitalize">
+							@job.Status
+						</span>
+					</td>
+					<td class="reels-created-cell">@job.ReelsCreated</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+<script>
+(function () {
+    const POLL_MS = 2000;
+
+    function isActive(status) {
+        return status === 'running' || status === 'pending';
+    }
+
+    function applyUpdate(row, data) {
+        const status = (data.status || '').toLowerCase();
+        row.dataset.status = status;
+
+        const cell = row.querySelector('.status-cell');
+        const spinner = cell.querySelector('.spinner-border');
+        const badge = cell.querySelector('.badge');
+
+        if (isActive(status)) {
+            if (!spinner) {
+                const s = document.createElement('span');
+                s.className = 'spinner-border spinner-border-sm text-primary me-2';
+                s.setAttribute('role', 'status');
+                cell.insertBefore(s, badge);
+            }
+        } else {
+            if (spinner) spinner.remove();
+        }
+
+        badge.textContent = status;
+        badge.className = 'badge text-capitalize ' + (
+            status === 'completed' ? 'bg-success' :
+            status === 'failed'    ? 'bg-danger'  : 'bg-primary'
+        );
+
+        const reelsCell = row.querySelector('.reels-created-cell');
+        if (reelsCell != null) reelsCell.textContent = data.reelsCreated ?? reelsCell.textContent;
+    }
+
+    async function pollOnce(row) {
+        const jobId = row.dataset.jobId;
+        try {
+            const resp = await fetch('/TrailerScraping/Status?jobId=' + jobId);
+            if (!resp.ok) return;
+            const data = await resp.json();
+            applyUpdate(row, data);
+        } catch (_) { /* network hiccup — try again next tick */ }
+    }
+
+    function tick() {
+        const active = [...document.querySelectorAll('#jobsTable tbody tr')]
+            .filter(r => isActive(r.dataset.status));
+        if (active.length === 0) return;
+        active.forEach(pollOnce);
+        setTimeout(tick, POLL_MS);
+    }
+
+    if (document.querySelectorAll('#jobsTable tbody tr[data-status="running"], #jobsTable tbody tr[data-status="pending"]').length > 0) {
+        setTimeout(tick, POLL_MS);
+    }
+})();
+</script>
