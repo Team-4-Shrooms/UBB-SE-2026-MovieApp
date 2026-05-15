@@ -21,4 +21,9 @@ Before submitting a pull request, please go through the [Code Review Checklist](
 
 ## Legacy
 
-See [Legacy](./docs/LEGACY.md) for the project's origin and merged repositories.
+This project was created by merging two independent repositories:
+
+- **Team 927/1 (Shrooms)** — https://github.com/Team-4-Shrooms/UBB-SE-2026-927-1
+- **Team 925/1** — https://github.com/UBB-SE-2026-925-1/UBB-SE-2026-925-1
+
+See [LEGACY.md](./docs/LEGACY.md) for more details.
