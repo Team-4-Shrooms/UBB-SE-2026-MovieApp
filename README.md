@@ -1,11 +1,38 @@
-# UBB-SE-2026-927-1
-
-# MovieApp
+# UBB-SE-2026-MovieApp
 
 ## Setup
-- open MovieApp.slnx
-- check if it builds: 
-  Build -> Build Solution
+
+1. Open `src/MovieApp/MovieApp.slnx`
+2. Build the solution: **Build → Build Solution**
+
+## Running the App
+
+The app has three projects that must start in a specific order.
+
+**Using Multiple Startup Projects (recommended):**
+
+1. Right-click the solution in Solution Explorer → **Set Startup Projects...**
+2. Select **Multiple startup projects**
+3. Set the following projects to **Start**, in this order:
+   - `MovieApp.WebApi`
+   - `MovieApp.Web`
+   - `MovieApp`
+4. Click **OK**, then press **F5**
+
+**Or start them manually one by one** (each in a separate terminal):
+
+```bash
+# 1. Start the API first (port 4544)
+dotnet run --project src/MovieApp/MovieApp.WebApi
+
+# 2. Start the web app second (port 5231)
+dotnet run --project src/MovieApp/MovieApp.Web
+
+# 3. Start the desktop app last
+dotnet run --project src/MovieApp/MovieApp
+```
+
+> **Important:** `MovieApp.WebApi` must be fully started before the other two, as both the web app and the desktop app connect to it on startup.
 
 ## Structure
 - src/ - source code
