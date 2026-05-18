@@ -9,5 +9,5 @@ public class Battle
     public string Status { get; set; } = "Active";
     public Movie? FirstMovie { get; set; }
     public Movie? SecondMovie { get; set; }
-    public ICollection<Bet> Bets { get; set; } = new List<Bet>();
+    public ICollection<BattleBet> Bets { get; set; } = new List<BattleBet>();
 }

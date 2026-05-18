@@ -25,7 +25,7 @@ namespace MovieApp.DataLayer.Models
         public ICollection<Transaction> Sales { get; set; } = new List<Transaction>();
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
-        public ICollection<Bet> Bets { get; set; } = new List<Bet>();
+        public ICollection<BattleBet> Bets { get; set; } = new List<BattleBet>();
         public UserStats? UserStats { get; set; }
         public ICollection<UserBadge> UserBadges { get; set; } = new List<UserBadge>();
     }
