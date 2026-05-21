@@ -61,19 +61,19 @@ public class SlotMachineProxyService : ISlotMachineService
 
     public async Task<IReadOnlyList<Genre>> GetGenresAsync(CancellationToken cancellationToken = default)
     {
-        var genres = await _apiClient.GetAsync<List<Genre>>("api/slot-machine/reels/genres");
+        var genres = await _apiClient.GetAsync<List<Genre>>("api/slot-machine/reels/genres", cancellationToken);
         return genres ?? new List<Genre>();
     }
 
     public async Task<Genre> GetRandomGenreAsync(CancellationToken cancellationToken = default)
     {
-        var genre = await _apiClient.GetAsync<Genre>("api/slot-machine/reels/genres/random");
+        var genre = await _apiClient.GetAsync<Genre>("api/slot-machine/reels/genres/random", cancellationToken);
         return genre ?? new Genre();
     }
 
     public async Task<IReadOnlyList<Actor>> GetActorsAsync(CancellationToken cancellationToken = default)
     {
-        var actors = await _apiClient.GetAsync<List<Actor>>("api/slot-machine/reels/actors");
+        var actors = await _apiClient.GetAsync<List<Actor>>("api/slot-machine/reels/actors", cancellationToken);
         return actors ?? new List<Actor>();
     }
 
