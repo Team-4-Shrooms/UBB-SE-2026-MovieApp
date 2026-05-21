@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieApp.Logic.Interfaces.Services;
+using MovieApp.WebApi.Mappings;
+using MovieApp.WebDTOs.DTOs.RequestDTOs;
 
 namespace MovieApp.WebApi.Endpoints;
 
@@ -20,7 +22,7 @@ public sealed class SlotMachineController : ControllerBase
     public async Task<IActionResult> GetUserSpinState(int userId)
     {
         var spinState = await _slotMachineService.GetUserSpinStateAsync(userId);
-        return Ok(spinState);
+        return Ok(spinState.ToDto());
     }
 
     [HttpGet("available-spins/{userId:int}")]
@@ -34,7 +36,7 @@ public sealed class SlotMachineController : ControllerBase
     public async Task<IActionResult> Spin(int userId)
     {
         var spinResult = await _slotMachineService.SpinAsync(userId);
-        return Ok(spinResult);
+        return Ok(spinResult.ToDto());
     }
 
     [HttpPost("bonus-spin/{userId:int}")]
@@ -62,42 +64,42 @@ public sealed class SlotMachineController : ControllerBase
     public async Task<IActionResult> GetGenres()
     {
         var genres = await _slotMachineService.GetGenresAsync();
-        return Ok(genres);
+        return Ok(genres.Select(genre => genre.ToDto()));
     }
 
     [HttpGet("reels/genres/random")]
     public async Task<IActionResult> GetRandomGenre()
     {
         var genre = await _slotMachineService.GetRandomGenreAsync();
-        return Ok(genre);
+        return Ok(genre.ToDto());
     }
 
     [HttpGet("reels/actors")]
     public async Task<IActionResult> GetActors()
     {
         var actors = await _slotMachineService.GetActorsAsync();
-        return Ok(actors);
+        return Ok(actors.Select(actor => actor.ToDto()));
     }
 
     [HttpGet("reels/actors/random")]
     public async Task<IActionResult> GetRandomActor()
     {
         var actor = await _slotMachineService.GetRandomActorAsync();
-        return Ok(actor);
+        return Ok(actor.ToDto());
     }
 
     [HttpGet("reels/directors")]
     public async Task<IActionResult> GetDirectors()
     {
         var directors = await _slotMachineService.GetDirectorsAsync();
-        return Ok(directors);
+        return Ok(directors.Select(director => director.ToDto()));
     }
 
     [HttpGet("reels/directors/random")]
     public async Task<IActionResult> GetRandomDirector()
     {
         var director = await _slotMachineService.GetRandomDirectorAsync();
-        return Ok(director);
+        return Ok(director.ToDto());
     }
 
     [HttpGet("matching-events")]
@@ -107,7 +109,7 @@ public sealed class SlotMachineController : ControllerBase
         [FromQuery] int directorId)
     {
         var matchingEvents = await _slotMachineService.GetMatchingEventsAsync(genreId, actorId, directorId);
-        return Ok(matchingEvents);
+        return Ok(matchingEvents.Select(slotEvent => slotEvent.ToDto()));
     }
 
     [HttpGet("jackpot")]
@@ -117,16 +119,13 @@ public sealed class SlotMachineController : ControllerBase
         [FromQuery] int directorId)
     {
         var jackpotMovie = await _slotMachineService.FindJackpotMovieAsync(genreId, actorId, directorId);
-        return Ok(jackpotMovie);
+        return Ok(jackpotMovie?.ToReferenceDto());
     }
 
     [HttpPost("jackpot-discount")]
-    public async Task<IActionResult> GrantJackpotDiscount([FromBody] GrantJackpotDiscountRequest request)
+    public async Task<IActionResult> GrantJackpotDiscount([FromBody] GrantJackpotDiscountRequestBody requestBody)
     {
-        await _slotMachineService.GrantJackpotDiscount(request.UserId, request.MovieId);
+        await _slotMachineService.GrantJackpotDiscount(requestBody.UserId, requestBody.MovieId);
         return Ok();
     }
 }
-
-/// <summary>Request body for granting a jackpot discount to a user on a specific movie.</summary>
-public sealed record GrantJackpotDiscountRequest(int UserId, int MovieId);
