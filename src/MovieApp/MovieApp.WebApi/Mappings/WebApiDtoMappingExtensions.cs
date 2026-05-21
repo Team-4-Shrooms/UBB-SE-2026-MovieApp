@@ -473,4 +473,18 @@ public static class WebApiDtoMappingExtensions
             Balance = user.Balance,
         };
     }
+
+    public static NotificationDto ToDto(this Notification notification)
+    {
+        return new NotificationDto
+        {
+            Id = notification.Id,
+            UserId = notification.UserId,
+            EventId = notification.EventId,
+            Type = notification.Type,
+            Message = notification.Message,
+            State = notification.State.ToString(),
+            CreatedAt = notification.CreatedAt,
+        };
+    }
 }

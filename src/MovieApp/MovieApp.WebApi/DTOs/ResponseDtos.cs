@@ -216,3 +216,14 @@ public sealed class UserDto
     public string Email { get; set; } = string.Empty;
     public decimal Balance { get; set; }
 }
+
+public sealed class NotificationDto
+{
+    public int Id { get; set; }
+    public int UserId { get; set; }
+    public int EventId { get; set; }
+    public string Type { get; set; } = string.Empty;
+    public string Message { get; set; } = string.Empty;
+    public string State { get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; }
+}

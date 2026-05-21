@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieApp.Logic.Interfaces.Services;
+using MovieApp.WebApi.Mappings;
+using MovieApp.WebDTOs.DTOs.RequestDTOs;
 
 namespace MovieApp.WebApi.Endpoints;
 
@@ -20,14 +22,14 @@ public sealed class NotificationsController : ControllerBase
     public async Task<IActionResult> GetNotificationsByUser(int userId)
     {
         var notifications = await _notificationService.GetNotificationsByUserAsync(userId);
-        return Ok(notifications);
+        return Ok(notifications.Select(notification => notification.ToDto()));
     }
 
     [HttpGet("{userId:int}/unread")]
     public async Task<IActionResult> GetUnreadNotifications(int userId)
     {
         var unreadNotifications = await _notificationService.GetUnreadAsync(userId);
-        return Ok(unreadNotifications);
+        return Ok(unreadNotifications.Select(notification => notification.ToDto()));
     }
 
     [HttpDelete("{notificationId:int}")]
@@ -59,38 +61,30 @@ public sealed class NotificationsController : ControllerBase
     }
 
     [HttpPost("generate/price-drop")]
-    public async Task<IActionResult> GeneratePriceDropNotification([FromBody] GeneratePriceDropNotificationRequest request)
+    public async Task<IActionResult> GeneratePriceDropNotification([FromBody] GeneratePriceDropNotificationRequestBody requestBody)
     {
-        await _notificationService.GeneratePriceDropNotificationAsync(request.EventId, request.EventTitle);
+        await _notificationService.GeneratePriceDropNotificationAsync(requestBody.EventId, requestBody.EventTitle);
         return Ok();
     }
 
     [HttpPost("generate/seats-available")]
-    public async Task<IActionResult> GenerateSeatsAvailableNotification([FromBody] GenerateSeatsAvailableNotificationRequest request)
+    public async Task<IActionResult> GenerateSeatsAvailableNotification([FromBody] GenerateSeatsAvailableNotificationRequestBody requestBody)
     {
-        await _notificationService.GenerateSeatsAvailableNotificationAsync(request.EventId, request.EventTitle);
+        await _notificationService.GenerateSeatsAvailableNotificationAsync(requestBody.EventId, requestBody.EventTitle);
         return Ok();
     }
 
     [HttpPost("notify/price-drop")]
-    public async Task<IActionResult> NotifyPriceDrop([FromBody] NotifyPriceDropRequest request)
+    public async Task<IActionResult> NotifyPriceDrop([FromBody] NotifyPriceDropRequestBody requestBody)
     {
-        await _notificationService.NotifyPriceDropAsync(request.EventId, request.OldPrice, request.NewPrice);
+        await _notificationService.NotifyPriceDropAsync(requestBody.EventId, requestBody.OldPrice, requestBody.NewPrice);
         return Ok();
     }
 
     [HttpPost("notify/seats-available")]
-    public async Task<IActionResult> NotifySeatsAvailable([FromBody] NotifySeatsAvailableRequest request)
+    public async Task<IActionResult> NotifySeatsAvailable([FromBody] NotifySeatsAvailableRequestBody requestBody)
     {
-        await _notificationService.NotifySeatsAvailableAsync(request.EventId, request.NewCapacity);
+        await _notificationService.NotifySeatsAvailableAsync(requestBody.EventId, requestBody.NewCapacity);
         return Ok();
     }
 }
-
-public sealed record GeneratePriceDropNotificationRequest(int EventId, string EventTitle);
-
-public sealed record GenerateSeatsAvailableNotificationRequest(int EventId, string EventTitle);
-
-public sealed record NotifyPriceDropRequest(int EventId, decimal OldPrice, decimal NewPrice);
-
-public sealed record NotifySeatsAvailableRequest(int EventId, int NewCapacity);
