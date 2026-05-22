@@ -212,6 +212,12 @@ public sealed class IngestUrlRequestBody
     public int MovieId { get; set; }
 }
 
+public sealed class GrantJackpotDiscountRequestBody
+{
+    public int UserId { get; set; }
+    public int MovieId { get; set; }
+}
+
 public sealed class GeneratePriceDropNotificationRequestBody
 {
     public int EventId { get; set; }
