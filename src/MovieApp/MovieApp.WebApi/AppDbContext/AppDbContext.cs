@@ -244,7 +244,7 @@ namespace MovieApp.WebApi.Data
                 .HasPrecision(3, 1);
 
             modelBuilder.Entity<ActiveSale>()
-                .Property(activitySale => activitySale.DiscountPercentage)
+                .Property(activeSale => activeSale.DiscountPercentage)
                 .HasPrecision(5, 2);
 
             modelBuilder.Entity<Transaction>()
@@ -284,7 +284,7 @@ namespace MovieApp.WebApi.Data
                 .HasPrecision(3, 1);
 
             modelBuilder.Entity<Event>()
-                .Property(@event => @event.TicketPrice)
+                .Property(cinemaEvent => cinemaEvent.TicketPrice)
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<PriceWatcher>()
