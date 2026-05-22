@@ -9,11 +9,11 @@ namespace MovieApp.WebApi.Endpoints;
 [Authorize]
 [ApiController]
 [Route("api/slot-machine")]
-public sealed class SlotMachineController : ControllerBase
+public sealed class SlotMachineEndpointsController : ControllerBase
 {
     private readonly ISlotMachineService _slotMachineService;
 
-    public SlotMachineController(ISlotMachineService slotMachineService)
+    public SlotMachineEndpointsController(ISlotMachineService slotMachineService)
     {
         _slotMachineService = slotMachineService;
     }
@@ -123,7 +123,7 @@ public sealed class SlotMachineController : ControllerBase
     }
 
     [HttpPost("jackpot-discount")]
-    public async Task<IActionResult> GrantJackpotDiscount([FromBody] GrantJackpotDiscountRequestBody requestBody)
+    public async Task<IActionResult> GrantJackpotDiscountAsync([FromBody] GrantJackpotDiscountRequestBody requestBody)
     {
         await _slotMachineService.GrantJackpotDiscount(requestBody.UserId, requestBody.MovieId);
         return Ok();
