@@ -89,6 +89,7 @@ namespace MovieApp
             services.AddTransient<IScrapeJobService, ScrapeJobProxyService>();
             services.AddTransient<IReelService, ReelProxyService>();
             services.AddTransient<INotificationService, NotificationProxyService>();
+            services.AddTransient<ISlotMachineService, SlotMachineProxyService>();
 
             // Reels Upload
             services.AddTransient<MovieApp.Logic.Features.ReelsUpload.IVideoStorageService, VideoStorageProxyService>();

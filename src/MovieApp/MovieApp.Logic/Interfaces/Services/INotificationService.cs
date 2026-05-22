@@ -19,8 +19,6 @@ public interface INotificationService
 
     Task RemoveNotificationAsync(int notificationIdentifier, CancellationToken cancellationToken = default);
 
-    Task<IReadOnlyList<Notification>> GetNotificationsByUserIdAsync(int userIdentifier, CancellationToken cancellationToken = default);
-
     Task NotifyPriceDropAsync(int eventIdentifier, decimal oldPrice, decimal newPrice, CancellationToken cancellationToken = default);
 
     Task NotifySeatsAvailableAsync(int eventIdentifier, int newCapacity, CancellationToken cancellationToken = default);
