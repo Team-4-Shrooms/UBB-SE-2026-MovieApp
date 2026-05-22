@@ -82,217 +82,217 @@ namespace MovieApp.WebApi.Data
             // Composite / Explicit PKs 
 
             modelBuilder.Entity<AmbassadorProfile>()
-                .HasKey(ap => ap.UserId);
+                .HasKey(ambassadorProfile => ambassadorProfile.UserId);
 
             modelBuilder.Entity<UserSpinData>()
-                .HasKey(usd => usd.UserId);
+                .HasKey(userSpinData => userSpinData.UserId);
 
             modelBuilder.Entity<MarathonProgress>()
-                .HasKey(mp => new { mp.UserId, mp.MarathonId });
+                .HasKey(marathonProgress => new { marathonProgress.UserId, marathonProgress.MarathonId });
 
             modelBuilder.Entity<PriceWatcher>()
-                .HasKey(pw => pw.EventId);
+                .HasKey(priceWatcher => priceWatcher.EventId);
             modelBuilder.Entity<PriceWatcher>()
-                .Property(pw => pw.EventId)
+                .Property(priceWatcher => priceWatcher.EventId)
                 .ValueGeneratedNever();
 
             // Cascade Delete
 
             modelBuilder.Entity<Transaction>()
-                .HasOne(t => t.Buyer)
-                .WithMany(u => u.Purchases)
+                .HasOne(transaction => transaction.Buyer)
+                .WithMany(user => user.Purchases)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Transaction>()
-                .HasOne(t => t.Seller)
-                .WithMany(u => u.Sales)
+                .HasOne(transaction => transaction.Seller)
+                .WithMany(user => user.Sales)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<MovieReview>()
-                .HasOne(mr => mr.User)
+                .HasOne(movieReview => movieReview.User)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UserReelInteraction>()
-                .HasOne(uri => uri.User)
-                .WithMany(u => u.ReelInteractions)
+                .HasOne(userReelInteraction => userReelInteraction.User)
+                .WithMany(user => user.ReelInteractions)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<OwnedMovie>()
-                .HasOne(om => om.User)
-                .WithMany(u => u.OwnedMovies)
+                .HasOne(ownedMovie => ownedMovie.User)
+                .WithMany(user => user.OwnedMovies)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<OwnedTicket>()
-                .HasOne(ot => ot.User)
-                .WithMany(u => u.OwnedTickets)
+                .HasOne(ownedTicket => ownedTicket.User)
+                .WithMany(user => user.OwnedTickets)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UserMoviePreference>()
-                .HasOne(ump => ump.User)
-                .WithMany(u => u.MoviePreferences)
+                .HasOne(userMoviePreference => userMoviePreference.User)
+                .WithMany(user => user.MoviePreferences)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Review
             modelBuilder.Entity<Review>()
-                .HasOne(r => r.User)
-                .WithMany(u => u.Reviews)
+                .HasOne(review => review.User)
+                .WithMany(user => user.Reviews)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Review>()
-                .HasOne(r => r.Movie)
-                .WithMany(m => m.Reviews)
+                .HasOne(review => review.Movie)
+                .WithMany(movie => movie.Reviews)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Comment
             modelBuilder.Entity<Comment>()
-                .HasOne(c => c.ParentComment)
-                .WithMany(c => c.Replies)
-                .HasForeignKey(c => c.ParentCommentId)
+                .HasOne(comment => comment.ParentComment)
+                .WithMany(comment => comment.Replies)
+                .HasForeignKey(comment => comment.ParentCommentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Comment>()
-                .HasOne(c => c.Author)
-                .WithMany(u => u.Comments)
-                .HasForeignKey(c => c.AuthorId)
+                .HasOne(comment => comment.Author)
+                .WithMany(user => user.Comments)
+                .HasForeignKey(comment => comment.AuthorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Comment>()
-                .HasOne(c => c.Movie)
-                .WithMany(m => m.Comments)
-                .HasForeignKey(c => c.MovieId)
+                .HasOne(comment => comment.Movie)
+                .WithMany(movie => movie.Comments)
+                .HasForeignKey(comment => comment.MovieId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // BattleBet
             modelBuilder.Entity<BattleBet>()
-                .HasOne(bb => bb.User)
-                .WithMany(u => u.Bets)
+                .HasOne(battleBet => battleBet.User)
+                .WithMany(user => user.Bets)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<BattleBet>()
-                .HasOne(bb => bb.Battle)
-                .WithMany(b => b.Bets)
+                .HasOne(battleBet => battleBet.Battle)
+                .WithMany(battle => battle.Bets)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // ReferralLog
             modelBuilder.Entity<ReferralLog>()
-                .HasOne(rl => rl.Ambassador)
+                .HasOne(referralLog => referralLog.Ambassador)
                 .WithMany()
-                .HasForeignKey(rl => rl.AmbassadorId)
+                .HasForeignKey(referralLog => referralLog.AmbassadorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<ReferralLog>()
-                .HasOne(rl => rl.ReferredUser)
+                .HasOne(referralLog => referralLog.ReferredUser)
                 .WithMany()
-                .HasForeignKey(rl => rl.ReferredUserId)
+                .HasForeignKey(referralLog => referralLog.ReferredUserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Booking
             modelBuilder.Entity<Booking>()
-                .HasIndex(b => new { b.ScreeningId, b.Row, b.Column })
+                .HasIndex(booking => new { booking.ScreeningId, booking.Row, booking.Column })
                 .IsUnique();
 
             // UserBadge
             modelBuilder.Entity<UserBadge>()
-                .HasOne(ub => ub.User)
-                .WithMany(u => u.UserBadges)
+                .HasOne(userBadge => userBadge.User)
+                .WithMany(user => user.UserBadges)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UserBadge>()
-                .HasOne(ub => ub.Badge)
-                .WithMany(b => b.UserBadges)
+                .HasOne(userBadge => userBadge.Badge)
+                .WithMany(badge => badge.UserBadges)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // UserStats: 1-to-1 with User
             modelBuilder.Entity<UserStats>()
-                .HasOne(us => us.User)
-                .WithOne(u => u.UserStats)
-                .HasForeignKey<UserStats>(us => us.UserId)
+                .HasOne(userStats => userStats.User)
+                .WithOne(user => user.UserStats)
+                .HasForeignKey<UserStats>(userStats => userStats.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // MarathonProgress
             modelBuilder.Entity<MarathonProgress>()
-                .HasOne(mp => mp.User)
+                .HasOne(marathonProgress => marathonProgress.User)
                 .WithMany()
-                .HasForeignKey(mp => mp.UserId)
+                .HasForeignKey(marathonProgress => marathonProgress.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Decimal Precisions 
 
             modelBuilder.Entity<User>()
-                .Property(u => u.Balance)
+                .Property(user => user.Balance)
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<Movie>()
-                .Property(m => m.Price)
+                .Property(movie => movie.Price)
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<Movie>()
-                .Property(m => m.ActiveSaleDiscountPercent)
+                .Property(movie => movie.ActiveSaleDiscountPercent)
                 .HasPrecision(5, 2);
 
             modelBuilder.Entity<Equipment>()
-                .Property(e => e.Price)
+                .Property(equipment => equipment.Price)
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<MovieEvent>()
-                .Property(me => me.TicketPrice)
+                .Property(movieEvent => movieEvent.TicketPrice)
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<Movie>()
-                .Property(m => m.Rating)
+                .Property(movie => movie.Rating)
                 .HasPrecision(3, 1);
 
             modelBuilder.Entity<ActiveSale>()
-                .Property(a => a.DiscountPercentage)
+                .Property(activitySale => activitySale.DiscountPercentage)
                 .HasPrecision(5, 2);
 
             modelBuilder.Entity<Transaction>()
-                .Property(t => t.Amount)
+                .Property(transaction => transaction.Amount)
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<MusicTrack>()
-                .Property(mt => mt.DurationSeconds)
+                .Property(musicTrack => musicTrack.DurationSeconds)
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<Reel>()
-                .Property(r => r.FeatureDurationSeconds)
+                .Property(reel => reel.FeatureDurationSeconds)
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<UserMoviePreference>()
-                .Property(p => p.Score)
+                .Property(userMoviePreference => userMoviePreference.Score)
                 .HasPrecision(8, 4);
 
             modelBuilder.Entity<UserProfile>()
-                .Property(p => p.AverageWatchTimeSeconds)
+                .Property(userProfile => userProfile.AverageWatchTimeSeconds)
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<UserProfile>()
-                .Property(p => p.LikeToViewRatio)
+                .Property(userProfile => userProfile.LikeToViewRatio)
                 .HasPrecision(8, 4);
 
             modelBuilder.Entity<UserReelInteraction>()
-                .Property(i => i.WatchDurationSeconds)
+                .Property(userReelInteraction => userReelInteraction.WatchDurationSeconds)
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<UserReelInteraction>()
-                .Property(i => i.WatchPercentage)
+                .Property(userReelInteraction => userReelInteraction.WatchPercentage)
                 .HasPrecision(5, 2);
 
             modelBuilder.Entity<MovieReview>()
-                .Property(mr => mr.StarRating)
+                .Property(movieReview => movieReview.StarRating)
                 .HasPrecision(3, 1);
 
             modelBuilder.Entity<Event>()
-                .Property(ev => ev.TicketPrice)
+                .Property(@event => @event.TicketPrice)
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<PriceWatcher>()
-                .Property(pw => pw.TargetPrice)
+                .Property(priceWatcher => priceWatcher.TargetPrice)
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<Review>()
-                .Property(r => r.StarRating)
+                .Property(review => review.StarRating)
                 .HasColumnType("decimal(3,1)");
         }
     }
