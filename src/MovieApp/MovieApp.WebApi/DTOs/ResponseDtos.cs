@@ -216,3 +216,65 @@ public sealed class UserDto
     public string Email { get; set; } = string.Empty;
     public decimal Balance { get; set; }
 }
+
+public sealed class GenreDto
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+}
+
+public sealed class ActorDto
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+}
+
+public sealed class DirectorDto
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+}
+
+public sealed class EventDto
+{
+    public int Id { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public string PosterUrl { get; set; } = string.Empty;
+    public DateTime EventDateTime { get; set; }
+    public string LocationReference { get; set; } = string.Empty;
+    public decimal TicketPrice { get; set; }
+    public double HistoricalRating { get; set; }
+    public int MaxCapacity { get; set; }
+    public int CurrentEnrollment { get; set; }
+    public string EventType { get; set; } = string.Empty;
+    public int CreatorUserId { get; set; }
+    public int AvailableSpots { get; set; }
+    public bool IsAvailable { get; set; }
+    public int DiscountPercentage { get; set; }
+    public bool IsJoined { get; set; }
+}
+
+public sealed class UserSpinDataDto
+{
+    public int UserId { get; set; }
+    public int DailySpinsRemaining { get; set; }
+    public int BonusSpins { get; set; }
+    public DateTime LastSlotSpinReset { get; set; }
+    public int LoginStreak { get; set; }
+    public DateTime LastLoginDate { get; set; }
+    public int EventSpinRewardsToday { get; set; }
+    public bool CanSpin { get; set; }
+}
+
+public sealed class SlotMachineResultDto
+{
+    public GenreDto Genre { get; set; } = new GenreDto();
+    public ActorDto Actor { get; set; } = new ActorDto();
+    public DirectorDto Director { get; set; } = new DirectorDto();
+    public List<EventDto> MatchingEvents { get; set; } = new List<EventDto>();
+    public HashSet<int> JackpotEventIds { get; set; } = new HashSet<int>();
+    public MovieReferenceDto? JackpotMovie { get; set; }
+    public bool JackpotDiscountApplied { get; set; }
+    public int DiscountPercentage { get; set; }
+}

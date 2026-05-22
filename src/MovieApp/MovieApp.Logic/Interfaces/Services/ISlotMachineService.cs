@@ -111,5 +111,5 @@ public interface ISlotMachineService
     /// <param name="userIdentifier">The unique identifier of the user.</param>
     /// <param name="movieIdentifier">The unique identifier of the movie.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task GrantJackpotDiscount(int userIdentifier, int movieIdentifier);
+    Task GrantJackpotDiscountAsync(int userIdentifier, int movieIdentifier);
 }
