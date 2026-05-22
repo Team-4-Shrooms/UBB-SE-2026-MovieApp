@@ -51,6 +51,8 @@ builder.Services.AddTransient<IVideoIngestionService, VideoIngestionProxyService
 builder.Services.AddSingleton<ITournamentLogicService, TournamentLogicProxyService>();
 builder.Services.AddTransient<IMovieTournamentService, MovieTournamentProxyService>();
 builder.Services.AddTransient<ISlotMachineService, SlotMachineProxyService>();
+builder.Services.AddTransient<IScreeningService, ScreeningProxyService>();
+builder.Services.AddTransient<IBookingService, BookingProxyService>();
 
 // Cache and session
 builder.Services.AddMemoryCache();

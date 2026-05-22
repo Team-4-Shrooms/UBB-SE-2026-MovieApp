@@ -21,6 +21,7 @@ namespace MovieApp.DataLayer.Interfaces
         DbSet<UserMoviePreference> UserMoviePreferences { get; }
         DbSet<UserProfile> UserProfiles { get; }
         DbSet<UserReelInteraction> UserReelInteractions { get; }
+        DbSet<SeatBooking> SeatBookings { get; }
 
         int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

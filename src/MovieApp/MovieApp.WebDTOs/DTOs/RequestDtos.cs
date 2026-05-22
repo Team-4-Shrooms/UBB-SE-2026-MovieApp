@@ -211,3 +211,46 @@ public sealed class IngestUrlRequestBody
     public string TrailerUrl { get; set; } = string.Empty;
     public int MovieId { get; set; }
 }
+
+public sealed class GrantJackpotDiscountRequestBody
+{
+    public int UserId { get; set; }
+    public int MovieId { get; set; }
+}
+
+public sealed class GeneratePriceDropNotificationRequestBody
+{
+    public int EventId { get; set; }
+    public string EventTitle { get; set; } = string.Empty;
+}
+
+public sealed class GenerateSeatsAvailableNotificationRequestBody
+{
+    public int EventId { get; set; }
+    public string EventTitle { get; set; } = string.Empty;
+}
+
+public sealed class NotifyPriceDropRequestBody
+{
+    public int EventId { get; set; }
+    public decimal OldPrice { get; set; }
+    public decimal NewPrice { get; set; }
+}
+
+public sealed class NotifySeatsAvailableRequestBody
+{
+    public int EventId { get; set; }
+    public int NewCapacity { get; set; }
+}
+
+public sealed class SeatRequest
+{
+    public int Row { get; set; }
+    public int Column { get; set; }
+}
+
+public sealed class BookSeatsRequestBody
+{
+    public int UserId { get; set; }
+    public List<SeatRequest> Seats { get; set; } = new();
+}
