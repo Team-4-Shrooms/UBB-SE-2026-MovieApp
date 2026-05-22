@@ -3,24 +3,66 @@ using Microsoft.AspNetCore.Mvc;
 using MovieApp.Logic.Interfaces.Services;
 using MovieApp.WebApi.Mappings;
 using MovieApp.WebDTOs.DTOs.RequestDTOs;
+using System.Security.Claims;
 
 namespace MovieApp.WebApi.Endpoints;
 
 [Authorize]
 [ApiController]
 [Route("api/notifications")]
-public sealed class NotificationsController : ControllerBase
+public sealed class NotificationsEndpointsController : ControllerBase
 {
     private readonly INotificationService _notificationService;
 
-    public NotificationsController(INotificationService notificationService)
+    public NotificationsEndpointsController(INotificationService notificationService)
     {
         _notificationService = notificationService;
+    }
+
+    private bool TryGetCurrentUserId(out int userId)
+    {
+        userId = default;
+        if (User?.Identity == null || !User.Identity.IsAuthenticated)
+            {
+            return false;
+        }
+
+        // Try standard claim types, fall back to common JWT claim names
+        var idClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                      ?? User.FindFirst("id")?.Value
+                      ?? User.FindFirst("sub")?.Value;
+
+        if (string.IsNullOrWhiteSpace(idClaim))
+        {
+            return false;
+        }
+
+        return int.TryParse(idClaim, out userId);
+    }
+
+    private ActionResult? EnsureUserMatches(int userId)
+    {
+        if (!TryGetCurrentUserId(out int currentUserId))
+        {
+            return Unauthorized();
+        }
+
+        if (currentUserId != userId)
+            {
+            return Forbid();
+        }
+
+        return null;
     }
 
     [HttpGet("{userId:int}")]
     public async Task<IActionResult> GetNotificationsByUser(int userId)
     {
+        var check = EnsureUserMatches(userId);
+        if (check is not null) {
+            return check;
+        }
+
         var notifications = await _notificationService.GetNotificationsByUserAsync(userId);
         return Ok(notifications.Select(notification => notification.ToDto()));
     }
@@ -28,7 +70,12 @@ public sealed class NotificationsController : ControllerBase
     [HttpGet("{userId:int}/unread")]
     public async Task<IActionResult> GetUnreadNotifications(int userId)
     {
-        var unreadNotifications = await _notificationService.GetUnreadAsync(userId);
+        var check = EnsureUserMatches(userId);
+        if (check is not null) {
+            return check;
+        }
+
+        var unreadNotifications = await _notificationService.GetUnreadNotificationsAsync(userId);
         return Ok(unreadNotifications.Select(notification => notification.ToDto()));
     }
 
@@ -56,6 +103,11 @@ public sealed class NotificationsController : ControllerBase
     [HttpPost("read-all/{userId:int}")]
     public async Task<IActionResult> MarkAllRead(int userId)
     {
+        var check = EnsureUserMatches(userId);
+        if (check is not null) {
+            return check;
+        }
+
         await _notificationService.MarkAllReadAsync(userId);
         return Ok();
     }
