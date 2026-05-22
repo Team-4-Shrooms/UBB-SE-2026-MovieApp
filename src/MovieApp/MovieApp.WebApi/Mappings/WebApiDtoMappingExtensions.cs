@@ -1,3 +1,4 @@
+using System.Linq;
 using MovieApp.DataLayer.Models;
 using MovieApp.WebApi.DTOs;
 using MovieApp.WebDTOs.DTOs.RequestDTOs;
@@ -471,6 +472,100 @@ public static class WebApiDtoMappingExtensions
             Username = user.Username ?? string.Empty,
             Email = user.Email ?? string.Empty,
             Balance = user.Balance,
+        };
+    }
+
+    public static NotificationDto ToDto(this Notification notification)
+    {
+        return new NotificationDto
+        {
+            Id = notification.Id,
+            UserId = notification.UserId,
+            EventId = notification.EventId,
+            Type = notification.Type,
+            Message = notification.Message,
+            State = notification.State.ToString(),
+            CreatedAt = notification.CreatedAt,
+        }
+    }
+  
+    public static GenreDto ToDto(this Genre genre)
+    {
+        return new GenreDto
+        {
+            Id = genre.Id,
+            Name = genre.Name,
+        };
+    }
+
+    public static ActorDto ToDto(this Actor actor)
+    {
+        return new ActorDto
+        {
+            Id = actor.Id,
+            Name = actor.Name,
+        };
+    }
+
+    public static DirectorDto ToDto(this Director director)
+    {
+        return new DirectorDto
+        {
+            Id = director.Id,
+            Name = director.Name,
+        };
+    }
+
+    public static EventDto ToDto(this Event slotEvent)
+    {
+        return new EventDto
+        {
+            Id = slotEvent.Id,
+            Title = slotEvent.Title,
+            Description = slotEvent.Description,
+            PosterUrl = slotEvent.PosterUrl,
+            EventDateTime = slotEvent.EventDateTime,
+            LocationReference = slotEvent.LocationReference,
+            TicketPrice = slotEvent.TicketPrice,
+            HistoricalRating = slotEvent.HistoricalRating,
+            MaxCapacity = slotEvent.MaxCapacity,
+            CurrentEnrollment = slotEvent.CurrentEnrollment,
+            EventType = slotEvent.EventType,
+            CreatorUserId = slotEvent.CreatorUserId,
+            AvailableSpots = slotEvent.AvailableSpots,
+            IsAvailable = slotEvent.IsAvailable,
+            DiscountPercentage = slotEvent.DiscountPercentage,
+            IsJoined = slotEvent.IsJoined,
+        };
+    }
+
+    public static UserSpinDataDto ToDto(this UserSpinData spinData)
+    {
+        return new UserSpinDataDto
+        {
+            UserId = spinData.UserId,
+            DailySpinsRemaining = spinData.DailySpinsRemaining,
+            BonusSpins = spinData.BonusSpins,
+            LastSlotSpinReset = spinData.LastSlotSpinReset,
+            LoginStreak = spinData.LoginStreak,
+            LastLoginDate = spinData.LastLoginDate,
+            EventSpinRewardsToday = spinData.EventSpinRewardsToday,
+            CanSpin = spinData.CanSpin,
+        };
+    }
+
+    public static SlotMachineResultDto ToDto(this SlotMachineResult result)
+    {
+        return new SlotMachineResultDto
+        {
+            Genre = result.Genre.ToDto(),
+            Actor = result.Actor.ToDto(),
+            Director = result.Director.ToDto(),
+            MatchingEvents = result.MatchingEvents.Select(slotEvent => slotEvent.ToDto()).ToList(),
+            JackpotEventIds = result.JackpotEventIds,
+            JackpotMovie = result.JackpotMovie?.ToReferenceDto(),
+            JackpotDiscountApplied = result.JackpotDiscountApplied,
+            DiscountPercentage = result.DiscountPercentage,
         };
     }
 }
