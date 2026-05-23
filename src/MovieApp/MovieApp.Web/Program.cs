@@ -54,6 +54,8 @@ builder.Services.AddTransient<INotificationService, NotificationProxyService>();
 builder.Services.AddTransient<ISlotMachineService, SlotMachineProxyService>();
 builder.Services.AddTransient<IScreeningService, ScreeningProxyService>();
 builder.Services.AddTransient<IBookingService, BookingProxyService>();
+builder.Services.AddTransient<IMarathonService, MarathonProxyService>();
+
 
 // Cache and session
 builder.Services.AddMemoryCache();

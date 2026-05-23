@@ -2,8 +2,6 @@ namespace MovieApp.Core.Services;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MovieApp.Core.Models;
-using MovieApp.Core.Models;
 using MovieApp.DataLayer.Models;
 
 public interface IMarathonService
