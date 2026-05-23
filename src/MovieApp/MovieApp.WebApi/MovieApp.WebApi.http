@@ -4,19 +4,3 @@ GET {{MovieApp.WebApi_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
-
-### GET Seat Availability
-GET {{MovieApp.WebApi_HostAddress}}/api/screenings/1/seats
-Accept: application/json
-
-### POST Book a Seat
-POST {{MovieApp.WebApi_HostAddress}}/api/screenings/1/book
-Content-Type: application/json
-
-{
-  "userId": 1,
-  "seats": [
-    { "row": 1, "column": 1 }
-  ]
-}
-
