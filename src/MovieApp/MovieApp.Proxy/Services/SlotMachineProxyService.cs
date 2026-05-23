@@ -114,4 +114,9 @@ public class SlotMachineProxyService : ISlotMachineService
             "api/slot-machine/jackpot-discount",
             new { UserId = userIdentifier, MovieId = movieIdentifier });
     }
+
+    public Task GrantJackpotDiscountAsync(int userIdentifier, int movieIdentifier)
+    {
+        throw new NotImplementedException();
+    }
 }

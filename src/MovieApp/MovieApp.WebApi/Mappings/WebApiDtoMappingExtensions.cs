@@ -486,7 +486,7 @@ public static class WebApiDtoMappingExtensions
             Message = notification.Message,
             State = notification.State.ToString(),
             CreatedAt = notification.CreatedAt,
-        }
+        };
     }
   
     public static GenreDto ToDto(this Genre genre)

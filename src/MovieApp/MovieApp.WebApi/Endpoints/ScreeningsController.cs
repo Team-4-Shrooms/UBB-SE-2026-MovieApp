@@ -5,7 +5,6 @@ using MovieApp.WebDTOs.DTOs.RequestDTOs;
 
 namespace MovieApp.WebApi.Endpoints;
 
-[Authorize]
 [ApiController]
 [Route("api/screenings")]
 public sealed class ScreeningsController : ControllerBase
