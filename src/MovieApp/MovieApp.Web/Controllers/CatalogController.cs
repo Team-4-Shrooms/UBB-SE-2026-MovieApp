@@ -135,7 +135,7 @@ public sealed class CatalogController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> PurchaseMovie(int movieId, decimal price)
+    public async Task<IActionResult> PurchaseMovie(int movieId)
     {
         var userId = _currentUserService.UserId;
         if (userId <= 0)
@@ -144,9 +144,27 @@ public sealed class CatalogController : Controller
             return RedirectToAction(nameof(Detail), new { id = movieId });
         }
 
+        var movie = await _movieService.GetMovieByIdAsync(movieId);
+        if (movie == null)
+        {
+            TempData["PurchaseError"] = "Movie not found.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        var activeSales = await _cache.GetOrCreateAsync("sales:active", async entry =>
+        {
+            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5);
+            return await _activeSalesService.GetBestDiscountPercentByMovieIdAsync();
+        });
+
+        if (activeSales != null && activeSales.TryGetValue(movie.Id, out var discount))
+        {
+            movie.ActiveSaleDiscountPercent = discount;
+        }
+
         try
         {
-            await _movieService.PurchaseMovieAsync(userId, movieId, price);
+            await _movieService.PurchaseMovieAsync(userId, movieId, movie.EffectivePrice);
             TempData["PurchaseSuccess"] = "Purchase successful! The movie has been added to your inventory.";
         }
         catch (Exception ex)
