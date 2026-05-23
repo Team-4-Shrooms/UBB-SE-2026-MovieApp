@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MovieApp.Proxy
@@ -43,23 +44,23 @@ namespace MovieApp.Proxy
         /// If a response comes back as 401, try to acquire/refresh the token once and retry.
         /// This handles the case where the WebApi wasn't running when the app started.
         /// </summary>
-        private async Task<HttpResponseMessage> SendWithRetryAsync(Func<Task<HttpResponseMessage>> send)
+        private async Task<HttpResponseMessage> SendWithRetryAsync(Func<CancellationToken, Task<HttpResponseMessage>> send, CancellationToken cancellationToken = default)
         {
             AttachToken();
-            HttpResponseMessage response = await send();
+            HttpResponseMessage response = await send(cancellationToken);
 
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 await _tokenProvider.RefreshAsync();
                 AttachToken();
-                response = await send();
+                response = await send(cancellationToken);
             }
 
             response.EnsureSuccessStatusCode();
             return response;
         }
 
-        public async Task<T?> GetAsync<T>(string uri)
+        public async Task<T?> GetAsync<T>(string uri, CancellationToken cancellationToken = default)
         {
             var token = _tokenProvider.GetToken();
 
@@ -70,47 +71,47 @@ namespace MovieApp.Proxy
             }
 
             AttachToken();
-            var response = await _httpClient.GetAsync(uri);
+            var response = await _httpClient.GetAsync(uri, cancellationToken);
 
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 await _tokenProvider.RefreshAsync();
                 AttachToken();
-                response = await _httpClient.GetAsync(uri);
+                response = await _httpClient.GetAsync(uri, cancellationToken);
             }
 
             if (response.StatusCode == HttpStatusCode.NotFound)
                 return default;
 
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<T>(DeserializeOptions);
+            return await response.Content.ReadFromJsonAsync<T>(DeserializeOptions, cancellationToken);
         }
 
-        public async Task PostAsync<TValue>(string uri, TValue value)
+        public async Task PostAsync<TValue>(string uri, TValue value, CancellationToken cancellationToken = default)
         {
-            await SendWithRetryAsync(() => _httpClient.PostAsJsonAsync(uri, value));
+            await SendWithRetryAsync(ct => _httpClient.PostAsJsonAsync(uri, value, ct), cancellationToken);
         }
 
-        public async Task<TResponse?> PostAsync<TValue, TResponse>(string uri, TValue value)
+        public async Task<TResponse?> PostAsync<TValue, TResponse>(string uri, TValue value, CancellationToken cancellationToken = default)
         {
-            var response = await SendWithRetryAsync(() => _httpClient.PostAsJsonAsync(uri, value));
-            return await response.Content.ReadFromJsonAsync<TResponse>(DeserializeOptions);
+            var response = await SendWithRetryAsync(ct => _httpClient.PostAsJsonAsync(uri, value, ct), cancellationToken);
+            return await response.Content.ReadFromJsonAsync<TResponse>(DeserializeOptions, cancellationToken);
         }
 
-        public async Task PutAsync<TValue>(string uri, TValue value)
+        public async Task PutAsync<TValue>(string uri, TValue value, CancellationToken cancellationToken = default)
         {
-            await SendWithRetryAsync(() => _httpClient.PutAsJsonAsync(uri, value));
+            await SendWithRetryAsync(ct => _httpClient.PutAsJsonAsync(uri, value, ct), cancellationToken);
         }
 
-        public async Task<TResponse?> PutAsync<TValue, TResponse>(string uri, TValue value)
+        public async Task<TResponse?> PutAsync<TValue, TResponse>(string uri, TValue value, CancellationToken cancellationToken = default)
         {
-            var response = await SendWithRetryAsync(() => _httpClient.PutAsJsonAsync(uri, value));
-            return await response.Content.ReadFromJsonAsync<TResponse>(DeserializeOptions);
+            var response = await SendWithRetryAsync(ct => _httpClient.PutAsJsonAsync(uri, value, ct), cancellationToken);
+            return await response.Content.ReadFromJsonAsync<TResponse>(DeserializeOptions, cancellationToken);
         }
 
-        public async Task DeleteAsync(string uri)
+        public async Task DeleteAsync(string uri, CancellationToken cancellationToken = default)
         {
-            await SendWithRetryAsync(() => _httpClient.DeleteAsync(uri));
+            await SendWithRetryAsync(ct => _httpClient.DeleteAsync(uri, ct), cancellationToken);
         }
     }
 }
