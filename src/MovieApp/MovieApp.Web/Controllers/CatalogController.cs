@@ -70,8 +70,8 @@ public sealed class CatalogController : Controller
 
         filteredMovies = sort switch
         {
-            "price_asc"    => filteredMovies.OrderBy(m => m.GetEffectivePrice()),
-            "price_desc"   => filteredMovies.OrderByDescending(m => m.GetEffectivePrice()),
+            "price_asc"    => filteredMovies.OrderBy(movie => movie.EffectivePrice),
+            "price_desc"   => filteredMovies.OrderByDescending(movie => movie.EffectivePrice),
             "rating_desc"  => filteredMovies.OrderByDescending(m => m.Rating),
             "rating_asc"   => filteredMovies.OrderBy(m => m.Rating),
             _              => filteredMovies.OrderBy(m => m.Title),

@@ -490,7 +490,7 @@ public sealed class WebApiDtoMappingTests
     [Fact]
     public void DashboardStatsToDto_ValidStats_MapsCorrectTotalJobs()
     {
-        DashboardStatsModel statsModel = new DashboardStatsModel
+        DashboardStats statsModel = new DashboardStats
         {
             TotalMovies = 5,
             TotalReels = 6,

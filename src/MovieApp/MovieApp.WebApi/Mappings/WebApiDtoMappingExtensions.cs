@@ -1,5 +1,6 @@
 using System.Linq;
 using MovieApp.DataLayer.Models;
+using MovieApp.Logic.Models;
 using MovieApp.WebApi.DTOs;
 using MovieApp.WebDTOs.DTOs.RequestDTOs;
 
@@ -360,20 +361,7 @@ public static class WebApiDtoMappingExtensions
         };
     }
 
-    public static DashboardStatsDto ToDto(this MovieApp.DataLayer.Models.DashboardStatsModel stats)
-    {
-        return new DashboardStatsDto
-        {
-            TotalMovies = stats.TotalMovies,
-            TotalReels = stats.TotalReels,
-            TotalJobs = stats.TotalJobs,
-            RunningJobs = stats.RunningJobs,
-            CompletedJobs = stats.CompletedJobs,
-            FailedJobs = stats.FailedJobs,
-        };
-    }
-
-    public static DashboardStatsDto ToDto(this MovieApp.Logic.Features.TrailerScraping.DashboardStatsModel stats)
+    public static DashboardStatsDto ToDto(this MovieApp.DataLayer.Models.DashboardStats stats)
     {
         return new DashboardStatsDto
         {
@@ -486,7 +474,7 @@ public static class WebApiDtoMappingExtensions
             Message = notification.Message,
             State = notification.State.ToString(),
             CreatedAt = notification.CreatedAt,
-        }
+        };
     }
   
     public static GenreDto ToDto(this Genre genre)

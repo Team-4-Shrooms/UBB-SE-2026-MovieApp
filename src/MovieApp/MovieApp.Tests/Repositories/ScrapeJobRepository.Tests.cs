@@ -486,7 +486,7 @@ namespace MovieApp.Tests.Repositories
 
             ScrapeJobRepository repository = new ScrapeJobRepository(context);
 
-            DashboardStatsModel result = await repository.GetDashboardStatsAsync();
+            DashboardStats result = await repository.GetDashboardStatsAsync();
 
             Assert.Equal(1, result.TotalMovies);
         }
@@ -523,7 +523,7 @@ namespace MovieApp.Tests.Repositories
 
             ScrapeJobRepository repository = new ScrapeJobRepository(context);
 
-            DashboardStatsModel result = await repository.GetDashboardStatsAsync();
+            DashboardStats result = await repository.GetDashboardStatsAsync();
 
             Assert.Equal(1, result.TotalReels);
         }
@@ -547,7 +547,7 @@ namespace MovieApp.Tests.Repositories
 
             ScrapeJobRepository repository = new ScrapeJobRepository(context);
 
-            DashboardStatsModel result = await repository.GetDashboardStatsAsync();
+            DashboardStats result = await repository.GetDashboardStatsAsync();
 
             Assert.Equal(1, result.CompletedJobs);
         }
@@ -571,7 +571,7 @@ namespace MovieApp.Tests.Repositories
 
             ScrapeJobRepository repository = new ScrapeJobRepository(context);
 
-            DashboardStatsModel result = await repository.GetDashboardStatsAsync();
+            DashboardStats result = await repository.GetDashboardStatsAsync();
 
             Assert.Equal(0, result.RunningJobs);
         }
@@ -595,7 +595,7 @@ namespace MovieApp.Tests.Repositories
 
             ScrapeJobRepository repository = new ScrapeJobRepository(context);
 
-            DashboardStatsModel result = await repository.GetDashboardStatsAsync();
+            DashboardStats result = await repository.GetDashboardStatsAsync();
 
             Assert.Equal(0, result.FailedJobs);
         }

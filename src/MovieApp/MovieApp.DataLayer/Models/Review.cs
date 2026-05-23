@@ -18,6 +18,4 @@ public class Review
     public string? SoundText { get; set; }
     public User? User { get; set; }
     public Movie? Movie { get; set; }
-    public int UserDisplayId => User?.Id ?? 0;
 }
-

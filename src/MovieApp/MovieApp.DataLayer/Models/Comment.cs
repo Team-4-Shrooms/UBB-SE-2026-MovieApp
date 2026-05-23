@@ -11,7 +11,4 @@ public class Comment
     public Movie? Movie { get; set; }
     public Comment? ParentComment { get; set; }
     public ICollection<Comment> Replies { get; set; } = new List<Comment>();
-    public int AuthorDisplayId => Author?.Id ?? 0;
-    public int ParentCommentDisplayId => ParentComment?.CommentId ?? 0;
-    public bool HasParentComment => ParentComment is not null;
 }

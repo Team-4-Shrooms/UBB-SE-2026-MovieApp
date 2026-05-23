@@ -53,10 +53,10 @@ namespace MovieApp.Proxy.Services
             return result ?? new List<ScrapeJobLog>();
         }
 
-        public async Task<MovieApp.Logic.Features.TrailerScraping.DashboardStatsModel> GetDashboardStatsAsync()
+        public async Task<MovieApp.DataLayer.Models.DashboardStats> GetDashboardStatsAsync()
         {
-            var result = await _apiClient.GetAsync<MovieApp.Logic.Features.TrailerScraping.DashboardStatsModel>("api/scrape-jobs/dashboard-stats");
-            return result ?? new MovieApp.Logic.Features.TrailerScraping.DashboardStatsModel();
+            var result = await _apiClient.GetAsync<MovieApp.DataLayer.Models.DashboardStats>("api/scrape-jobs/dashboard-stats");
+            return result ?? new MovieApp.DataLayer.Models.DashboardStats();
         }
 
         public async Task<List<Movie>> SearchMoviesByNameAsync(string partialName)

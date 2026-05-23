@@ -1,4 +1,4 @@
-namespace MovieApp.DataLayer.Models;
+namespace MovieApp.Logic.Helpers;
 public static class Room
 {
     public const int MinRows = 10;

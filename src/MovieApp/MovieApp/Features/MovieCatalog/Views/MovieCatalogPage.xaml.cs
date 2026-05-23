@@ -33,7 +33,7 @@ namespace MovieApp.Features.MovieCatalog.Views
 
         public string OriginalPriceText => $"$ {Movie.Price:0.00}";
 
-        public string CurrentPriceText => $"$ {Movie.GetEffectivePrice():0.00}";
+        public string CurrentPriceText => $"$ {Movie.EffectivePrice:0.00}";
 
         public Microsoft.UI.Xaml.Visibility SaleVisibility => IsOnSale
             ? Microsoft.UI.Xaml.Visibility.Visible
@@ -102,11 +102,11 @@ namespace MovieApp.Features.MovieCatalog.Views
 
             if (SortAscPrice.IsChecked == true)
             {
-                list = list.OrderBy(movie => movie.GetEffectivePrice());
+                list = list.OrderBy(movie => movie.EffectivePrice);
             }
             else if (SortDescPrice.IsChecked == true)
             {
-                list = list.OrderByDescending(movie => movie.GetEffectivePrice());
+                list = list.OrderByDescending(movie => movie.EffectivePrice);
             }
             else if (SortHighRating.IsChecked == true)
             {
