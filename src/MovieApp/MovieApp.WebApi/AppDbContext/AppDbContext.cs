@@ -33,8 +33,7 @@ namespace MovieApp.WebApi.Data
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<UserReelInteraction> UserReelInteractions { get; set; }
         public DbSet<SeatBooking> SeatBookings { get; set; }
-        public DbSet<Screening> Screenings { get; set; }
-        public DbSet<Booking> Bookings { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

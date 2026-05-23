@@ -22,30 +22,6 @@ namespace MovieApp.WebApi.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Badge", b =>
-                {
-                    b.Property<int>("BadgeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BadgeId"));
-
-                    b.Property<int>("CriteriaValue")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("BadgeId");
-
-                    b.ToTable("Badge");
-                });
-
             modelBuilder.Entity("MovieApp.DataLayer.Models.ActiveSale", b =>
                 {
                     b.Property<int>("Id")
@@ -73,183 +49,6 @@ namespace MovieApp.WebApi.Migrations
                         .IsUnique();
 
                     b.ToTable("ActiveSales");
-                });
-
-            modelBuilder.Entity("MovieApp.DataLayer.Models.Actor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MovieId");
-
-                    b.ToTable("Actor");
-                });
-
-            modelBuilder.Entity("MovieApp.DataLayer.Models.Battle", b =>
-                {
-                    b.Property<int>("BattleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BattleId"));
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("FirstMovieId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("InitialRatingFirstMovie")
-                        .HasColumnType("float");
-
-                    b.Property<double>("InitialRatingSecondMovie")
-                        .HasColumnType("float");
-
-                    b.Property<int?>("SecondMovieId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("BattleId");
-
-                    b.HasIndex("FirstMovieId");
-
-                    b.HasIndex("SecondMovieId");
-
-                    b.ToTable("Battle");
-                });
-
-            modelBuilder.Entity("MovieApp.DataLayer.Models.BattleBet", b =>
-                {
-                    b.Property<int>("BattleBetId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BattleBetId"));
-
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("BattleId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("BattleBetId");
-
-                    b.HasIndex("BattleId");
-
-                    b.HasIndex("MovieId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("BattleBet");
-                });
-
-            modelBuilder.Entity("MovieApp.DataLayer.Models.Booking", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("BookedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Column")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Row")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ScreeningId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Bookings");
-                });
-
-            modelBuilder.Entity("MovieApp.DataLayer.Models.Comment", b =>
-                {
-                    b.Property<int>("CommentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentId"));
-
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ParentCommentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CommentId");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("MovieId");
-
-                    b.HasIndex("ParentCommentId");
-
-                    b.ToTable("Comment");
-                });
-
-            modelBuilder.Entity("MovieApp.DataLayer.Models.Director", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MovieId");
-
-                    b.ToTable("Director");
                 });
 
             modelBuilder.Entity("MovieApp.DataLayer.Models.Equipment", b =>
@@ -297,28 +96,6 @@ namespace MovieApp.WebApi.Migrations
                     b.ToTable("Equipment");
                 });
 
-            modelBuilder.Entity("MovieApp.DataLayer.Models.Genre", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MovieId");
-
-                    b.ToTable("Genre");
-                });
-
             modelBuilder.Entity("MovieApp.DataLayer.Models.Movie", b =>
                 {
                     b.Property<int>("Id")
@@ -334,9 +111,6 @@ namespace MovieApp.WebApi.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DurationMinutes")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsOnSale")
                         .HasColumnType("bit");
@@ -592,72 +366,6 @@ namespace MovieApp.WebApi.Migrations
                     b.ToTable("Reels");
                 });
 
-            modelBuilder.Entity("MovieApp.DataLayer.Models.Review", b =>
-                {
-                    b.Property<int>("ReviewId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReviewId"));
-
-                    b.Property<int>("ActingRating")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ActingText")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CgiRating")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CgiText")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CinematographyRating")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CinematographyText")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsExtraReview")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PlotRating")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PlotText")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SoundRating")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SoundText")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<float>("StarRating")
-                        .HasColumnType("real");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ReviewId");
-
-                    b.HasIndex("MovieId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Review");
-                });
-
             modelBuilder.Entity("MovieApp.DataLayer.Models.ScrapeJob", b =>
                 {
                     b.Property<int>("Id")
@@ -726,56 +434,6 @@ namespace MovieApp.WebApi.Migrations
                     b.ToTable("ScrapeJobLogs");
                 });
 
-            modelBuilder.Entity("MovieApp.DataLayer.Models.Screening", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("EventId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ScreeningTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Screenings");
-                });
-
-            modelBuilder.Entity("MovieApp.DataLayer.Models.SeatBooking", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("BookedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Column")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Row")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ScreeningId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SeatBookings");
-                });
-
             modelBuilder.Entity("MovieApp.DataLayer.Models.Transaction", b =>
                 {
                     b.Property<int>("Id")
@@ -840,12 +498,6 @@ namespace MovieApp.WebApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AuthProvider")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AuthSubject")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal>("Balance")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
@@ -865,29 +517,6 @@ namespace MovieApp.WebApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("MovieApp.DataLayer.Models.UserBadge", b =>
-                {
-                    b.Property<int>("UserBadgeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserBadgeId"));
-
-                    b.Property<int?>("BadgeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserBadgeId");
-
-                    b.HasIndex("BadgeId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserBadge");
                 });
 
             modelBuilder.Entity("MovieApp.DataLayer.Models.UserMoviePreference", b =>
@@ -1004,31 +633,6 @@ namespace MovieApp.WebApi.Migrations
                     b.ToTable("UserReelInteractions");
                 });
 
-            modelBuilder.Entity("MovieApp.DataLayer.Models.UserStats", b =>
-                {
-                    b.Property<int>("UserStatsId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserStatsId"));
-
-                    b.Property<int>("TotalPoints")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WeeklyScore")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserStatsId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("UserStats");
-                });
-
             modelBuilder.Entity("MovieApp.DataLayer.Models.ActiveSale", b =>
                 {
                     b.HasOne("MovieApp.DataLayer.Models.Movie", "Movie")
@@ -1040,81 +644,6 @@ namespace MovieApp.WebApi.Migrations
                     b.Navigation("Movie");
                 });
 
-            modelBuilder.Entity("MovieApp.DataLayer.Models.Actor", b =>
-                {
-                    b.HasOne("MovieApp.DataLayer.Models.Movie", null)
-                        .WithMany("Actors")
-                        .HasForeignKey("MovieId");
-                });
-
-            modelBuilder.Entity("MovieApp.DataLayer.Models.Battle", b =>
-                {
-                    b.HasOne("MovieApp.DataLayer.Models.Movie", "FirstMovie")
-                        .WithMany()
-                        .HasForeignKey("FirstMovieId");
-
-                    b.HasOne("MovieApp.DataLayer.Models.Movie", "SecondMovie")
-                        .WithMany()
-                        .HasForeignKey("SecondMovieId");
-
-                    b.Navigation("FirstMovie");
-
-                    b.Navigation("SecondMovie");
-                });
-
-            modelBuilder.Entity("MovieApp.DataLayer.Models.BattleBet", b =>
-                {
-                    b.HasOne("MovieApp.DataLayer.Models.Battle", "Battle")
-                        .WithMany("Bets")
-                        .HasForeignKey("BattleId");
-
-                    b.HasOne("MovieApp.DataLayer.Models.Movie", "Movie")
-                        .WithMany()
-                        .HasForeignKey("MovieId");
-
-                    b.HasOne("MovieApp.DataLayer.Models.User", "User")
-                        .WithMany("Bets")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Battle");
-
-                    b.Navigation("Movie");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("MovieApp.DataLayer.Models.Comment", b =>
-                {
-                    b.HasOne("MovieApp.DataLayer.Models.User", "Author")
-                        .WithMany("Comments")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MovieApp.DataLayer.Models.Movie", "Movie")
-                        .WithMany("Comments")
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MovieApp.DataLayer.Models.Comment", "ParentComment")
-                        .WithMany("Replies")
-                        .HasForeignKey("ParentCommentId");
-
-                    b.Navigation("Author");
-
-                    b.Navigation("Movie");
-
-                    b.Navigation("ParentComment");
-                });
-
-            modelBuilder.Entity("MovieApp.DataLayer.Models.Director", b =>
-                {
-                    b.HasOne("MovieApp.DataLayer.Models.Movie", null)
-                        .WithMany("Directors")
-                        .HasForeignKey("MovieId");
-                });
-
             modelBuilder.Entity("MovieApp.DataLayer.Models.Equipment", b =>
                 {
                     b.HasOne("MovieApp.DataLayer.Models.User", "Seller")
@@ -1124,13 +653,6 @@ namespace MovieApp.WebApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Seller");
-                });
-
-            modelBuilder.Entity("MovieApp.DataLayer.Models.Genre", b =>
-                {
-                    b.HasOne("MovieApp.DataLayer.Models.Movie", null)
-                        .WithMany("Genres")
-                        .HasForeignKey("MovieId");
                 });
 
             modelBuilder.Entity("MovieApp.DataLayer.Models.MovieEvent", b =>
@@ -1220,21 +742,6 @@ namespace MovieApp.WebApi.Migrations
                     b.Navigation("Movie");
                 });
 
-            modelBuilder.Entity("MovieApp.DataLayer.Models.Review", b =>
-                {
-                    b.HasOne("MovieApp.DataLayer.Models.Movie", "Movie")
-                        .WithMany("Reviews")
-                        .HasForeignKey("MovieId");
-
-                    b.HasOne("MovieApp.DataLayer.Models.User", "User")
-                        .WithMany("Reviews")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Movie");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("MovieApp.DataLayer.Models.ScrapeJobLog", b =>
                 {
                     b.HasOne("MovieApp.DataLayer.Models.ScrapeJob", "ScrapeJob")
@@ -1280,21 +787,6 @@ namespace MovieApp.WebApi.Migrations
                     b.Navigation("Movie");
 
                     b.Navigation("Seller");
-                });
-
-            modelBuilder.Entity("MovieApp.DataLayer.Models.UserBadge", b =>
-                {
-                    b.HasOne("Badge", "Badge")
-                        .WithMany("UserBadges")
-                        .HasForeignKey("BadgeId");
-
-                    b.HasOne("MovieApp.DataLayer.Models.User", "User")
-                        .WithMany("UserBadges")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Badge");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MovieApp.DataLayer.Models.UserMoviePreference", b =>
@@ -1350,45 +842,9 @@ namespace MovieApp.WebApi.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MovieApp.DataLayer.Models.UserStats", b =>
-                {
-                    b.HasOne("MovieApp.DataLayer.Models.User", "User")
-                        .WithOne("UserStats")
-                        .HasForeignKey("MovieApp.DataLayer.Models.UserStats", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Badge", b =>
-                {
-                    b.Navigation("UserBadges");
-                });
-
-            modelBuilder.Entity("MovieApp.DataLayer.Models.Battle", b =>
-                {
-                    b.Navigation("Bets");
-                });
-
-            modelBuilder.Entity("MovieApp.DataLayer.Models.Comment", b =>
-                {
-                    b.Navigation("Replies");
-                });
-
             modelBuilder.Entity("MovieApp.DataLayer.Models.Movie", b =>
                 {
                     b.Navigation("ActiveSale");
-
-                    b.Navigation("Actors");
-
-                    b.Navigation("Comments");
-
-                    b.Navigation("Directors");
-
-                    b.Navigation("Genres");
-
-                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("MovieApp.DataLayer.Models.Reel", b =>
@@ -1403,10 +859,6 @@ namespace MovieApp.WebApi.Migrations
 
             modelBuilder.Entity("MovieApp.DataLayer.Models.User", b =>
                 {
-                    b.Navigation("Bets");
-
-                    b.Navigation("Comments");
-
                     b.Navigation("CreatedReels");
 
                     b.Navigation("EquipmentForSale");
@@ -1423,13 +875,7 @@ namespace MovieApp.WebApi.Migrations
 
                     b.Navigation("ReelInteractions");
 
-                    b.Navigation("Reviews");
-
                     b.Navigation("Sales");
-
-                    b.Navigation("UserBadges");
-
-                    b.Navigation("UserStats");
                 });
 #pragma warning restore 612, 618
         }
