@@ -1,0 +1,59 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using MovieApp.DataLayer.Models;
+using MovieApp.Logic.Interfaces.Services;
+using MovieApp.WebDTOs.DTOs.RequestDTOs;
+
+namespace MovieApp.Proxy.Services
+{
+    public class BookingProxyService : IBookingService
+    {
+        private readonly ApiClient _apiClient;
+        private readonly string _baseEndpoint = "api/bookings";
+
+        public BookingProxyService(ApiClient apiClient)
+        {
+            _apiClient = apiClient;
+        }
+
+        public async Task<IReadOnlyList<Booking>> GetBookingsForScreeningAsync(int screeningId, CancellationToken cancellationToken = default)
+        {
+            var result = await _apiClient.GetAsync<List<Booking>>($"{_baseEndpoint}/{screeningId}/bookings");
+            return result ?? new List<Booking>();
+        }
+
+        public async Task<bool> BookSeatsAsync(int screeningId, int userId, IReadOnlyList<(int Row, int Column)> seats, CancellationToken cancellationToken = default)
+        {
+            var body = new BookSeatsRequestBody
+            {
+                UserId = userId,
+                Seats = seats.Select(seat => new SeatRequest { Row = seat.Row, Column = seat.Column }).ToList()
+            };
+            
+            try
+            {
+                await _apiClient.PostAsync($"{_baseEndpoint}/{screeningId}/book", body);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> CancelBookingAsync(int bookingId, int userId, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                await _apiClient.PostAsync($"{_baseEndpoint}/{bookingId}/cancel", new { UserId = userId });
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+    }
+}

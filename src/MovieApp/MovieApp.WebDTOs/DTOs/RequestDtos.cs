@@ -242,3 +242,15 @@ public sealed class NotifySeatsAvailableRequestBody
     public int EventId { get; set; }
     public int NewCapacity { get; set; }
 }
+
+public sealed class SeatRequest
+{
+    public int Row { get; set; }
+    public int Column { get; set; }
+}
+
+public sealed class BookSeatsRequestBody
+{
+    public int UserId { get; set; }
+    public List<SeatRequest> Seats { get; set; } = new();
+}
