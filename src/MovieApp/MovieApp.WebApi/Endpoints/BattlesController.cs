@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieApp.DataLayer.Models;
 using MovieApp.Logic.Interfaces.Services;
-using MovieApp.WebDTOs.DTOs;
+using MovieApp.WebDTOs.DTOs.RequestDTOs;
 
 namespace MovieApp.WebApi.Endpoints;
 
@@ -24,14 +24,14 @@ public class BattlesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Battle>>> GetBattlesAsync(CancellationToken ct)
+    public async Task<ActionResult<IEnumerable<Battle>>> GetBattles(CancellationToken ct)
     {
         IEnumerable<Battle> battles = await _battleService.GetBattlesAsync(ct);
         return Ok(battles);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Battle>> GetBattleByIdAsync(int id, CancellationToken ct)
+    public async Task<ActionResult<Battle>> GetBattleById(int id, CancellationToken ct)
     {
         Battle? battle = await _battleService.GetBattleByIdAsync(id, ct);
         if (battle == null)
@@ -43,7 +43,7 @@ public class BattlesController : ControllerBase
     }
 
     [HttpPost("{id}/bet")]
-    public async Task<ActionResult<BattleBet>> PlaceBetAsync(int id, [FromBody] PlaceBetRequest request, CancellationToken ct)
+    public async Task<ActionResult<BattleBet>> PlaceBet(int id, [FromBody] PlaceBetRequest request, CancellationToken ct)
     {
         if (request == null || request.Amount <= 0)
         {

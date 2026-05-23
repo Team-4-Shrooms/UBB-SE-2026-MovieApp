@@ -6,8 +6,8 @@ using MovieApp.DataLayer.Models;
 namespace MovieApp.Logic.Interfaces.Services;
 public interface IBattleService
 {
-    Task<IEnumerable<Battle>> GetBattlesAsync(CancellationToken ct = default);
-    Task<Battle?> GetBattleByIdAsync(int id, CancellationToken ct = default);
+    Task<IEnumerable<Battle>> GetBattlesAsync(CancellationToken cancellationToken = default);
+    Task<Battle?> GetBattleByIdAsync(int id, CancellationToken cancellationToken = default);
     Task<Battle?> GetActiveBattleAsync(CancellationToken ct = default);
     Task<Battle> CreateBattleAsync(int firstMovieId, int secondMovieId, CancellationToken ct = default);
     Task<BattleBet> PlaceBetAsync(int userId, int battleId, int movieId, int amount, CancellationToken ct = default);
