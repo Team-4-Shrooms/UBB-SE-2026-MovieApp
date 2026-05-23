@@ -254,3 +254,15 @@ public sealed class BookSeatsRequestBody
     public int UserId { get; set; }
     public List<SeatRequest> Seats { get; set; } = new();
 }
+
+public class PlaceBetRequest
+{
+    public int MovieId { get; set; }
+    public int Amount { get; set; }
+}
+
+public class PlaceBattleRequest
+{
+    public int FirstMovieId { get; set; }
+    public int SecondMovieId { get; set; }
+}
