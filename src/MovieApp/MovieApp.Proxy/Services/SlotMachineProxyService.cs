@@ -108,7 +108,7 @@ public class SlotMachineProxyService : ISlotMachineService
             $"api/slot-machine/jackpot?genreId={genreIdentifier}&actorId={actorIdentifier}&directorId={directorIdentifier}");
     }
 
-    public async Task GrantJackpotDiscount(int userIdentifier, int movieIdentifier)
+    public async Task GrantJackpotDiscountAsync(int userIdentifier, int movieIdentifier)
     {
         await _apiClient.PostAsync(
             "api/slot-machine/jackpot-discount",
