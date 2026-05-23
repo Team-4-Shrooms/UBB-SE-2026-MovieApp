@@ -11,6 +11,7 @@ namespace MovieApp.Proxy.Services
     public class BookingProxyService : IBookingService
     {
         private readonly ApiClient _apiClient;
+        private readonly string _baseEndpoint = "api/bookings";
 
         public BookingProxyService(ApiClient apiClient)
         {
@@ -19,7 +20,7 @@ namespace MovieApp.Proxy.Services
 
         public async Task<IReadOnlyList<Booking>> GetBookingsForScreeningAsync(int screeningId, CancellationToken cancellationToken = default)
         {
-            var result = await _apiClient.GetAsync<List<Booking>>($"api/screenings/{screeningId}/bookings");
+            var result = await _apiClient.GetAsync<List<Booking>>($"{_baseEndpoint}/{screeningId}/bookings");
             return result ?? new List<Booking>();
         }
 
@@ -33,7 +34,7 @@ namespace MovieApp.Proxy.Services
             
             try
             {
-                await _apiClient.PostAsync($"api/screenings/{screeningId}/book", body);
+                await _apiClient.PostAsync($"{_baseEndpoint}/{screeningId}/book", body);
                 return true;
             }
             catch
@@ -46,7 +47,7 @@ namespace MovieApp.Proxy.Services
         {
             try
             {
-                await _apiClient.PostAsync($"api/bookings/{bookingId}/cancel", new { UserId = userId });
+                await _apiClient.PostAsync($"{_baseEndpoint}/{bookingId}/cancel", new { UserId = userId });
                 return true;
             }
             catch
