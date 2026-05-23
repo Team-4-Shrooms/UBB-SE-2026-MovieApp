@@ -44,7 +44,6 @@ namespace MovieApp.WebApi.Data
         public DbSet<Screening> Screenings { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Notification> Notifications { get; set; }
-        public DbSet<SeatBooking> SeatBookings { get; set; }
 
         // Gamification 
         public DbSet<Battle> Battles { get; set; }
