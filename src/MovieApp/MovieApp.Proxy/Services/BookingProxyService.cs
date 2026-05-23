@@ -29,7 +29,7 @@ namespace MovieApp.Proxy.Services
             var body = new BookSeatsRequestBody
             {
                 UserId = userId,
-                Seats = seats.Select(s => new SeatRequest { Row = s.Row, Column = s.Column }).ToList()
+                Seats = seats.Select(seat => new SeatRequest { Row = seat.Row, Column = seat.Column }).ToList()
             };
             
             try
