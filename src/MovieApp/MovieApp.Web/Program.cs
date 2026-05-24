@@ -30,6 +30,7 @@ builder.Services.AddSingleton<ICurrentUserService>(serviceProvider => servicePro
 builder.Services.AddHostedService<JwtAutoLoginService>();
 
 // Proxy services
+builder.Services.AddTransient<IBattleService, BattleProxyService>();
 builder.Services.AddTransient<IReelService, ReelProxyService>();
 builder.Services.AddTransient<IAudioLibraryService, AudioLibraryProxyService>();
 builder.Services.AddTransient<IMovieService, MovieProxyService>();
@@ -54,6 +55,8 @@ builder.Services.AddTransient<INotificationService, NotificationProxyService>();
 builder.Services.AddTransient<ISlotMachineService, SlotMachineProxyService>();
 //builder.Services.AddTransient<IScreeningService, ScreeningProxyService>();
 builder.Services.AddTransient<IBookingService, BookingProxyService>();
+builder.Services.AddTransient<IMarathonService, MarathonProxyService>();
+
 
 // Cache and session
 builder.Services.AddMemoryCache();
