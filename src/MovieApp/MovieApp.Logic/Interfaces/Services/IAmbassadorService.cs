@@ -41,4 +41,12 @@ public interface IAmbassadorService
     /// Redeems one reward from the user's balance.
     /// </summary>
     Task RedeemRewardAsync(int userId, CancellationToken ct = default);
+
+    Task<int?> ResolveCodeToUserIdAsync(string referralCode, CancellationToken ct = default);
+
+    Task<bool> ReferralLogExistsAsync(int ambassadorId, int friendId, int eventId, CancellationToken ct = default);
+
+    Task LogReferralByAmbassadorIdAsync(int ambassadorId, int friendId, int eventId, CancellationToken ct = default);
+
+    Task DecrementRewardBalanceAsync(int userId, CancellationToken ct = default);
 }
