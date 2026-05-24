@@ -267,6 +267,19 @@ public class PlaceBattleRequest
     public int SecondMovieId { get; set; }
 }
 
+public sealed class AddCommentRequest
+{
+    public int UserId { get; set; }
+    public string Content { get; set; } = string.Empty;
+}
+
+public sealed class ReplyCommentRequest
+{
+    public int UserId { get; set; }
+    public string Content { get; set; } = string.Empty;
+}
+
+
 public class CreateAmbassadorProfileRequestBody
 {
     public string ReferralCode { get; set; } = string.Empty;

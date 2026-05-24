@@ -289,3 +289,15 @@ public sealed class SlotMachineResultDto
     public bool JackpotDiscountApplied { get; set; }
     public int DiscountPercentage { get; set; }
 }
+
+public sealed class CommentResponseDto
+{
+    public int CommentId { get; set; }
+    public int AuthorId { get; set; }
+    public int MovieId { get; set; }
+    public int? ParentCommentId { get; set; }
+    public string Content { get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; }
+    public string AuthorUsername { get; set; } = string.Empty;
+    public List<CommentResponseDto> Replies { get; set; } = new List<CommentResponseDto>();
+}
