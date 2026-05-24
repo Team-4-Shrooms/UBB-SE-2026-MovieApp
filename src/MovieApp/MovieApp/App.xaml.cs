@@ -13,6 +13,7 @@ using MovieApp.Proxy.Services;
 using MovieApp.Auth;
 using MovieApp.WebApi.Data;
 using MovieApp.Features.Marketplace.ViewModels;
+using MovieApp.Features.SlotMachine.ViewModels;
 using MovieApp.Features.Wallet.ViewModels;
 
 namespace MovieApp
@@ -141,6 +142,9 @@ namespace MovieApp
             services.AddTransient<SellEquipmentViewModel>();
             services.AddTransient<WalletViewModel>();
             services.AddTransient<FlashSaleViewModel>(sp => new FlashSaleViewModel(DateTime.Now.AddHours(2)));
+
+            // Slot Machine
+            services.AddTransient<SlotMachineViewModel>();
 
             var provider = services.BuildServiceProvider();
             Services = provider;
