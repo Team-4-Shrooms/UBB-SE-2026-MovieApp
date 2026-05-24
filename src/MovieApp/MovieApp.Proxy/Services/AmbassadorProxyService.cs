@@ -18,17 +18,18 @@ namespace MovieApp.Proxy.Services
 
         public Task CreateAmbassadorProfileAsync(int userId, string referralCode, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            throw _apiClient.;
         }
 
         public Task<string?> GetReferralCodeAsync(int userId, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            return _apiClient.GetAsync<string?>($"/api/referrals/{userId}/my-code", ct);
         }
 
         public Task<IEnumerable<ReferralHistoryItem>> GetReferralHistoryAsync(int ambassadorId, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            return _apiClient.GetAsync<IEnumerable<ReferralHistoryItem>>($"/api/referrals/history/{ambassadorId}", ct)
+                   ?? Enumerable.Empty<ReferralHistoryItem>();
         }
 
         public Task<int> GetRewardBalanceAsync(int userId, CancellationToken ct = default)
