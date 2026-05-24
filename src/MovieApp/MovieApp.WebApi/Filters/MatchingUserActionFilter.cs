@@ -13,26 +13,26 @@ public sealed class MatchingUserActionFilter : IActionFilter
 {
     private const int UnauthenticatedUserId = 0;
 
-    private readonly ICurrentUserService currentUserService;
-    private readonly string routeParameterName;
+    private readonly ICurrentUserService _currentUserService;
+    private readonly string _routeParameterName;
 
     public MatchingUserActionFilter(ICurrentUserService currentUserService, string routeParameterName)
     {
-        this.currentUserService = currentUserService;
-        this.routeParameterName = routeParameterName;
+        this._currentUserService = currentUserService;
+        this._routeParameterName = routeParameterName;
     }
 
     public void OnActionExecuting(ActionExecutingContext context)
     {
-        if (!context.ActionArguments.TryGetValue(this.routeParameterName, out object? rawValue)
+        if (!context.ActionArguments.TryGetValue(this._routeParameterName, out object? rawValue)
             || rawValue is not int requestedUserId)
         {
             context.Result = new BadRequestObjectResult(
-                $"Missing or invalid route parameter '{this.routeParameterName}'.");
+                $"Missing or invalid route parameter '{this._routeParameterName}'.");
             return;
         }
 
-        int currentUserId = this.currentUserService.UserId;
+        int currentUserId = this._currentUserService.UserId;
         if (currentUserId == UnauthenticatedUserId)
         {
             context.Result = new UnauthorizedResult();

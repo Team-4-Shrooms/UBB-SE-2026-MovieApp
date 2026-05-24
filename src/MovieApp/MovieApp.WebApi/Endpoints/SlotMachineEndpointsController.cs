@@ -12,20 +12,20 @@ namespace MovieApp.WebApi.Endpoints;
 [Route("api/slot-machine")]
 public sealed class SlotMachineEndpointsController : ControllerBase
 {
-    private readonly ISlotMachineService slotMachineService;
-    private readonly ICurrentUserService currentUserService;
+    private readonly ISlotMachineService _slotMachineService;
+    private readonly ICurrentUserService _currentUserService;
 
     public SlotMachineEndpointsController(ISlotMachineService slotMachineService, ICurrentUserService currentUserService)
     {
-        this.slotMachineService = slotMachineService;
-        this.currentUserService = currentUserService;
+        this._slotMachineService = slotMachineService;
+        this._currentUserService = currentUserService;
     }
 
     [HttpGet("state/{userId:int}")]
     [RequireMatchingUser]
     public async Task<IActionResult> GetUserSpinState(int userId)
     {
-        var spinState = await this.slotMachineService.GetUserSpinStateAsync(userId);
+        var spinState = await this._slotMachineService.GetUserSpinStateAsync(userId);
         return Ok(spinState.ToDto());
     }
 
@@ -33,7 +33,7 @@ public sealed class SlotMachineEndpointsController : ControllerBase
     [RequireMatchingUser]
     public async Task<IActionResult> GetAvailableSpins(int userId)
     {
-        int availableSpins = await this.slotMachineService.GetAvailableSpinsAsync(userId);
+        int availableSpins = await this._slotMachineService.GetAvailableSpinsAsync(userId);
         return Ok(availableSpins);
     }
 
@@ -41,7 +41,7 @@ public sealed class SlotMachineEndpointsController : ControllerBase
     [RequireMatchingUser]
     public async Task<IActionResult> Spin(int userId)
     {
-        var spinResult = await this.slotMachineService.SpinAsync(userId);
+        var spinResult = await this._slotMachineService.SpinAsync(userId);
         return Ok(spinResult.ToDto());
     }
 
@@ -49,7 +49,7 @@ public sealed class SlotMachineEndpointsController : ControllerBase
     [RequireMatchingUser]
     public async Task<IActionResult> GrantBonusSpin(int userId)
     {
-        bool wasGranted = await this.slotMachineService.GrantBonusSpinForEventParticipationAsync(userId);
+        bool wasGranted = await this._slotMachineService.GrantBonusSpinForEventParticipationAsync(userId);
         return Ok(wasGranted);
     }
 
@@ -57,7 +57,7 @@ public sealed class SlotMachineEndpointsController : ControllerBase
     [RequireMatchingUser]
     public async Task<IActionResult> RecordLoginStreak(int userId)
     {
-        bool wasRecorded = await this.slotMachineService.RecordLoginAndCheckStreakAsync(userId);
+        bool wasRecorded = await this._slotMachineService.RecordLoginAndCheckStreakAsync(userId);
         return Ok(wasRecorded);
     }
 
@@ -65,49 +65,49 @@ public sealed class SlotMachineEndpointsController : ControllerBase
     [RequireMatchingUser]
     public async Task<IActionResult> GrantStreakSpin(int userId)
     {
-        bool wasGranted = await this.slotMachineService.GrantStreakSpinAsync(userId);
+        bool wasGranted = await this._slotMachineService.GrantStreakSpinAsync(userId);
         return Ok(wasGranted);
     }
 
     [HttpGet("reels/genres")]
     public async Task<IActionResult> GetGenres()
     {
-        var genres = await this.slotMachineService.GetGenresAsync();
+        var genres = await this._slotMachineService.GetGenresAsync();
         return Ok(genres.Select(genre => genre.ToDto()));
     }
 
     [HttpGet("reels/genres/random")]
     public async Task<IActionResult> GetRandomGenre()
     {
-        var genre = await this.slotMachineService.GetRandomGenreAsync();
+        var genre = await this._slotMachineService.GetRandomGenreAsync();
         return Ok(genre.ToDto());
     }
 
     [HttpGet("reels/actors")]
     public async Task<IActionResult> GetActors()
     {
-        var actors = await this.slotMachineService.GetActorsAsync();
+        var actors = await this._slotMachineService.GetActorsAsync();
         return Ok(actors.Select(actor => actor.ToDto()));
     }
 
     [HttpGet("reels/actors/random")]
     public async Task<IActionResult> GetRandomActor()
     {
-        var actor = await this.slotMachineService.GetRandomActorAsync();
+        var actor = await this._slotMachineService.GetRandomActorAsync();
         return Ok(actor.ToDto());
     }
 
     [HttpGet("reels/directors")]
     public async Task<IActionResult> GetDirectors()
     {
-        var directors = await this.slotMachineService.GetDirectorsAsync();
+        var directors = await this._slotMachineService.GetDirectorsAsync();
         return Ok(directors.Select(director => director.ToDto()));
     }
 
     [HttpGet("reels/directors/random")]
     public async Task<IActionResult> GetRandomDirector()
     {
-        var director = await this.slotMachineService.GetRandomDirectorAsync();
+        var director = await this._slotMachineService.GetRandomDirectorAsync();
         return Ok(director.ToDto());
     }
 
@@ -117,7 +117,7 @@ public sealed class SlotMachineEndpointsController : ControllerBase
         [FromQuery] int actorId,
         [FromQuery] int directorId)
     {
-        var matchingEvents = await this.slotMachineService.GetMatchingEventsAsync(genreId, actorId, directorId);
+        var matchingEvents = await this._slotMachineService.GetMatchingEventsAsync(genreId, actorId, directorId);
         return Ok(matchingEvents.Select(slotEvent => slotEvent.ToDto()));
     }
 
@@ -127,7 +127,7 @@ public sealed class SlotMachineEndpointsController : ControllerBase
         [FromQuery] int actorId,
         [FromQuery] int directorId)
     {
-        var jackpotMovie = await this.slotMachineService.FindJackpotMovieAsync(genreId, actorId, directorId);
+        var jackpotMovie = await this._slotMachineService.FindJackpotMovieAsync(genreId, actorId, directorId);
         return Ok(jackpotMovie?.ToReferenceDto());
     }
 
@@ -137,12 +137,12 @@ public sealed class SlotMachineEndpointsController : ControllerBase
     [HttpPost("jackpot-discount")]
     public async Task<IActionResult> GrantJackpotDiscount([FromBody] GrantJackpotDiscountRequestBody requestBody)
     {
-        if (this.currentUserService.UserId != requestBody.UserId)
+        if (this._currentUserService.UserId != requestBody.UserId)
         {
             return Forbid();
         }
 
-        await this.slotMachineService.GrantJackpotDiscountAsync(requestBody.UserId, requestBody.MovieId);
+        await this._slotMachineService.GrantJackpotDiscountAsync(requestBody.UserId, requestBody.MovieId);
         return Ok();
     }
 }
