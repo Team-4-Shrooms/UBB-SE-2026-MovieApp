@@ -20,6 +20,7 @@ using MovieApp.Logic.Features.TrailerScraping;
 using MovieApp.Logic.Interfaces.Services;
 using MovieApp.Logic.Services;
 using MovieApp.WebApi.Data;
+using MovieApp.Logic.Features.Battles;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -107,6 +108,15 @@ builder.Services.AddScoped<IUserRepository>(serviceProvider => serviceProvider.G
 builder.Services.AddScoped<VideoStorageRepository>();
 builder.Services.AddScoped<IVideoStorageRepository>(serviceProvider => serviceProvider.GetRequiredService<VideoStorageRepository>());
 
+builder.Services.AddScoped<BetRepository>();
+builder.Services.AddScoped<IBetRepository>(serviceProvider => serviceProvider.GetRequiredService<BetRepository>());
+
+builder.Services.AddScoped<UserStatsRepository>();
+builder.Services.AddScoped<IUserStatsRepository>(serviceProvider => serviceProvider.GetRequiredService<UserStatsRepository>());
+
+builder.Services.AddScoped<BattleRepository>();
+builder.Services.AddScoped<IBattleRepository>(serviceProvider => serviceProvider.GetRequiredService<BattleRepository>());
+
 // Core services
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IEquipmentService, EquipmentService>();
@@ -123,8 +133,10 @@ builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IScrapeJobService, ScrapeJobService>();
 builder.Services.AddScoped<IReelService, ReelService>();
+builder.Services.AddScoped<IBattleService, BattleService>();
 
 // Feature services
+builder.Services.AddScoped<IPointService, PointService>();
 builder.Services.AddScoped<IMovieCardFeedService, MovieCardFeedService>();
 builder.Services.AddScoped<ISwipeService, SwipeService>();
 builder.Services.AddScoped<IPersonalityMatchingService, PersonalityMatchingService>();
