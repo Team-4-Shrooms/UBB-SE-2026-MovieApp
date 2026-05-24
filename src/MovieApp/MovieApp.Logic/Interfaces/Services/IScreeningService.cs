@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MovieApp.DataLayer.Models;
+using MovieApp.Logic.Models;
 
 public interface IScreeningService
 {

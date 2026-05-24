@@ -56,7 +56,7 @@ namespace MovieApp.DataLayer.Interfaces.Repositories
         /// Returns aggregated dashboard statistics.
         /// </summary>
         /// <returns>The aggregated dashboard statistics.</returns>
-        Task<DashboardStatsModel> GetDashboardStatsAsync();
+        Task<DashboardStats> GetDashboardStatsAsync();
 
         /// <summary>
         /// Searches movies by partial title match for autocomplete.

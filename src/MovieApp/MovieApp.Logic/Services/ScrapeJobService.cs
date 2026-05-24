@@ -54,10 +54,10 @@ namespace MovieApp.Logic.Services
             return result.ToList();
         }
 
-        public async Task<Features.TrailerScraping.DashboardStatsModel> GetDashboardStatsAsync()
+        public async Task<MovieApp.DataLayer.Models.DashboardStats> GetDashboardStatsAsync()
         {
             var stats = await _scrapeJobRepository.GetDashboardStatsAsync();
-            return new Features.TrailerScraping.DashboardStatsModel
+            return new MovieApp.DataLayer.Models.DashboardStats
             {
                 TotalMovies = stats.TotalMovies,
                 TotalReels = stats.TotalReels,

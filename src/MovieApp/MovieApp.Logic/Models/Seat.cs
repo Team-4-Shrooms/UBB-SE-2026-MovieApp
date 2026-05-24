@@ -1,4 +1,4 @@
-namespace MovieApp.DataLayer.Models;
+namespace MovieApp.Logic.Models;
 
 using System.ComponentModel;
 using System.Runtime.CompilerServices;

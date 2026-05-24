@@ -4,7 +4,7 @@ namespace MovieApp.DataLayer.Models
     /// Represents aggregated dashboard statistics for the trailer scraping admin view,
     /// including counts of movies, reels, and scrape jobs by status.
     /// </summary>
-    public class DashboardStatsModel
+    public class DashboardStats
     {
         /// <summary>Gets or sets the total number of movies in the database.</summary>
         public int TotalMovies { get; set; }

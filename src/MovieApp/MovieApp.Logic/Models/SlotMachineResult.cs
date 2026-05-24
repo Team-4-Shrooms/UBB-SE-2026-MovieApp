@@ -1,4 +1,7 @@
-namespace MovieApp.DataLayer.Models;
+namespace MovieApp.Logic.Models;
+
+using MovieApp.DataLayer.Models;
+
 public sealed class SlotMachineResult
 {
     /// <summary>
@@ -41,4 +44,3 @@ public sealed class SlotMachineResult
     /// </summary>
     public int DiscountPercentage { get; set; }
 }
-
