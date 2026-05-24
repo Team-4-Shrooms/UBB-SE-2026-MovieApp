@@ -32,5 +32,40 @@ namespace MovieApp.WebApi.Endpoints
             if (ambassador == null) return NotFound();
             return Ok(ambassador);
         }
+
+        [HttpPost("{userId:int}/profile")]
+        public async Task<IActionResult> CreateAmbassadorProfile(int userId, [FromBody] MovieApp.WebDTOs.DTOs.RequestDTOs.CreateAmbassadorProfileRequestBody request)
+        {
+            await _ambassadorService.CreateAmbassadorProfileAsync(userId, request.ReferralCode);
+            return Ok();
+        }
+
+        [HttpGet("referral/validate")]
+        public async Task<IActionResult> ValidateReferralCode([FromQuery] string code)
+        {
+            var isValid = await _ambassadorService.IsReferralCodeValidAsync(code);
+            return Ok(isValid);
+        }
+
+        [HttpPost("referral/process")]
+        public async Task<IActionResult> ProcessReferral([FromBody] MovieApp.WebDTOs.DTOs.RequestDTOs.ProcessReferralRequestBody request)
+        {
+            await _ambassadorService.ProcessReferralAsync(request.ReferralCode, request.FriendId, request.EventId);
+            return Ok();
+        }
+
+        [HttpGet("{userId:int}/rewards/balance")]
+        public async Task<IActionResult> GetRewardBalance(int userId)
+        {
+            var balance = await _ambassadorService.GetRewardBalanceAsync(userId);
+            return Ok(balance);
+        }
+
+        [HttpPost("{userId:int}/rewards/redeem")]
+        public async Task<IActionResult> RedeemReward(int userId)
+        {
+            await _ambassadorService.RedeemRewardAsync(userId);
+            return Ok();
+        }
     }
 }

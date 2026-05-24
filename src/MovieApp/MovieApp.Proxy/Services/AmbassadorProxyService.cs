@@ -20,7 +20,7 @@ namespace MovieApp.Proxy.Services
 
         public async Task CreateAmbassadorProfileAsync(int userId, string referralCode, CancellationToken ct = default)
         {
-            await _apiClient.PostAsync($"/api/ambassadors/{userId}/profile", new { referralCode }, ct);
+            await _apiClient.PostAsync($"{_baseEndpoint}/{userId}/profile", new { referralCode }, ct);
         }
 
         public async Task<IEnumerable<AmbassadorProfile>> GetAllAmbassadorsAsync(CancellationToken ct = default)
