@@ -11,6 +11,8 @@ namespace MovieApp.Proxy.Services
     public class AmbassadorProxyService: IAmbassadorService
     {
         private readonly ApiClient _apiClient;
+        private readonly string _baseEndpoint = "/api/ambassadors";
+
         public AmbassadorProxyService(ApiClient apiClient)
         {
             _apiClient = apiClient;
@@ -21,37 +23,48 @@ namespace MovieApp.Proxy.Services
             await _apiClient.PostAsync($"/api/ambassadors/{userId}/profile", new { referralCode }, ct);
         }
 
+        public async Task<IEnumerable<AmbassadorProfile>> GetAllAmbassadorsAsync(CancellationToken ct = default)
+        {
+            var result = await _apiClient.GetAsync<IEnumerable<AmbassadorProfile>>($"/api/ambassadors", ct);
+            return result ?? Enumerable.Empty<AmbassadorProfile>();
+        }
+
+        public async Task<AmbassadorProfile?> GetAmbassadorByIdAsync(int id, CancellationToken ct = default)
+        {
+            return await _apiClient.GetAsync<AmbassadorProfile?>($"/api/ambassadors/{id}", ct);
+        }
+
         public async Task<string?> GetReferralCodeAsync(int userId, CancellationToken ct = default)
         {
-            return await _apiClient.GetAsync<string?>($"/api/referrals/{userId}/my-code", ct);
+            return await _apiClient.GetAsync<string?>($"{_baseEndpoint}/{userId}/my-code", ct);
         }
 
         public async Task<IEnumerable<ReferralHistoryItem>> GetReferralHistoryAsync(int ambassadorId, CancellationToken ct = default)
         {
-            var result = await _apiClient.GetAsync<IEnumerable<ReferralHistoryItem>>($"/api/referrals/history/{ambassadorId}", ct);
+            var result = await _apiClient.GetAsync<IEnumerable<ReferralHistoryItem>>($"{_baseEndpoint}/history/{ambassadorId}", ct);
             return result ?? Enumerable.Empty<ReferralHistoryItem>();
         }
 
         public async Task<int> GetRewardBalanceAsync(int userId, CancellationToken ct = default)
         {
-            var result = await _apiClient.GetAsync<int?>($"/api/ambassadors/{userId}/rewards/balance", ct);
+            var result = await _apiClient.GetAsync<int?>($"{_baseEndpoint}/{userId}/rewards/balance", ct);
             return result ?? 0;
         }
 
         public async Task<bool> IsReferralCodeValidAsync(string referralCode, CancellationToken ct = default)
         {
-            var result = await _apiClient.GetAsync<bool?>($"/api/ambassadors/referral/validate?code={referralCode}", ct);
+            var result = await _apiClient.GetAsync<bool?>($"{_baseEndpoint}/referral/validate?code={referralCode}", ct);
             return result ?? false;
         }
 
         public async Task ProcessReferralAsync(string referralCode, int friendId, int eventId, CancellationToken ct = default)
         {
-            await _apiClient.PostAsync($"/api/ambassadors/referral/process", new { referralCode, friendId, eventId }, ct);
+            await _apiClient.PostAsync($"{_baseEndpoint}/referral/process", new { referralCode, friendId, eventId }, ct);
         }
 
         public async Task RedeemRewardAsync(int userId, CancellationToken ct = default)
         {
-            await _apiClient.PostAsync($"/api/ambassadors/{userId}/rewards/redeem", new { }, ct);
+            await _apiClient.PostAsync($"{_baseEndpoint}/{userId}/rewards/redeem", new { }, ct);
         }
     }
 }

@@ -21,15 +21,16 @@ namespace MovieApp.WebApi.Endpoints
         [HttpGet("")]
         public async Task<IActionResult> GetAllAmbassadors()
         {
-            // NOTE: IAmbassadorService is missing this method!
-            return Ok(new List<object>()); // Placeholder
+            var ambassadors = await _ambassadorService.GetAllAmbassadorsAsync();
+            return Ok(ambassadors);
         }
 
         [HttpGet("{userId:int}")]
         public async Task<IActionResult> GetAmbassador(int userId)
         {
-            // NOTE: IAmbassadorService is missing this method!
-            return Ok(new { Id = userId }); // Placeholder
+            var ambassador = await _ambassadorService.GetAmbassadorByIdAsync(userId);
+            if (ambassador == null) return NotFound();
+            return Ok(ambassador);
         }
     }
 }
