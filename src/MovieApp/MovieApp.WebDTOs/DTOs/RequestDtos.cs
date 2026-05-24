@@ -272,3 +272,15 @@ public sealed class ApplyRewardRequestBody
 {
     public int AmbassadorId { get; set; }
 }
+
+public class PlaceBetRequest
+{
+    public int MovieId { get; set; }
+    public int Amount { get; set; }
+}
+
+public class PlaceBattleRequest
+{
+    public int FirstMovieId { get; set; }
+    public int SecondMovieId { get; set; }
+}
