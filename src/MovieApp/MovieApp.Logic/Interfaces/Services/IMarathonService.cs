@@ -1,4 +1,4 @@
-namespace MovieApp.Core.Services;
+namespace MovieApp.Logic.Interfaces.Services;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;

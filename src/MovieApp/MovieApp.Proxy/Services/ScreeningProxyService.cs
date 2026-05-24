@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MovieApp.DataLayer.Models;
 using MovieApp.Logic.Interfaces.Services;
+using MovieApp.Logic.Models;
 
 namespace MovieApp.Proxy.Services
 {
