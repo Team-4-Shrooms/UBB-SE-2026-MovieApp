@@ -213,5 +213,41 @@ namespace MovieApp.Logic.Services
         {
             return await _betRepository.GetByIdAsync(userId, battleId, ct);
         }
+
+        public async Task<IEnumerable<Battle>> GetBattlesAsync(CancellationToken cancellationToken = default)
+        {
+            var battles = await _battleRepository.GetAllAsync(cancellationToken);
+
+            foreach (var battle in battles)
+            {
+                battle.FirstMovie =
+                    await _movieRepository.GetMovieByIdAsync(battle.FirstMovie?.Id ?? 0)
+                    ?? battle.FirstMovie;
+
+                battle.SecondMovie =
+                    await _movieRepository.GetMovieByIdAsync(battle.SecondMovie?.Id ?? 0)
+                    ?? battle.SecondMovie;
+            }
+
+            return battles;
+        }
+
+        public async Task<Battle?> GetBattleByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            var battle = await _battleRepository.GetByIdAsync(id, cancellationToken);
+
+            if (battle != null)
+            {
+                battle.FirstMovie =
+                    await _movieRepository.GetMovieByIdAsync(battle.FirstMovie?.Id ?? 0)
+                    ?? battle.FirstMovie;
+
+                battle.SecondMovie =
+                    await _movieRepository.GetMovieByIdAsync(battle.SecondMovie?.Id ?? 0)
+                    ?? battle.SecondMovie;
+            }
+
+            return battle;
+        }
     }
 }
