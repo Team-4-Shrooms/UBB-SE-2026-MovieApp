@@ -52,7 +52,7 @@ builder.Services.AddSingleton<ITournamentLogicService, TournamentLogicProxyServi
 builder.Services.AddTransient<IMovieTournamentService, MovieTournamentProxyService>();
 builder.Services.AddTransient<INotificationService, NotificationProxyService>();
 builder.Services.AddTransient<ISlotMachineService, SlotMachineProxyService>();
-builder.Services.AddTransient<IScreeningService, ScreeningProxyService>();
+//builder.Services.AddTransient<IScreeningService, ScreeningProxyService>();
 builder.Services.AddTransient<IBookingService, BookingProxyService>();
 
 // Cache and session
