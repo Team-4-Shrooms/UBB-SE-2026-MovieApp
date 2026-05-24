@@ -2,11 +2,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using MovieApp.DataLayer.Models;
 using MovieApp.Features.Notification.ViewModels;
 
 namespace MovieApp.Features.Notification.Views
 {
+    using Notification = MovieApp.DataLayer.Models.Notification;
+
     public sealed partial class NotificationPage : Page
     {
         public NotificationViewModel ViewModel { get; } =

@@ -5,12 +5,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml;
-using MovieApp.DataLayer.Models;
 using MovieApp.Features.Shared.Models;
 using MovieApp.Logic.Interfaces.Services;
 
 namespace MovieApp.Features.Notification.ViewModels
 {
+    using Notification = MovieApp.DataLayer.Models.Notification;
+    using NotificationState = MovieApp.DataLayer.Models.NotificationState;
+
     public class NotificationViewModel : INotifyPropertyChanged
     {
         private readonly INotificationService _service;
