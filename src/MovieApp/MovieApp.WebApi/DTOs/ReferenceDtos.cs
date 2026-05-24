@@ -52,3 +52,15 @@ public sealed class EquipmentReferenceDto
     public string ImageUrl { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
 }
+
+public sealed class CommentReferenceDto
+{
+    public int CommentId { get; set; }
+    public int AuthorId { get; set; }
+    public int MovieId { get; set; }
+    public int? ParentCommentId { get; set; }
+    public string Content { get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; }
+    public string AuthorUsername { get; set; } = string.Empty;
+    public List<CommentReferenceDto> Replies { get; set; } = new List<CommentReferenceDto>();
+}
