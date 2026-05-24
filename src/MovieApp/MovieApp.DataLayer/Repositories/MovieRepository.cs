@@ -46,6 +46,85 @@ namespace MovieApp.DataLayer.Repositories
         {
             return await _context.Movies.Where(m => m.Title.Contains(pattern)).Take(limit).ToListAsync();
         }
+
+        public async Task<IReadOnlyList<Genre>> GetGenresAsync(CancellationToken ct = default)
+        => await _context.Genres.ToListAsync(ct);
+
+        public async Task<IReadOnlyList<Actor>> GetActorsAsync(CancellationToken ct = default)
+            => await _context.Actors.ToListAsync(ct);
+
+        public async Task<IReadOnlyList<Director>> GetDirectorsAsync(CancellationToken ct = default)
+            => await _context.Directors.ToListAsync(ct);
+
+        public async Task<IReadOnlyList<Movie>> FindMoviesByCriteriaAsync(int genreId, int actorId, int directorId, CancellationToken ct = default)
+        {
+            return await _context.Movies
+                .Where(m => m.Genres.Any(g => g.Id == genreId) &&
+                            m.Actors.Any(a => a.Id == actorId) &&
+                            m.Directors.Any(d => d.Id == directorId))
+                .ToListAsync(ct);
+        }
+
+        public async Task<IReadOnlyList<Movie>> FindMoviesByAnyCriteriaAsync(int genreId, int actorId, int directorId, CancellationToken ct = default)
+        {
+            return await _context.Movies
+                .Where(m => m.Genres.Any(g => g.Id == genreId) ||
+                            m.Actors.Any(a => a.Id == actorId) ||
+                            m.Directors.Any(d => d.Id == directorId))
+                .ToListAsync(ct);
+        }
+
+        public async Task<IReadOnlyList<int>> FindScreeningEventIdsForMovieAsync(int movieId, CancellationToken ct = default)
+        {
+            return await _context.Screenings
+                .Where(s => s.MovieId == movieId)
+                .Select(s => s.EventId)
+                .ToListAsync(ct);
+        }
+
+        public async Task<IReadOnlyList<ReelCombination>> GetValidReelCombinationsAsync(CancellationToken ct = default)
+        {
+            var now = DateTime.UtcNow;
+
+            // Get movies that have at least one screening in the future
+            var moviesWithFutureScreenings = await _context.Movies
+                .Include(m => m.Genres)
+                .Include(m => m.Actors)
+                .Include(m => m.Directors)
+                .Where(m => _context.Screenings.Any(s => s.MovieId == m.Id && s.ScreeningTime >= now))
+                .ToListAsync(ct);
+
+            var combinations = new List<ReelCombination>();
+
+            foreach (var movie in moviesWithFutureScreenings)
+            {
+                foreach (var genre in movie.Genres)
+                {
+                    foreach (var actor in movie.Actors)
+                    {
+                        foreach (var director in movie.Directors)
+                        {
+                            combinations.Add(new ReelCombination
+                            {
+                                Genre = genre,
+                                Actor = actor,
+                                Director = director
+                            });
+                        }
+                    }
+                }
+            }
+
+            // Filter to unique combinations based on the IDs of the entities
+            return combinations
+                .DistinctBy(c => new
+                {
+                    GenreId = c.Genre.Id,
+                    ActorId = c.Actor.Id,
+                    DirectorId = c.Director.Id
+                })
+                .ToList();
+        }
     }
 }
 

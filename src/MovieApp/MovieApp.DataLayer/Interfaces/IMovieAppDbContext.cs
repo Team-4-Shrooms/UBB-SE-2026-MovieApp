@@ -44,6 +44,8 @@ namespace MovieApp.DataLayer.Interfaces
         DbSet<AmbassadorProfile> AmbassadorProfiles { get; }
         DbSet<ReferralLog> ReferralLogs { get; }
 
+        DbSet<Reward> Rewards { get; }
+
         int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

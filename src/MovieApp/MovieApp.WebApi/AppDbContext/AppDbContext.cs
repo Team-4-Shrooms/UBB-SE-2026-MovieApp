@@ -63,6 +63,8 @@ namespace MovieApp.WebApi.Data
         public DbSet<AmbassadorProfile> AmbassadorProfiles { get; set; }
         public DbSet<ReferralLog> ReferralLogs { get; set; }
 
+        public DbSet<Reward> Rewards { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -294,6 +296,13 @@ namespace MovieApp.WebApi.Data
             modelBuilder.Entity<Review>()
                 .Property(review => review.StarRating)
                 .HasColumnType("decimal(3,1)");
+
+            modelBuilder.Entity<Reward>()
+                .HasKey(r => r.RewardId);
+
+            modelBuilder.Entity<Reward>()
+                .Property(r => r.DiscountValue)
+                .HasPrecision(5, 2);
         }
     }
 }
