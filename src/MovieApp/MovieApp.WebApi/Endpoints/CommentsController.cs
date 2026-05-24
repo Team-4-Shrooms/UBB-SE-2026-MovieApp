@@ -28,17 +28,17 @@ public sealed class CommentsController : ControllerBase
     {
         List<Comment> comments = await _commentService.GetCommentsForMovieAsync(id);
 
-        ILookup<int?, Comment> commentLookup = comments.ToLookup(c => c.ParentCommentId);
+        ILookup<int?, Comment> commentLookup = comments.ToLookup(comment => comment.ParentCommentId);
 
         List<Comment> rootComments = comments
-            .Where(c => c.ParentCommentId == null)
-            .OrderByDescending(c => c.CreatedAt)
+            .Where(comment => comment.ParentCommentId == null)
+            .OrderByDescending(comment => comment.CreatedAt)
             .ToList();
 
         foreach (Comment comment in comments)
         {
             comment.Replies = commentLookup[comment.CommentId]
-                .OrderBy(c => c.CreatedAt)
+                .OrderBy(comment => comment.CreatedAt)
                 .ToList();
         }
 
