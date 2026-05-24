@@ -73,7 +73,6 @@
             <form asp-action="PurchaseMovie" method="post" class="mb-4">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="movieId" value="@Model.Movie.Id" />
-                <input type="hidden" name="price" value="@Model.Movie.GetEffectivePrice()" />
                 <button type="submit" class="btn btn-primary btn-lg">
                     <i class="bi bi-cart-fill me-1"></i> Buy — $@(Model.Movie.HasActiveSale ? Model.Movie.DiscountedPriceText : Model.Movie.OriginalPriceText)
                 </button>

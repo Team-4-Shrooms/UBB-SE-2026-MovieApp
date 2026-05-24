@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MovieApp.DataLayer.Models;
+namespace MovieApp.Logic.Features.ExternalReviews;
 
 public sealed class GuardianApiResponseDto
 {
@@ -31,5 +31,3 @@ public sealed class GuardianFieldsDto
     [JsonPropertyName("trailText")]
     public string TrailText { get; set; } = string.Empty;
 }
-
-

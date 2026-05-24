@@ -37,7 +37,7 @@ namespace MovieApp.Logic.Services
 
             List<OwnedMovie> ownerships = await _inventoryRepo.GetMovieOwnershipsAsync(userId, movieId);
 
-            decimal refund = movie.GetEffectivePrice();
+            decimal refund = movie.EffectivePrice;
             user.Balance += refund;
 
             await _inventoryRepo.RemoveMovieOwnershipsAsync(ownerships);

@@ -1,4 +1,4 @@
-﻿namespace MovieApp.DataLayer.Models
+namespace MovieApp.DataLayer.Models
 {
     public class ActiveSale
     {
@@ -8,10 +8,5 @@
         public DateTime EndTime { get; set; }
 
         public Movie Movie { get; set; }
-
-        public bool IsExpired()
-        { 
-            return DateTime.Now > EndTime; 
-        }
     }
 }

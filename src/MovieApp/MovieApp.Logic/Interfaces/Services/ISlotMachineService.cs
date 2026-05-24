@@ -1,4 +1,5 @@
 using MovieApp.DataLayer.Models;
+using MovieApp.Logic.Models;
 
 namespace MovieApp.Logic.Interfaces.Services;
 public interface ISlotMachineService

@@ -28,7 +28,7 @@ public class NotificationProxyService : INotificationService
         return await GetNotificationsByUserAsync(userIdentifier, cancellationToken);
     }
 
-    public async Task<IReadOnlyList<Notification>> GetUnreadAsync(int userIdentifier, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<Notification>> GetUnreadNotificationsAsync(int userIdentifier, CancellationToken cancellationToken = default)
     {
         var unreadNotifications = await _apiClient.GetAsync<List<Notification>>($"api/notifications/{userIdentifier}/unread", cancellationToken);
         return unreadNotifications ?? new List<Notification>();

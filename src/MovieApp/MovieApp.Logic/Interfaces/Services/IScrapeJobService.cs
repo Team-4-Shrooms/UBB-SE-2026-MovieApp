@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MovieApp.DataLayer.Models;
-using MovieApp.Logic.Features.TrailerScraping;
 
 namespace MovieApp.Logic.Interfaces.Services
 {
@@ -14,7 +13,7 @@ namespace MovieApp.Logic.Interfaces.Services
         Task<List<ScrapeJob>> GetAllJobsAsync();
         Task<List<ScrapeJobLog>> GetLogsForJobAsync(int jobId);
         Task<List<ScrapeJobLog>> GetAllLogsAsync();
-        Task<Features.TrailerScraping.DashboardStatsModel> GetDashboardStatsAsync();
+        Task<DashboardStats> GetDashboardStatsAsync();
         Task<List<Movie>> SearchMoviesByNameAsync(string partialName);
         Task<int?> FindMovieByTitleAsync(string title);
         Task<bool> ReelExistsByVideoUrlAsync(string videoUrl);

@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MovieApp.DataLayer.Models;
 using MovieApp.Logic.Interfaces.Services;
+using MovieApp.Logic.Models;
 
 namespace MovieApp.Proxy.Services;
 
@@ -108,7 +109,7 @@ public class SlotMachineProxyService : ISlotMachineService
             $"api/slot-machine/jackpot?genreId={genreIdentifier}&actorId={actorIdentifier}&directorId={directorIdentifier}");
     }
 
-    public async Task GrantJackpotDiscount(int userIdentifier, int movieIdentifier)
+    public async Task GrantJackpotDiscountAsync(int userIdentifier, int movieIdentifier)
     {
         await _apiClient.PostAsync(
             "api/slot-machine/jackpot-discount",

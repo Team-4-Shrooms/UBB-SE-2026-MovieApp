@@ -73,6 +73,7 @@ namespace MovieApp
             services.AddSingleton<ApiClient>();
 
             // Proxy services (replace broken proxy repository registrations)
+            services.AddTransient<IBattleService, BattleProxyService>();
             services.AddTransient<IMovieService, MovieProxyService>();
             services.AddTransient<IEquipmentService, EquipmentProxyService>();
             services.AddTransient<IActiveSalesService, ActiveSalesProxyService>();

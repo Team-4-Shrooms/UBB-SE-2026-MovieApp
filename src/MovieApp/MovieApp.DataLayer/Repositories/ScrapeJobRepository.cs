@@ -91,7 +91,7 @@ namespace MovieApp.DataLayer.Repositories
         }
 
         /// <inheritdoc />
-        public async Task<DashboardStatsModel> GetDashboardStatsAsync()
+        public async Task<DashboardStats> GetDashboardStatsAsync()
         {
             int totalMovies = await _context.Movies.CountAsync();
             int totalReels = await _context.Reels.CountAsync();
@@ -100,7 +100,7 @@ namespace MovieApp.DataLayer.Repositories
             int completedJobs = await _context.ScrapeJobs.CountAsync(job => job.Status == "completed");
             int failedJobs = await _context.ScrapeJobs.CountAsync(job => job.Status == "failed");
 
-            return new DashboardStatsModel
+            return new DashboardStats
             {
                 TotalMovies = totalMovies,
                 TotalReels = totalReels,
