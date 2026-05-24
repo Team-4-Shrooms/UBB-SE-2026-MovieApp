@@ -266,3 +266,15 @@ public class PlaceBattleRequest
     public int FirstMovieId { get; set; }
     public int SecondMovieId { get; set; }
 }
+
+public class CreateAmbassadorProfileRequestBody
+{
+    public string ReferralCode { get; set; } = string.Empty;
+}
+
+public class ProcessReferralRequestBody
+{
+    public string ReferralCode { get; set; } = string.Empty;
+    public int FriendId { get; set; }
+    public int EventId { get; set; }
+}

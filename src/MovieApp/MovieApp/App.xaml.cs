@@ -93,6 +93,7 @@ namespace MovieApp
             services.AddTransient<ISlotMachineService, SlotMachineProxyService>();
             services.AddTransient<IScreeningService, ScreeningProxyService>();
             services.AddTransient<IBookingService, BookingProxyService>();
+            services.AddTransient<IAmbassadorService, AmbassadorProxyService>();
             services.AddTransient<IMarathonService, MarathonProxyService>();
 
             // Reels Upload
