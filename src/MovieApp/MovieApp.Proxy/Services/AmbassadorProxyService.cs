@@ -16,40 +16,42 @@ namespace MovieApp.Proxy.Services
             _apiClient = apiClient;
         }
 
-        public Task CreateAmbassadorProfileAsync(int userId, string referralCode, CancellationToken ct = default)
+        public async Task CreateAmbassadorProfileAsync(int userId, string referralCode, CancellationToken ct = default)
         {
-            throw _apiClient.;
+            await _apiClient.PostAsync($"/api/ambassadors/{userId}/profile", new { referralCode }, ct);
         }
 
-        public Task<string?> GetReferralCodeAsync(int userId, CancellationToken ct = default)
+        public async Task<string?> GetReferralCodeAsync(int userId, CancellationToken ct = default)
         {
-            return _apiClient.GetAsync<string?>($"/api/referrals/{userId}/my-code", ct);
+            return await _apiClient.GetAsync<string?>($"/api/referrals/{userId}/my-code", ct);
         }
 
-        public Task<IEnumerable<ReferralHistoryItem>> GetReferralHistoryAsync(int ambassadorId, CancellationToken ct = default)
+        public async Task<IEnumerable<ReferralHistoryItem>> GetReferralHistoryAsync(int ambassadorId, CancellationToken ct = default)
         {
-            return _apiClient.GetAsync<IEnumerable<ReferralHistoryItem>>($"/api/referrals/history/{ambassadorId}", ct)
-                   ?? Enumerable.Empty<ReferralHistoryItem>();
+            var result = await _apiClient.GetAsync<IEnumerable<ReferralHistoryItem>>($"/api/referrals/history/{ambassadorId}", ct);
+            return result ?? Enumerable.Empty<ReferralHistoryItem>();
         }
 
-        public Task<int> GetRewardBalanceAsync(int userId, CancellationToken ct = default)
+        public async Task<int> GetRewardBalanceAsync(int userId, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var result = await _apiClient.GetAsync<int?>($"/api/ambassadors/{userId}/rewards/balance", ct);
+            return result ?? 0;
         }
 
-        public Task<bool> IsReferralCodeValidAsync(string referralCode, CancellationToken ct = default)
+        public async Task<bool> IsReferralCodeValidAsync(string referralCode, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var result = await _apiClient.GetAsync<bool?>($"/api/ambassadors/referral/validate?code={referralCode}", ct);
+            return result ?? false;
         }
 
-        public Task ProcessReferralAsync(string referralCode, int friendId, int eventId, CancellationToken ct = default)
+        public async Task ProcessReferralAsync(string referralCode, int friendId, int eventId, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            await _apiClient.PostAsync($"/api/ambassadors/referral/process", new { referralCode, friendId, eventId }, ct);
         }
 
-        public Task RedeemRewardAsync(int userId, CancellationToken ct = default)
+        public async Task RedeemRewardAsync(int userId, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            await _apiClient.PostAsync($"/api/ambassadors/{userId}/rewards/redeem", new { }, ct);
         }
     }
 }
