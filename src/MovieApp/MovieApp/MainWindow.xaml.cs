@@ -16,6 +16,7 @@ using MovieApp.Features.ReelsUpload.Views;
 using MovieApp.Features.TrailerScraping.Views;
 using MovieApp.Features.Notification.ViewModels;
 using MovieApp.Features.Notification.Views;
+using MovieApp.Features.SlotMachine.Views;
 using MovieApp.Features.Wallet.Views;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -48,6 +49,7 @@ namespace MovieApp
             ["PersonalityMatch"] = typeof(PersonalityMatchPage),
             ["ReelsFeed"] = typeof(ReelsFeedPage),
             ["Notification"] = typeof(NotificationPage),
+            ["SlotMachine"] = typeof(SlotMachinePage),
         };
 
         public MainWindow()

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodebaseMap project="MovieApp" version="Team-925-1" timestamp="2026-05-25T00:29:04+03:00">
+  <ProjectMetadata>
+    <Name>UBB-SE-2026-925-1</Name>
+    <AbsolutePath>c:\Users\waytoounoriginal\Documents\misc\UBB-SE-2026-925-1</AbsolutePath>
+    <Description>Original standalone repository created by Team 925/1 before consolidation into the unified MovieApp project.</Description>
+    <TargetFramework>.NET 8</TargetFramework>
+    <UIFramework>WinUI 3 (Windows App SDK)</UIFramework>
+    <DataAccess>Entity Framework Core (Code-First with Migrations)</DataAccess>
+    <DatabaseType>SQL Server</DatabaseType>
+    <ArchitectureType>Traditional MVVM Layout (Views/ViewModels/Services) for UI, Clean Architecture (Core, Infrastructure, Web, WebAPI, Proxy)</ArchitectureType>
+  </ProjectMetadata>
+
+  <CodingStyleSystem source="Source Code Inspection" status="Implicit / No Configuration Files">
+    <Rule id="1" name="Spaces for indentation" status="Compliant">
+      <Description>Uses spaces for indentation (generally 4 spaces wide).</Description>
+    </Rule>
+    <Rule id="2" name="Line Endings" status="Compliant">
+      <Description>Uses Windows-style CRLF line endings in C# files.</Description>
+    </Rule>
+    <Rule id="3" name="Namespace declarations" status="File-Scoped">
+      <Description>Uses C# 10 file-scoped namespace declarations (e.g. 'namespace MovieApp.Core.Services;') instead of block-scoped braces namespaces.</Description>
+    </Rule>
+    <Rule id="4" name="Type member qualification" status="Explicit this.">
+      <Description>Local member variables, fields, and repository calls are qualified with 'this.' (e.g., 'this.badgeRepository.GetAllAsync()').</Description>
+    </Rule>
+    <Rule id="5" name="Private fields naming" status="Prefix">
+      <Description>Private backing fields carry the '_' prefix (e.g. 'private readonly IUserBadgeRepository _userBadgeRepository;').</Description>
+    </Rule>
+    <Rule id="6" name="var keyword usage" status="Extensive Use">
+      <Description>Heavily utilizes the 'var' keyword in method bodies for local variable declarations (similar to current codebase).</Description>
+    </Rule>
+    <Rule id="7" name="Explicit access modifiers" status="Mostly Compliant">
+      <Description>Most members are declared with explicit modifiers, but without StyleCop/editorconfig constraints, there is no automatic enforcement.</Description>
+    </Rule>
+    <Rule id="8" name="Braces layout" status="Allman Style">
+      <Description>Uses opening braces on new lines (Allman style) for class and method declarations.</Description>
+    </Rule>
+  </CodingStyleSystem>
+
+  <SolutionStructure slnxPath="MergedVersion/MovieApp_925_1.slnx">
+    <Project name="MovieApp.UI" type="WinUI 3 Desktop App" directory="MergedVersion/MovieApp.UI">
+      <Description>Desktop client application. Structured using a traditional MVVM folder layout rather than a feature-based structure.</Description>
+      <Structure>
+        <Folder name="Views" description="XAML pages for UI.">
+          <File path="BattleView.xaml" description="Movie battles and betting UI." />
+          <File path="CatalogView.xaml" description="Movie catalog browsing list/grid." />
+          <File path="DetailsCheckoutPage.xaml" description="Movie detail, screening schedule, and checkout screen." />
+          <File path="EventManagementPage.xaml" description="Admin screening schedule/event planner." />
+          <File path="FavoritesPage.xaml" description="User's favorited movie events." />
+          <File path="ForumView.xaml" description="User comments and discussion thread." />
+          <File path="HomePage.xaml" description="Main user dashboard." />
+          <File path="MarathonsPage.xaml" description="Movie marathons tracker and progress." />
+          <File path="MovieDetailView.xaml" description="Detailed movie page." />
+          <File path="MyEventsPage.xaml" description="List of events the user has booked tickets for." />
+          <File path="NotificationsPage.xaml" description="User inbox notifications list." />
+          <File path="ProfileView.xaml" description="User profile, stats, and achievements display." />
+          <File path="ReferralAreaPage.xaml" description="Referral code generation, sharing, and validation." />
+          <File path="RewardsPage.xaml" description="Reward store and points redemption." />
+          <File path="SlotMachinePage.xaml" description="Gamification feature: spin slot machine for balance/points." />
+          <File path="TriviaWheelPage.xaml" description="Gamification feature: trivia questions for rewards." />
+          <Folder name="Components" description="Reusable UI child elements." />
+        </Folder>
+        <Folder name="ViewModels" description="Contains corresponding ViewModel logic classes for the Views.">
+          <File path="BattleViewModel.cs" />
+          <File path="CatalogViewModel.cs" />
+          <File path="FavoritesViewModel.cs" />
+          <File path="ForumViewModel.cs" />
+          <File path="MainViewModel.cs" />
+          <File path="MarathonPageViewModel.cs" />
+          <File path="MovieDetailViewModel.cs" />
+          <File path="NotificationsViewModel.cs" />
+          <File path="ProfileViewModel.cs" />
+          <File path="RewardsViewModel.cs" />
+          <File path="SlotMachineViewModel.cs" />
+          <File path="TriviaWheelViewModel.cs" />
+          <Folder name="Events" description="Contains event and booking view models (e.g. DetailsCheckoutViewModel.cs, SeatGuideViewModel.cs, EventManagementViewModel.cs)." />
+        </Folder>
+        <Folder name="Services" description="UI services (e.g., local dialog management, navigation service)." />
+        <Folder name="Controls" description="Custom user controls." />
+        <Folder name="Converters" description="XAML value converters." />
+        <Folder name="Navigation" description="Page navigation mechanisms." />
+      </Structure>
+      <MainFiles>
+        <File path="App.xaml" />
+        <File path="App.xaml.cs" description="DI configuration registering views, viewmodels, and services." />
+        <File path="MainWindow.xaml" />
+        <File path="MainWindow.xaml.cs" />
+      </MainFiles>
+    </Project>
+
+    <Project name="MovieApp.Core" type="Class Library" directory="MergedVersion/MovieApp.Core">
+      <Description>Contains core domain models, service interfaces, DTOs, and core business services.</Description>
+      <Structure>
+        <Folder name="Models" description="Domain entities representing data structures (e.g., Movie, User, Bet, Seat, SeatBooking, SlotMachineResult, WatchedEvent, ReferralLog). Includes 925-specific seat booking models." />
+        <Folder name="Interfaces" description="Repository and service contracts." />
+        <Folder name="Services" description="Business logic service implementations (e.g. BattleService.cs, BadgeService.cs, MarathonService.cs, SlotMachineService.cs)." />
+        <Folder name="DTOs" description="Data transfer objects for controllers and services." />
+      </Structure>
+    </Project>
+
+    <Project name="MovieApp.Infrastructure" type="Class Library" directory="MergedVersion/MovieApp.Infrastructure">
+      <Description>Implements repositories and contains the database context class.</Description>
+      <Structure>
+        <Folder name="Data" description="EF Core MovieAppDbContext setup." />
+        <Folder name="Repositories" description="Contains 22 repository classes implementing interfaces defined in Core (e.g. BattleRepository.cs, TriviaRepository.cs, UserSlotMachineStateRepository.cs)." />
+        <Folder name="Migrations" description="EF Core code-first database migrations." />
+      </Structure>
+    </Project>
+
+    <Project name="MovieApp.Proxy" type="Class Library" directory="MergedVersion/MovieApp.Proxy">
+      <Description>API proxies prefixed with 'Remote' that access the REST API backend (e.g. RemoteBadgeService.cs, RemoteMarathonService.cs).</Description>
+      <MainFiles>
+        <File path="ApiClient.cs" />
+        <File path="IdentityConfig.cs" />
+      </MainFiles>
+    </Project>
+
+    <Project name="MovieApp.WebAPI" type="Web API" directory="MergedVersion/MovieApp.WebAPI">
+      <Description>Backend service serving data endpoints.</Description>
+      <Structure>
+        <Folder name="Controllers" description="Standard ASP.NET Core controllers (e.g. BattlesController.cs, EventsController.cs, SlotMachineController.cs, MarathonsController.cs)." />
+        <Folder name="Services" description="Host API services." />
+      </Structure>
+    </Project>
+
+    <Project name="MovieApp.Web" type="ASP.NET Core MVC" directory="MergedVersion/MovieApp.Web">
+      <Description>Web frontend built on ASP.NET Core MVC.</Description>
+      <Structure>
+        <Folder name="Controllers" description="MVC controllers." />
+        <Folder name="Views" description="Razor views." />
+        <Folder name="Models" description="Web view models." />
+      </Structure>
+    </Project>
+  </SolutionStructure>
+</CodebaseMap>

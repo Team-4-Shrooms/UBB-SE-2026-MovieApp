@@ -36,6 +36,7 @@
                                Visibility="{x:Bind NotificationViewModel.BadgeVisibility, Mode=OneWay}"/>
                 </NavigationViewItem.InfoBadge>
             </NavigationViewItem>
+            <NavigationViewItem Content="Slot Machine" Tag="SlotMachine" Icon="Placeholder"/>
         </NavigationView.MenuItems>
 
         <Frame x:Name="ContentFrame" />

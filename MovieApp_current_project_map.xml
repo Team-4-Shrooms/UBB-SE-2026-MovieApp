@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodebaseMap project="MovieApp" version="Current-Unified" timestamp="2026-05-25T00:29:04+03:00">
+  <ProjectMetadata>
+    <Name>UBB-SE-2026-MovieApp</Name>
+    <AbsolutePath>c:\Users\waytoounoriginal\source\repos\UBB-SE-2026-MovieApp</AbsolutePath>
+    <Description>Unified movie management and social platform created by merging Team 927/1 and Team 925/1 (incorporating PureCaffeine features).</Description>
+    <TargetFramework>.NET 8</TargetFramework>
+    <UIFramework>WinUI 3 (Windows App SDK)</UIFramework>
+    <DataAccess>Entity Framework Core (Code-First with Migrations)</DataAccess>
+    <DatabaseType>SQL Server</DatabaseType>
+    <ArchitectureType>Feature-Based Layout for UI/Logic, and Clean Architecture Layers (DataLayer, Logic, Web, WebApi, Proxy)</ArchitectureType>
+  </ProjectMetadata>
+
+  <CodingStyleSystem source="docs/CODING_STYLE.md" status="Active with Code Violations">
+    <Rule id="1" name="Spaces for indentation" severity="Warning" diagnosticId="SA1027">
+      <Expected>Use space indentation, exactly 4 spaces. No tabs allowed.</Expected>
+      <CodebaseStatus>Fully Compliant (Enforced by StyleCop SA1027 and .editorconfig).</CodebaseStatus>
+    </Rule>
+    <Rule id="2" name="End file with newline" severity="Warning" diagnosticId="SA1518">
+      <Expected>Every file must end with a trailing newline character.</Expected>
+      <CodebaseStatus>Fully Compliant (Enforced by StyleCop SA1518 and .editorconfig).</CodebaseStatus>
+    </Rule>
+    <Rule id="3" name="Use CRLF line endings" severity="Warning" diagnosticId="None">
+      <Expected>Windows-style CRLF (carriage return + line feed) endings throughout.</Expected>
+      <CodebaseStatus>Fully Compliant (Enforced by .editorconfig end_of_line = crlf).</CodebaseStatus>
+    </Rule>
+    <Rule id="4" name="Strip trailing whitespace" severity="Warning" diagnosticId="SA1028">
+      <Expected>No trailing whitespace allowed at the end of lines.</Expected>
+      <CodebaseStatus>Fully Compliant (Enforced by StyleCop SA1028 and .editorconfig trim_trailing_whitespace = true).</CodebaseStatus>
+    </Rule>
+    <Rule id="5" name="UTF-8 Encoding" severity="Warning" diagnosticId="None">
+      <Expected>All files must use UTF-8 character encoding.</Expected>
+      <CodebaseStatus>Fully Compliant (Enforced by .editorconfig charset = utf-8).</CodebaseStatus>
+    </Rule>
+    <Rule id="6" name="PascalCase for types, members, methods" severity="Warning" diagnosticId="SA1300">
+      <Expected>Classes, Structs, Enums, Interfaces, Methods, Properties, Events, Delegates named in PascalCase.</Expected>
+      <CodebaseStatus>Compliant.</CodebaseStatus>
+    </Rule>
+    <Rule id="7" name="Interface prefix with I" severity="Suggestion" diagnosticId="None">
+      <Expected>Interface names must start with a capital 'I' followed by PascalCase.</Expected>
+      <CodebaseStatus>Compliant.</CodebaseStatus>
+    </Rule>
+    <Rule id="8" name="Static fields naming prefix" severity="Warning" diagnosticId="SA1310">
+      <Expected>Static fields prefixed with 's_' followed by camelCase.</Expected>
+      <CodebaseStatus>Compliant.</CodebaseStatus>
+    </Rule>
+    <Rule id="9" name="Private fields naming prefix" severity="Warning" diagnosticId="SA1309">
+      <Expected>Private/private-protected instance fields prefixed with '_' followed by camelCase.</Expected>
+      <CodebaseStatus>Compliant (Note: StyleCop SA1309 is set to "None" to permit the underscore prefix).</CodebaseStatus>
+    </Rule>
+    <Rule id="10" name="camelCase for parameters and local variables" severity="Warning" diagnosticId="None">
+      <Expected>Plain camelCase naming with no prefixes for parameters and local variables.</Expected>
+      <CodebaseStatus>Compliant.</CodebaseStatus>
+    </Rule>
+    <Rule id="11" name="Banned var keyword" severity="Warning" diagnosticId="None">
+      <Expected>Never use 'var' - always write explicit types.</Expected>
+      <CodebaseStatus>NON-COMPLIANT (DOCS OUT OF DATE). The actual codebase contains hundreds of occurrences of the 'var' keyword across controllers, logic services, viewmodels, and data seeders. The .editorconfig has csharp_style_var_* = false:warning set, which causes compiler warnings in modern build environments but the rule is ignored in the existing code files.</CodebaseStatus>
+    </Rule>
+    <Rule id="12" name="Language keywords over BCL names" severity="Warning" diagnosticId="SA1121">
+      <Expected>Use keywords (int, string, bool) instead of BCL types (Int32, String, Boolean).</Expected>
+      <CodebaseStatus>Compliant (Enforced by StyleCop SA1121 and .editorconfig).</CodebaseStatus>
+    </Rule>
+    <Rule id="13" name="Null-coalescing operators" severity="Warning" diagnosticId="None">
+      <Expected>Use ?? and ??= instead of manual null checks in assignments.</Expected>
+      <CodebaseStatus>Compliant.</CodebaseStatus>
+    </Rule>
+    <Rule id="14" name="Null-conditional operator" severity="Warning" diagnosticId="None">
+      <Expected>Use ?. instead of nested null checks.</Expected>
+      <CodebaseStatus>Compliant.</CodebaseStatus>
+    </Rule>
+    <Rule id="15" name="Pattern matching over is-checks + cast" severity="Warning" diagnosticId="None">
+      <Expected>Use switch expressions and pattern matching (is Type variable, is not null).</Expected>
+      <CodebaseStatus>Compliant.</CodebaseStatus>
+    </Rule>
+    <Rule id="16" name="Ternary expressions" severity="Warning" diagnosticId="None">
+      <Expected>Use ternary operator (?:) for simple assignments and returns instead of if-else.</Expected>
+      <CodebaseStatus>Compliant.</CodebaseStatus>
+    </Rule>
+    <Rule id="17" name="Collection initializers" severity="Warning" diagnosticId="None">
+      <Expected>Initialize collections inline using braces or collection expressions instead of sequential Add() calls.</Expected>
+      <CodebaseStatus>Compliant.</CodebaseStatus>
+    </Rule>
+    <Rule id="18" name="Object initializers" severity="Warning" diagnosticId="None">
+      <Expected>Set object properties inline at instantiation instead of sequential assignments.</Expected>
+      <CodebaseStatus>Compliant.</CodebaseStatus>
+    </Rule>
+    <Rule id="19" name="Explicit access modifiers" severity="Warning" diagnosticId="None">
+      <Expected>Every non-interface member must carry an explicit access modifier (public, private, etc.).</Expected>
+      <CodebaseStatus>Compliant (Enforced by .editorconfig dotnet_style_require_accessibility_modifiers = for_non_interface_members:warning).</CodebaseStatus>
+    </Rule>
+    <Rule id="20" name="Readonly fields" severity="Warning" diagnosticId="None">
+      <Expected>Mark fields readonly whenever possible (assigned only in constructor).</Expected>
+      <CodebaseStatus>Compliant (Enforced by .editorconfig dotnet_style_readonly_field = true:warning).</CodebaseStatus>
+    </Rule>
+    <Rule id="21" name="Expression bodies rule" severity="Warning" diagnosticId="None">
+      <Expected>Use expression bodies (=>) for properties, getters/setters, indexers. Methods and constructors MUST use full block bodies with braces.</Expected>
+      <CodebaseStatus>Compliant (Enforced by .editorconfig csharp_style_expression_bodied_* rules).</CodebaseStatus>
+    </Rule>
+    <Rule id="22" name="Static local and anonymous functions" severity="Warning" diagnosticId="None">
+      <Expected>Local functions and lambdas that do not capture instance state should be declared static.</Expected>
+      <CodebaseStatus>Compliant (Enforced by .editorconfig csharp_prefer_static_* = true:warning).</CodebaseStatus>
+    </Rule>
+    <Rule id="23" name="Braces for control-flow blocks" severity="Warning" diagnosticId="SA1503">
+      <Expected>Always use curly braces for if, else, loops, etc., even for single-line blocks.</Expected>
+      <CodebaseStatus>Compliant (Enforced by StyleCop SA1503 and .editorconfig csharp_prefer_braces = true:warning).</CodebaseStatus>
+    </Rule>
+    <Rule id="24" name="Allman brace layout style" severity="Warning" diagnosticId="SA1500">
+      <Expected>Opening braces placed on their own line. else, catch, finally start on a new line.</Expected>
+      <CodebaseStatus>Compliant (Enforced by StyleCop SA1500 and .editorconfig csharp_new_line_* = true).</CodebaseStatus>
+    </Rule>
+    <Rule id="25" name="Block-scoped namespace declaration" severity="Warning" diagnosticId="None">
+      <Expected>Namespaces must be declared using the block-scoped layout with curly braces (not file-scoped).</Expected>
+      <CodebaseStatus>Compliant (Enforced by .editorconfig csharp_style_namespace_declarations = block_scoped:silent).</CodebaseStatus>
+    </Rule>
+  </CodingStyleSystem>
+
+  <SolutionStructure slnPath="src/MovieApp/MovieApp-Server.sln" slnxPath="src/MovieApp/MovieApp.slnx">
+    <Project name="MovieApp" type="WinUI 3 Desktop App" directory="src/MovieApp/MovieApp">
+      <Description>Client application built with WinUI 3 (Windows App SDK). Uses a feature-based folder structure under Features/.</Description>
+      <Structure>
+        <Folder name="Auth" description="User authentication pages and state management." />
+        <Folder name="Assets" description="Images, icons, and visual assets." />
+        <Folder name="Properties" description="Launch settings and configuration." />
+        <Folder name="Features">
+          <Folder name="Events" description="Local screening events view, schedule, and ticket purchasing." />
+          <Folder name="Inventory" description="List of user's owned movies and purchased event tickets." />
+          <Folder name="Marketplace" description="Flea market equipment list, detail, and transaction initiation." />
+          <Folder name="MovieCatalog" description="Grid/list view of the central movie database." />
+          <Folder name="MovieDetail" description="Detailed movie page, displaying reviews and screening events." />
+          <Folder name="MovieSwipe" description="Tinder-like swiping feature for setting movie preferences." />
+          <Folder name="MovieTournament" description="Tournament game setup, match pairings, and leaderboard tracking." />
+          <Folder name="PersonalityMatch" description="Computes personality matching compatibility with other users." />
+          <Folder name="ReelsEditing" description="Short video cropping and background music editing." />
+          <Folder name="ReelsFeed" description="Infinite-scroll reels feed with player and like/interaction triggers." />
+          <Folder name="ReelsUpload" description="Video file upload and movie linking interface." />
+          <Folder name="TrailerScraping" description="Trailer video background scraper logs dashboard." />
+          <Folder name="Wallet" description="Display and top-up of user balance." />
+          <Folder name="Shared" description="Common custom controls, dialogs, styles, and templates." />
+        </Folder>
+      </Structure>
+      <MainFiles>
+        <File path="App.xaml" type="XAML" description="App resource definitions and setup." />
+        <File path="App.xaml.cs" type="C#" description="Application entry point; configures Dependency Injection (DI) services." />
+        <File path="MainWindow.xaml" type="XAML" description="Main frame shell with NavigationView menu." />
+        <File path="MainWindow.xaml.cs" type="C#" description="Navigation logic for loading feature pages in the frame." />
+        <File path="app.manifest" type="Manifest" description="Win32 application manifest." />
+        <File path="Package.appxmanifest" type="Manifest" description="App packaging and capabilities configuration." />
+      </MainFiles>
+    </Project>
+
+    <Project name="MovieApp.DataLayer" type="Class Library" directory="src/MovieApp/MovieApp.DataLayer">
+      <Description>Data access layer containing Entity Framework Core DbContext, DB model declarations, and repository implementations.</Description>
+      <Structure>
+        <Folder name="Models" description="Database entities mapped to SQL Server tables." />
+        <Folder name="Interfaces" description="Repository interface contracts (e.g. IMovieRepository)." />
+        <Folder name="Repositories" description="Concrete repository implementations performing database operations via DbContext." />
+      </Structure>
+      <MainFiles>
+        <File path="DataSeeder.cs" type="C#" description="Seeds the database with movies, users, event schedules, and demo interactions." />
+        <File path="Models/Movie.cs" type="C#" description="Represents the central Movies table." />
+        <File path="Models/User.cs" type="C#" description="Represents the Users table (credentials, balance, roles)." />
+        <File path="Models/Reel.cs" type="C#" description="Represents short videos linked to movies and creators." />
+        <File path="Models/UserMoviePreference.cs" type="C#" description="Stores swipe/tournament preference scores between users and movies." />
+        <File path="Models/UserProfile.cs" type="C#" description="Stores aggregated user statistics and analytics." />
+        <File path="Models/MovieEvent.cs" type="C#" description="Represents scheduled screening events." />
+        <File path="Models/ActiveSale.cs" type="C#" description="Stores discount sales applied to movies." />
+      </MainFiles>
+    </Project>
+
+    <Project name="MovieApp.Logic" type="Class Library" directory="src/MovieApp/MovieApp.Logic">
+      <Description>Business logic layer containing validation, calculation engines, and service wrappers around repositories.</Description>
+      <Structure>
+        <Folder name="Services" description="Common domain services (e.g. AudioLibraryService, ReviewService)." />
+        <Folder name="Interfaces" description="Service contracts exposed to UI and Controllers." />
+        <Folder name="Features" description="Feature-specific business logic matching the UI modules." />
+        <Folder name="Helpers" description="Utility methods." />
+      </Structure>
+    </Project>
+
+    <Project name="MovieApp.Proxy" type="Class Library" directory="src/MovieApp/MovieApp.Proxy">
+      <Description>API gateway proxy services that communicate with MovieApp.WebApi. Used by the WinUI 3 app to delegate logic execution to the server.</Description>
+      <Structure>
+        <Folder name="Services" description="Proxy services matching the WebApi controllers (e.g. MovieProxyService)." />
+      </Structure>
+      <MainFiles>
+        <File path="ApiClient.cs" type="C#" description="Underlying HTTP client wrapper handling token headers and requests." />
+      </MainFiles>
+    </Project>
+
+    <Project name="MovieApp.WebApi" type="Web API" directory="src/MovieApp/MovieApp.WebApi">
+      <Description>ASP.NET Core REST API. Serves as the database interface for the Proxy layer.</Description>
+      <Structure>
+        <Folder name="AppDbContext" description="EF Core database context configuration." />
+        <Folder name="Endpoints" description="Controller classes mapping routes under api/... (e.g. MovieEndpointsController)." />
+        <Folder name="DTOs" description="Request/Response data transfer objects." />
+        <Folder name="Auth" description="JWT authentication handlers." />
+      </Structure>
+      <MainFiles>
+        <File path="Program.cs" type="C#" description="WebApi entry point; sets up middleware, controllers routing, and DB connection." />
+      </MainFiles>
+    </Project>
+
+    <Project name="MovieApp.Web" type="ASP.NET Core MVC" directory="src/MovieApp/MovieApp.Web">
+      <Description>Web frontend built on ASP.NET Core MVC. Implements features for user reviews, catalog browsing, and video players.</Description>
+      <Structure>
+        <Folder name="Controllers" description="MVC controller classes (e.g., CatalogController, ReelsEditingController)." />
+        <Folder name="Views" description="Razor templates for web layout and pages." />
+        <Folder name="Models" description="MVC view models." />
+      </Structure>
+    </Project>
+
+    <Project name="MovieApp.WebDTOs" type="Class Library" directory="src/MovieApp/MovieApp.WebDTOs">
+      <Description>Shared DTO models used for serialization between Web, WebApi, and Proxy projects.</Description>
+    </Project>
+  </SolutionStructure>
+</CodebaseMap>
