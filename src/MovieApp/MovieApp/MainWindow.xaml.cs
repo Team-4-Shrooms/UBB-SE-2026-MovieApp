@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using MovieApp.Features.Events.Views;
@@ -14,6 +15,8 @@ using MovieApp.Features.ReelsEditing.Views;
 using MovieApp.Features.ReelsFeed.Views;
 using MovieApp.Features.ReelsUpload.Views;
 using MovieApp.Features.TrailerScraping.Views;
+using MovieApp.Features.Notification.ViewModels;
+using MovieApp.Features.Notification.Views;
 using MovieApp.Features.SlotMachine.Views;
 using MovieApp.Features.Wallet.Views;
 
@@ -27,6 +30,9 @@ namespace MovieApp
     /// </summary>
     public sealed partial class MainWindow : Window
     {
+
+        public NotificationViewModel NotificationViewModel { get; } =
+            App.Services.GetRequiredService<NotificationViewModel>();
 
         private static readonly Dictionary<string, Type> PageMap = new()
         {
@@ -43,6 +49,7 @@ namespace MovieApp
             ["MovieTournament"] = typeof(MovieTournamentPage),
             ["PersonalityMatch"] = typeof(PersonalityMatchPage),
             ["ReelsFeed"] = typeof(ReelsFeedPage),
+            ["Notification"] = typeof(NotificationPage),
             ["SlotMachine"] = typeof(SlotMachinePage),
             ["Marathon"] = typeof(MarathonPage),
         };

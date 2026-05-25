@@ -13,6 +13,7 @@ using MovieApp.Proxy.Services;
 using MovieApp.Auth;
 using MovieApp.WebApi.Data;
 using MovieApp.Features.Marketplace.ViewModels;
+using MovieApp.Features.Notification.ViewModels;
 using MovieApp.Features.SlotMachine.ViewModels;
 using MovieApp.Features.Marathon.ViewModels;
 using MovieApp.Features.Wallet.ViewModels;
@@ -147,6 +148,8 @@ namespace MovieApp
             services.AddTransient<WalletViewModel>();
             services.AddTransient<FlashSaleViewModel>(sp => new FlashSaleViewModel(DateTime.Now.AddHours(2)));
 
+            // Notification — Singleton so MainWindow badge shares the same instance as the page
+            services.AddSingleton<NotificationViewModel>();
             // Slot Machine
             services.AddTransient<SlotMachineViewModel>();
 
