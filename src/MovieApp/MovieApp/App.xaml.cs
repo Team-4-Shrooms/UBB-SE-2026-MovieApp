@@ -14,6 +14,7 @@ using MovieApp.Auth;
 using MovieApp.WebApi.Data;
 using MovieApp.Features.Marketplace.ViewModels;
 using MovieApp.Features.SlotMachine.ViewModels;
+using MovieApp.Features.Marathon.ViewModels;
 using MovieApp.Features.Wallet.ViewModels;
 
 namespace MovieApp
@@ -136,6 +137,9 @@ namespace MovieApp
             services.AddTransient<MovieApp.Logic.Features.ReelsFeed.IReelInteractionService, ReelInteractionProxyService>();
             services.AddTransient<MovieApp.Features.ReelsFeed.ViewModels.ReelsFeedViewModel>();
             services.AddTransient<MovieApp.Features.ReelsFeed.ViewModels.UserProfileViewModel>();
+
+            // Marathons
+            services.AddTransient<MarathonViewModel>();
 
             // Marketplace & Wallet
             services.AddTransient<MarketplaceViewModel>();
