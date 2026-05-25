@@ -101,6 +101,9 @@ builder.Services.AddScoped<IScrapeJobRepository>(serviceProvider => serviceProvi
 builder.Services.AddScoped<TransactionRepository>();
 builder.Services.AddScoped<ITransactionRepository>(serviceProvider => serviceProvider.GetRequiredService<TransactionRepository>());
 
+builder.Services.AddScoped<MarathonRepository>();
+builder.Services.AddScoped<IMarathonRepository>(serviceProvider => serviceProvider.GetRequiredService<MarathonRepository>());
+
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<IUserRepository>(serviceProvider => serviceProvider.GetRequiredService<UserRepository>());
 
@@ -123,6 +126,7 @@ builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IScrapeJobService, ScrapeJobService>();
 builder.Services.AddScoped<IReelService, ReelService>();
+builder.Services.AddScoped<IMarathonService, MarathonService>();
 
 // Feature services
 builder.Services.AddScoped<IMovieCardFeedService, MovieCardFeedService>();
