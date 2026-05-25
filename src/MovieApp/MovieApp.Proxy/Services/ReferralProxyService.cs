@@ -20,11 +20,7 @@ public sealed class ReferralProxyService : IReferralLogService, IReferralValidat
         _apiClient = apiClient;
     }
 
-    public async Task LogReferralUsageAsync(
-        string referralCode,
-        int friendIdentifier,
-        int eventIdentifier,
-        CancellationToken cancellationToken = default)
+    public async Task LogReferralUsageAsync(string referralCode, int friendIdentifier, int eventIdentifier, CancellationToken cancellationToken = default)
     {
         int? ambassadorId = await _apiClient.GetAsync<int?>(
             $"api/referrals/code/{referralCode}/user",
@@ -46,10 +42,7 @@ public sealed class ReferralProxyService : IReferralLogService, IReferralValidat
             cancellationToken);
     }
 
-    public async Task<bool> IsValidReferralAsync(
-        string referralCode,
-        int currentUserIdentifier,
-        CancellationToken cancellationToken = default)
+    public async Task<bool> IsValidReferralAsync(string referralCode, int currentUserIdentifier, CancellationToken cancellationToken = default)
     {
         bool isValid = await _apiClient.GetAsync<bool>(
             $"api/referrals/validate?code={Uri.EscapeDataString(referralCode)}&currentUserId={currentUserIdentifier}",
@@ -57,11 +50,7 @@ public sealed class ReferralProxyService : IReferralLogService, IReferralValidat
         return isValid;
     }
 
-    public async Task<bool> IsValidReferralForEventAsync(
-        string referralCode,
-        int currentUserIdentifier,
-        int eventIdentifier,
-        CancellationToken cancellationToken = default)
+    public async Task<bool> IsValidReferralForEventAsync(string referralCode, int currentUserIdentifier, int eventIdentifier, CancellationToken cancellationToken = default)
     {
         bool baseValid = await IsValidReferralAsync(referralCode, currentUserIdentifier, cancellationToken);
         if (!baseValid)

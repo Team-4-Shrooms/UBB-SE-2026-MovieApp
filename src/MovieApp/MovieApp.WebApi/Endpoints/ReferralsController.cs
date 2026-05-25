@@ -15,9 +15,7 @@ public sealed class ReferralsController : ControllerBase
     private readonly IReferralValidator _referralValidator;
     private readonly IAmbassadorService _ambassadorService;
 
-    public ReferralsController(
-        IReferralValidator referralValidator,
-        IAmbassadorService ambassadorService)
+    public ReferralsController(IReferralValidator referralValidator, IAmbassadorService ambassadorService)
     {
         _referralValidator = referralValidator;
         _ambassadorService = ambassadorService;
@@ -91,11 +89,7 @@ public sealed class ReferralsController : ControllerBase
     }
 
     [HttpGet("check")]
-    public async Task<IActionResult> CheckReferralLogExists(
-        [FromQuery] int ambassadorId,
-        [FromQuery] int friendId,
-        [FromQuery] int eventId,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> CheckReferralLogExists([FromQuery] int ambassadorId, [FromQuery] int friendId, [FromQuery] int eventId, CancellationToken cancellationToken)
     {
         bool exists = await _ambassadorService.ReferralLogExistsAsync(ambassadorId, friendId, eventId, cancellationToken);
         return Ok(exists);
