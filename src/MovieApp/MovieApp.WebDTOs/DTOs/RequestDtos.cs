@@ -255,6 +255,19 @@ public sealed class BookSeatsRequestBody
     public List<SeatRequest> Seats { get; set; } = new();
 }
 
+public sealed class CancelBookingRequestBody
+{
+    public int UserId { get; set; }
+}
+
+public sealed class CreateScreeningRequestBody
+{
+    public int EventId { get; set; }
+    public int MovieId { get; set; }
+    public int RoomId { get; set; }
+    public System.DateTime ScreeningTime { get; set; }
+}
+
 public class PlaceBetRequest
 {
     public int MovieId { get; set; }

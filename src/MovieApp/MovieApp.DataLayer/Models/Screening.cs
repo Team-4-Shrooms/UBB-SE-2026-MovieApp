@@ -11,5 +11,7 @@ public sealed class Screening
 
     required public int MovieId { get; init; }
 
+    required public int RoomId { get; init; }
+
     required public DateTime ScreeningTime { get; init; }
 }

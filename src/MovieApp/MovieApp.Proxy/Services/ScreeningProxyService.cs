@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MovieApp.DataLayer.Models;
 using MovieApp.Logic.Interfaces.Services;
 using MovieApp.Logic.Models;
+using MovieApp.WebDTOs.DTOs;
 
 namespace MovieApp.Proxy.Services
 {
@@ -38,6 +39,11 @@ namespace MovieApp.Proxy.Services
         {
             var result = await _apiClient.GetAsync<List<Seat>>($"{_baseEndpoint}/{screeningId}/seats");
             return result ?? new List<Seat>();
+        }
+
+        public async Task<ScreeningDetailsDto?> GetScreeningDetailsAsync(int screeningId, CancellationToken cancellationToken = default)
+        {
+            return await _apiClient.GetAsync<ScreeningDetailsDto>($"{_baseEndpoint}/{screeningId}/details");
         }
 
         public async Task AddScreeningAsync(Screening screening, CancellationToken cancellationToken = default)

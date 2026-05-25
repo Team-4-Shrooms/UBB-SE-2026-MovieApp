@@ -1,0 +1,84 @@
+@{
+    ViewData["Title"] = "Create Screening";
+    var movies = ViewBag.Movies as List<MovieApp.DataLayer.Models.Movie> ?? new List<MovieApp.DataLayer.Models.Movie>();
+    int defaultEventId = ViewBag.DefaultEventId ?? 1;
+    int defaultRoomId = ViewBag.DefaultRoomId ?? 1;
+    var defaultTime = DateTime.Now.AddDays(1).ToString("yyyy-MM-ddTHH:mm");
+}
+
+<div class="container mt-5" style="max-width: 720px;">
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger rounded-4 px-4 mb-4 shadow-sm">
+            <i class="bi bi-exclamation-octagon-fill me-2"></i> @TempData["Error"]
+        </div>
+    }
+
+    <div class="card border-0 shadow-lg rounded-5 p-4 p-md-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="display-6 fw-bold mb-0">New Screening</h1>
+            <a asp-action="Index" asp-route-eventId="@defaultEventId" class="btn btn-outline-secondary rounded-pill">
+                <i class="bi bi-arrow-left me-1"></i> Back
+            </a>
+        </div>
+
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Movie</label>
+                <select name="movieId" class="form-select rounded-3" required>
+                    <option value="">— Select a movie —</option>
+                    @foreach (var movie in movies)
+                    {
+                        <option value="@movie.Id">@movie.Title</option>
+                    }
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Screening Time</label>
+                <input type="datetime-local" name="screeningTime" class="form-control rounded-3" value="@defaultTime" required />
+            </div>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Event ID</label>
+                    <input type="number" name="eventId" class="form-control rounded-3" value="@defaultEventId" min="1" required />
+                    <small class="text-muted">The cinema event this screening belongs to.</small>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Room ID</label>
+                    <input type="number" name="roomId" class="form-control rounded-3" value="@defaultRoomId" min="1" required />
+                    <small class="text-muted d-block">
+                        Available rooms (Event 1):<br />
+                        1 = Hall A (5×8 = 40 seats)<br />
+                        2 = Hall B IMAX (8×10 = 80 seats)<br />
+                        3 = Hall C Premium (4×6 = 24 seats)<br />
+                        4 = Hall D Small (3×5 = 15 seats)<br />
+                        5 = Hall E Standard (6×9 = 54 seats)
+                    </small>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill py-3 mt-4 purchase-btn">
+                <i class="bi bi-plus-circle me-2"></i> Create Screening
+            </button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .purchase-btn {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        border: none; font-weight: 700; letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+    .purchase-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(37, 117, 252, 0.3) !important;
+    }
+    .rounded-5 { border-radius: 2rem !important; }
+</style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">

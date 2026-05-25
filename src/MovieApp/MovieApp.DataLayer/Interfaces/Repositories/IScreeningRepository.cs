@@ -13,5 +13,9 @@ public interface IScreeningRepository
 
     Task<IReadOnlyList<Screening>> GetByMovieIdAsync(int movieIdentifier, CancellationToken cancellationToken = default);
 
+    Task<Room?> GetRoomAsync(int roomId, CancellationToken cancellationToken = default);
+
+    Task<Event?> GetCinemaEventAsync(int eventId, CancellationToken cancellationToken = default);
+
     Task AddAsync(Screening screening, CancellationToken cancellationToken = default);
 }
