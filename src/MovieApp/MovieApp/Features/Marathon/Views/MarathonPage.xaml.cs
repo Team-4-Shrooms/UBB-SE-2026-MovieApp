@@ -115,7 +115,7 @@ public sealed partial class MarathonPage : Page
 
         this._currentMovieId = movieId;
 
-        var movie = this.ViewModel.Movies.FirstOrDefault(m => m.MovieId == movieId);
+        var movie = this.ViewModel.Movies.FirstOrDefault(movie => movie.MovieId == movieId);
         this.QuizMovieTitle.Text = movie?.Title ?? "Movie";
 
         var triviaRepository = App.Services.GetService<MovieApp.DataLayer.Interfaces.Repositories.ITriviaRepository>();
@@ -241,7 +241,7 @@ public sealed partial class MarathonPage : Page
             return;
         }
 
-        int verified = this.ViewModel.Movies.Count(m => m.IsVerified);
+        int verified = this.ViewModel.Movies.Count(movie => movie.IsVerified);
         this.ProgressBar.Value = (double)verified / this.ViewModel.Movies.Count;
     }
 
