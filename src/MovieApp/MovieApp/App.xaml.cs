@@ -96,6 +96,9 @@ namespace MovieApp
             services.AddTransient<ISlotMachineService, SlotMachineProxyService>();
             //services.AddTransient<IScreeningService, ScreeningProxyService>();
             services.AddTransient<IBookingService, BookingProxyService>();
+            services.AddTransient<IReferralLogService, ReferralProxyService>();
+            services.AddTransient<IReferralValidator, ReferralProxyService>();
+            services.AddTransient<IReferralCodeGenerator, ReferralProxyService>();
             services.AddTransient<ICommentService, CommentProxyService>();
             services.AddTransient<IAmbassadorService, AmbassadorProxyService>();
             services.AddTransient<IMarathonService, MarathonProxyService>();
