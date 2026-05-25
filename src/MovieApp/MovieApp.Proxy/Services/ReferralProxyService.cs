@@ -11,7 +11,7 @@ public sealed class ReferralProxyService : IReferralLogService, IReferralValidat
 {
     private const int GeneratedCodeLength = 8;
     private static readonly char[] CodeAlphabet =
-        "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".ToCharArray();
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
 
     private readonly ApiClient _apiClient;
 
