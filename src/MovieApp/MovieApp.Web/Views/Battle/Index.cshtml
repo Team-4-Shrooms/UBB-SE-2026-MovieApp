@@ -1,0 +1,208 @@
+@model MovieApp.Web.ViewModels.Battles.BattleViewModel
+
+@{
+	ViewData["Title"] = "Battle";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+	<h2 class="fw-bold">Movie Battle</h2>
+
+	<div class="text-muted">
+		Points: <span class="fw-bold">@Model.CurrentUserPoints</span>
+	</div>
+</div>
+
+@if (Model.StatusMessage != null)
+{
+		<div class="alert alert-info">
+		@Model.StatusMessage
+		</div>
+}
+
+@if (Model.Battle == null)
+{
+		<div class="alert alert-warning text-center py-5">
+			<h5 class="mb-0">No active battle available.</h5>
+		</div>
+}
+else
+{
+		<div class="row g-4">
+
+			<!-- Battle Card -->
+			<div class="col-lg-8">
+				<div class="card box-shadow">
+					<div class="card-body">
+
+						<div class="d-flex justify-content-between align-items-center mb-3">
+							<h5 class="fw-bold mb-0">
+								Battle #@Model.Battle.BattleId
+							</h5>
+
+							<span class="badge bg-secondary">
+							@Model.Battle.Status
+							</span>
+						</div>
+
+						<div class="row">
+
+							<!-- First Movie -->
+							<div class="col-md-6">
+								<div class="card h-100 border">
+									<div class="card-body">
+
+										<h5 class="fw-bold">
+										@Model.Battle.FirstMovie?.Title
+										</h5>
+
+										<div class="text-muted mb-2">
+											Bets: @Model.FirstMovieBetCount
+										</div>
+
+										<div class="fw-bold">
+										@Model.FirstMoviePointTotal points
+										</div>
+
+									@if (Model.WinnerMovieId == Model.Battle.FirstMovie?.Id)
+									{
+												<span class="badge bg-success mt-2">Winner</span>
+									}
+
+									</div>
+								</div>
+							</div>
+
+							<!-- Second Movie -->
+							<div class="col-md-6">
+								<div class="card h-100 border">
+									<div class="card-body">
+
+										<h5 class="fw-bold">
+										@Model.Battle.SecondMovie?.Title
+										</h5>
+
+										<div class="text-muted mb-2">
+											Bets: @Model.SecondMovieBetCount
+										</div>
+
+										<div class="fw-bold">
+										@Model.SecondMoviePointTotal points
+										</div>
+
+									@if (Model.WinnerMovieId == Model.Battle.SecondMovie?.Id)
+									{
+												<span class="badge bg-success mt-2">Winner</span>
+									}
+
+									</div>
+								</div>
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+
+				<!-- Bet Form -->
+				<div class="card box-shadow mt-4">
+					<div class="card-body">
+
+						<h5 class="fw-bold mb-3">Place Your Bet</h5>
+
+						<form asp-action="PlaceBet" method="post" class="row g-3">
+						@Html.AntiForgeryToken()
+
+							<input type="hidden" name="BattleId" value="@Model.Battle.BattleId" />
+
+							<div class="col-md-5">
+								<label class="form-label fw-bold">Movie</label>
+								<select name="MovieId" class="form-select">
+									<option value="@Model.Battle.FirstMovie?.Id">
+									@Model.Battle.FirstMovie?.Title
+									</option>
+									<option value="@Model.Battle.SecondMovie?.Id">
+									@Model.Battle.SecondMovie?.Title
+									</option>
+								</select>
+							</div>
+
+							<div class="col-md-4">
+								<label class="form-label fw-bold">Amount</label>
+								<input type="number"
+									   name="Amount"
+									   min="1"
+									   class="form-control"
+									   placeholder="Enter amount" />
+							</div>
+
+							<div class="col-md-3 d-flex align-items-end">
+								<button type="submit" class="btn btn-primary w-100">
+									Place Bet
+								</button>
+							</div>
+
+						</form>
+
+					</div>
+				</div>
+			</div>
+
+			<!-- Leaderboard -->
+			<div class="col-lg-4">
+
+				<div class="card box-shadow">
+					<div class="card-body">
+
+						<h5 class="fw-bold mb-3">Leaderboard</h5>
+
+					@if (!Model.LeaderboardRows.Any())
+					{
+								<div class="text-muted">No bets yet.</div>
+					}
+					else
+					{
+								<ul class="list-group list-group-flush">
+							@foreach (var row in Model.LeaderboardRows)
+							{
+											<li class="list-group-item d-flex justify-content-between">
+												<div>
+													<div class="fw-bold">@row.Username</div>
+													<small class="text-muted">@row.MovieTitle</small>
+												</div>
+												<span class="fw-bold">@row.Amount</span>
+											</li>
+							}
+								</ul>
+					}
+
+					</div>
+				</div>
+
+				<!-- Admin Actions -->
+				<div class="card box-shadow mt-4">
+					<div class="card-body">
+
+						<h6 class="fw-bold">Demo Actions</h6>
+
+						<form asp-action="CreateDemo" method="post" class="mb-2">
+						@Html.AntiForgeryToken()
+							<button class="btn btn-success w-100">Create Demo</button>
+						</form>
+
+						<form asp-action="ForceSettle" method="post" class="mb-2">
+						@Html.AntiForgeryToken()
+							<input type="hidden" name="battleId" value="@Model.Battle.BattleId" />
+							<button class="btn btn-warning w-100">Force Settle</button>
+						</form>
+
+						<form asp-action="ResetDemo" method="post">
+						@Html.AntiForgeryToken()
+							<button class="btn btn-danger w-100">Reset Demo</button>
+						</form>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+}

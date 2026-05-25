@@ -1,3 +1,4 @@
+using MovieApp.Logic.Features.Battles;
 using MovieApp.Logic.Features.MovieSwipe;
 using MovieApp.Logic.Features.MovieTournament;
 using MovieApp.Logic.Features.PersonalityMatch;
@@ -56,7 +57,7 @@ builder.Services.AddTransient<ISlotMachineService, SlotMachineProxyService>();
 //builder.Services.AddTransient<IScreeningService, ScreeningProxyService>();
 builder.Services.AddTransient<IBookingService, BookingProxyService>();
 builder.Services.AddTransient<IMarathonService, MarathonProxyService>();
-
+builder.Services.AddTransient<IPointService, PointProxyService>();
 
 // Cache and session
 builder.Services.AddMemoryCache();
