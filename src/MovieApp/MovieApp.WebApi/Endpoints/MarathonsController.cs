@@ -34,8 +34,15 @@ public sealed class MarathonsController : ControllerBase
         return Ok(movies);
     }
 
-    [HttpPost("{id:int}/enroll")]
-    public async Task<IActionResult> Enroll(int id)
+    [HttpGet("weekly/{userId:int}")]
+    public async Task<IActionResult> GetWeeklyMarathons(int userId)
+    {
+        var marathons = await _marathonService.GetWeeklyMarathonsAsync(userId);
+        return Ok(marathons);
+    }
+
+    [HttpPost("{id:int}/start")]
+    public async Task<IActionResult> StartMarathon(int id)
     {
         bool success = await _marathonService.StartMarathonAsync(id);
         return Ok(success);
@@ -51,5 +58,47 @@ public sealed class MarathonsController : ControllerBase
         }
 
         return Ok(progress);
+    }
+
+    [HttpGet("{id:int}/leaderboard")]
+    public async Task<IActionResult> GetLeaderboard(int id)
+    {
+        var leaderboard = await _marathonService.GetLeaderboardWithUsernamesAsync(id);
+        return Ok(leaderboard);
+    }
+
+    [HttpPost("{id:int}/quiz")]
+    public async Task<IActionResult> UpdateQuizResult(int id, [FromBody] int correctAnswersCount)
+    {
+        await _marathonService.UpdateQuizResultAsync(id, correctAnswersCount);
+        return Ok();
+    }
+
+    [HttpPost("{id:int}/movies/{movieId:int}/log")]
+    public async Task<IActionResult> LogMovie(int id, int movieId, [FromBody] int correctAnswersCount)
+    {
+        bool success = await _marathonService.LogMovieAsync(id, movieId, correctAnswersCount);
+        return Ok(success);
+    }
+
+    [HttpGet("{id:int}/participants/count")]
+    public async Task<IActionResult> GetParticipantCount(int id)
+    {
+        int count = await _marathonService.GetParticipantCountAsync(id);
+        return Ok(count);
+    }
+
+    [HttpGet("{id:int}/movies/count")]
+    public async Task<IActionResult> GetMarathonMovieCount(int id)
+    {
+        int count = await _marathonService.GetMarathonMovieCountAsync(id);
+        return Ok(count);
+    }
+
+    [HttpGet("{id:int}/prerequisite/{userId:int}")]
+    public async Task<IActionResult> IsPrerequisiteCompleted(int id, int userId)
+    {
+        bool isCompleted = await _marathonService.IsPrerequisiteCompletedAsync(userId, id);
+        return Ok(isCompleted);
     }
 }

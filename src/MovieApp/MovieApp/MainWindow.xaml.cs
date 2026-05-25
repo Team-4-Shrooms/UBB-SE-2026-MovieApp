@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Controls;
 using MovieApp.Features.Events.Views;
 using MovieApp.Features.Inventory.Views;
 using MovieApp.Features.Marketplace.Views;
+using MovieApp.Features.Marathon.Views;
 using MovieApp.Features.MovieCatalog.Views;
 using MovieApp.Features.MovieSwipe.Views;
 using MovieApp.Features.MovieTournament.Views;
@@ -43,6 +44,7 @@ namespace MovieApp
             ["PersonalityMatch"] = typeof(PersonalityMatchPage),
             ["ReelsFeed"] = typeof(ReelsFeedPage),
             ["SlotMachine"] = typeof(SlotMachinePage),
+            ["Marathon"] = typeof(MarathonPage),
         };
 
         public MainWindow()
