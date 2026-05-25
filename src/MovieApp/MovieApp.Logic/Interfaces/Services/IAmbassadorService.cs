@@ -13,6 +13,16 @@ public interface IAmbassadorService
     Task<bool> IsReferralCodeValidAsync(string referralCode, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Gets all ambassador profiles.
+    /// </summary>
+    Task<IEnumerable<AmbassadorProfile>> GetAllAmbassadorsAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets an ambassador profile by ID.
+    /// </summary>
+    Task<AmbassadorProfile?> GetAmbassadorByIdAsync(int id, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Gets the ambassador referral code for a user, or null if not an ambassador.
     /// </summary>
     Task<string?> GetReferralCodeAsync(int userId, CancellationToken cancellationToken = default);

@@ -284,3 +284,28 @@ public class PlaceBattleRequest
     public int FirstMovieId { get; set; }
     public int SecondMovieId { get; set; }
 }
+
+public sealed class AddCommentRequest
+{
+    public int UserId { get; set; }
+    public string Content { get; set; } = string.Empty;
+}
+
+public sealed class ReplyCommentRequest
+{
+    public int UserId { get; set; }
+    public string Content { get; set; } = string.Empty;
+}
+
+
+public class CreateAmbassadorProfileRequestBody
+{
+    public string ReferralCode { get; set; } = string.Empty;
+}
+
+public class ProcessReferralRequestBody
+{
+    public string ReferralCode { get; set; } = string.Empty;
+    public int FriendId { get; set; }
+    public int EventId { get; set; }
+}

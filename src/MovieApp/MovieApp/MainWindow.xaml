@@ -30,6 +30,8 @@
             <NavigationViewItem Content="Events" Tag="Events" Icon="Calendar"/>
             <NavigationViewItem Content="Inventory" Tag="Inventory" Icon="AllApps"/>
             <NavigationViewItem Content="Wallet" Tag="Wallet" Icon="PreviewLink"/>
+            <NavigationViewItem Content="Slot Machine" Tag="SlotMachine" Icon="Placeholder"/>
+            <NavigationViewItem Content="Marathons" Tag="Marathon" Icon="Go"/>
         </NavigationView.MenuItems>
 
         <Frame x:Name="ContentFrame" />

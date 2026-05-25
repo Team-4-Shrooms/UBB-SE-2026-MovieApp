@@ -1,5 +1,3 @@
-using MovieApp.Core.Models;
-
 namespace MovieApp.DataLayer.Interfaces.Repositories;
 
 using MovieApp.DataLayer.Models;

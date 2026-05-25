@@ -1,4 +1,4 @@
-namespace MovieApp.Core.Models;
+namespace MovieApp.DataLayer.Models;
 
 using System;
 public sealed class LeaderboardEntry
