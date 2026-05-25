@@ -104,6 +104,12 @@ builder.Services.AddScoped<ITransactionRepository>(serviceProvider => servicePro
 builder.Services.AddScoped<MarathonRepository>();
 builder.Services.AddScoped<IMarathonRepository>(serviceProvider => serviceProvider.GetRequiredService<MarathonRepository>());
 
+builder.Services.AddScoped<NotificationRepository>();
+builder.Services.AddScoped<INotificationRepository>(serviceProvider => serviceProvider.GetRequiredService<NotificationRepository>());
+
+builder.Services.AddScoped<FavoriteEventRepository>();
+builder.Services.AddScoped<IFavoriteEventRepository>(serviceProvider => serviceProvider.GetRequiredService<FavoriteEventRepository>());
+
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<IUserRepository>(serviceProvider => serviceProvider.GetRequiredService<UserRepository>());
 
@@ -127,6 +133,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IScrapeJobService, ScrapeJobService>();
 builder.Services.AddScoped<IReelService, ReelService>();
 builder.Services.AddScoped<IMarathonService, MarathonService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 // Feature services
 builder.Services.AddScoped<IMovieCardFeedService, MovieCardFeedService>();

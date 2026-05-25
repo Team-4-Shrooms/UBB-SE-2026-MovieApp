@@ -16,7 +16,12 @@ public interface INotificationRepository
     Task RemoveAsync(int notificationIdentifier, CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<Notification>> FindByUserAsync(int userIdentifier, CancellationToken cancellationToken = default);
+
     Task<IReadOnlyList<Notification>> GetUnreadByUserAsync(int userIdentifier, CancellationToken cancellationToken = default);
+
     Task MarkReadAsync(int notificationIdentifier, CancellationToken cancellationToken = default);
+
     Task MarkAllReadAsync(int userIdentifier, CancellationToken cancellationToken = default);
+
+    Task<int> GetUnreadCountAsync(int userIdentifier, CancellationToken cancellationToken = default);
 }
