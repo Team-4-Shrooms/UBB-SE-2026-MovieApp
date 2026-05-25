@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MovieApp.WebDTOs.DTOs.RequestDTOs;
 using MovieApp.WebApi.Mappings;
 using MovieApp.Logic.Interfaces.Services;
+using MovieApp.DataLayer.Models;
 
 namespace MovieApp.WebApi.Endpoints;
 
@@ -12,10 +13,12 @@ namespace MovieApp.WebApi.Endpoints;
 public sealed class MovieEndpointsController : ControllerBase
 {
     private readonly IMovieService _movieService;
+    private readonly IExternalReviewService _externalReviewService;
 
-    public MovieEndpointsController(IMovieService movieService)
+    public MovieEndpointsController(IMovieService movieService, IExternalReviewService externalReviewService)
     {
         _movieService = movieService;
+        _externalReviewService = externalReviewService;
     }
 
     [HttpGet]
@@ -29,11 +32,7 @@ public sealed class MovieEndpointsController : ControllerBase
     public async Task<IActionResult> GetMovieById(int movieId)
     {
         var movie = await _movieService.GetMovieByIdAsync(movieId);
-
-        if (movie == null)
-        {
-            return NoContent();
-        }
+        if (movie == null) return NoContent();
 
         return Ok(movie.ToDto());
     }
@@ -56,5 +55,16 @@ public sealed class MovieEndpointsController : ControllerBase
     {
         await _movieService.PurchaseMovieAsync(body.UserId, id, body.FinalPrice);
         return Ok();
+    }
+
+    [HttpGet("{id:int}/external-reviews")]
+    public async Task<IActionResult> GetExternalReviews(int id, CancellationToken ct)
+    {
+        var movie = await _movieService.GetMovieByIdAsync(id);
+        if (movie == null) return NotFound("Movie not found.");
+
+        var reviews = await _externalReviewService.GetExternalReviewsAsync(movie.Title, movie.ReleaseYear, ct);
+
+        return Ok(reviews);
     }
 }
