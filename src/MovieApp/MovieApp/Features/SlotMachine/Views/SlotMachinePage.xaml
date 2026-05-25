@@ -280,7 +280,7 @@
                                            Text="{x:Bind Director.Name}"
                                            TextTrimming="CharacterEllipsis"/>
                                 <TextBlock Grid.Column="3"
-                                           Text="{x:Bind JackpotMovie.Title}"
+                                           Text="{Binding JackpotMovie.Title, TargetNullValue=''}"
                                            FontWeight="Bold"
                                            Foreground="#C8971A"
                                            TextTrimming="CharacterEllipsis"/>
