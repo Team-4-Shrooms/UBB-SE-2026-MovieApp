@@ -98,6 +98,8 @@ namespace MovieApp
             services.AddTransient<ICommentService, CommentProxyService>();
             services.AddTransient<IAmbassadorService, AmbassadorProxyService>();
             services.AddTransient<IMarathonService, MarathonProxyService>();
+            services.AddTransient<IBadgeService, BadgeProxyService>();
+            services.AddTransient<IUserStatsService, UserStatsProxyService>();
 
             // Reels Upload
             services.AddTransient<MovieApp.Logic.Features.ReelsUpload.IVideoStorageService, VideoStorageProxyService>();

@@ -28,4 +28,6 @@ public interface IBadgeService
     /// <param name="ct">A token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     Task CheckAndAwardBadgesAsync(int userId, CancellationToken ct = default);
+
+    Task<IList<UserStats>> GetLeaderboardAsync(CancellationToken ct = default);
 }

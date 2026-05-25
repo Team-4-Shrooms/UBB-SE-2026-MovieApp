@@ -58,6 +58,8 @@ builder.Services.AddTransient<IBookingService, BookingProxyService>();
 builder.Services.AddTransient<ICommentService, CommentProxyService>();
 builder.Services.AddTransient<IAmbassadorService, AmbassadorProxyService>();
 builder.Services.AddTransient<IMarathonService, MarathonProxyService>();
+builder.Services.AddTransient<IBadgeService, BadgeProxyService>();
+builder.Services.AddTransient<IUserStatsService, UserStatsProxyService>();
 
 
 // Cache and session
