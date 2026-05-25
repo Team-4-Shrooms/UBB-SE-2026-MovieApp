@@ -21,7 +21,14 @@ namespace MovieApp.Features.Notification.Views
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            await ViewModel.LoadNotificationsCommand.ExecuteAsync(null);
+            try
+            {
+                await ViewModel.LoadNotificationsCommand.ExecuteAsync(null);
+            }
+            catch (System.Exception)
+            {
+                // Backend unavailable — notifications list remains empty
+            }
         }
 
         private async void MarkRead_Click(object sender, RoutedEventArgs e)

@@ -6,12 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:MovieApp.DataLayer.Models"
-    xmlns:converters="using:MovieApp.Features.Shared.Converters"
     mc:Ignorable="d">
-
-    <Page.Resources>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-    </Page.Resources>
 
     <ScrollViewer Padding="24">
         <StackPanel Spacing="16">

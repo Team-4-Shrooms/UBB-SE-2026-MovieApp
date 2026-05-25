@@ -51,7 +51,7 @@ namespace MovieApp.Features.Notification.ViewModels
         private async Task LoadNotificationsAsync()
         {
             IReadOnlyList<Notification> notifications =
-                await _service.GetNotificationsByUserAsync(SessionManager.CurrentUserID);
+                await _service.GetUnreadNotificationsAsync(SessionManager.CurrentUserID);
             Notifications.Clear();
             foreach (Notification notification in notifications)
             {
