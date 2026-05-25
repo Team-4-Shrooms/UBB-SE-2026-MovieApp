@@ -31,9 +31,9 @@ namespace MovieApp.Logic.Services
         }
 
 
-        public async Task<Battle> CreateBattleAsync(int firstMovieId, int secondMovieId, CancellationToken ct = default)
+        public async Task<Battle> CreateBattleAsync(int firstMovieId, int secondMovieId, CancellationToken cancellationToken = default)
         {
-            var allBattles = await _battleRepository.GetAllAsync(ct);
+            var allBattles = await _battleRepository.GetAllAsync(cancellationToken);
             if (allBattles.Any(b => b.Status == "Active"))
             {
                 throw new InvalidOperationException("An active battle already exists.");
@@ -54,11 +54,11 @@ namespace MovieApp.Logic.Services
                 Status = "Active"
             };
 
-            await _battleRepository.InsertAsync(battle, ct);
+            await _battleRepository.InsertAsync(battle, cancellationToken);
             return battle;
         }
 
-        public async Task<Battle> CreateDemoBattleAsync(CancellationToken ct = default)
+        public async Task<Battle> CreateDemoBattleAsync(CancellationToken cancellationToken = default)
         {
             var movies = await _movieRepository.GetAllMoviesAsync();
             if (movies.Count < 2)
@@ -66,10 +66,10 @@ namespace MovieApp.Logic.Services
                 throw new InvalidOperationException("Not enough movies for a battle.");
             }
 
-            var sortedMovies = movies.OrderBy(m => m.Rating).ToList();
-            Movie bestM1 = sortedMovies[0];
-            Movie bestM2 = sortedMovies[1];
-            double minDiff = (double)Math.Abs(bestM1.Rating - bestM2.Rating);
+            var sortedMovies = movies.OrderBy(movie => movie.Rating).ToList();
+            Movie bestMovie1 = sortedMovies[0];
+            Movie bestMovie2 = sortedMovies[1];
+            double minDiff = (double)Math.Abs(bestMovie1.Rating - bestMovie2.Rating);
 
             for (int i = 0; i < sortedMovies.Count - 1; i++)
             {
@@ -77,52 +77,52 @@ namespace MovieApp.Logic.Services
                 if (diff < minDiff)
                 {
                     minDiff = diff;
-                    bestM1 = sortedMovies[i];
-                    bestM2 = sortedMovies[i + 1];
+                    bestMovie1 = sortedMovies[i];
+                    bestMovie2 = sortedMovies[i + 1];
                 }
             }
 
-            return await this.CreateBattleAsync(bestM1.Id, bestM2.Id, ct);
+            return await this.CreateBattleAsync(bestMovie1.Id, bestMovie2.Id, cancellationToken);
         }
 
-        public async Task<int> DetermineWinnerAsync(int battleId, CancellationToken ct = default)
+        public async Task<int> DetermineWinnerAsync(int battleId, CancellationToken cancellationToken = default)
         {
-            var battle = await _battleRepository.GetByIdAsync(battleId, ct) ?? throw new InvalidOperationException("Battle not found.");
+            var battle = await _battleRepository.GetByIdAsync(battleId, cancellationToken) ?? throw new InvalidOperationException("Battle not found.");
 
-            var m1 = await _movieRepository.GetMovieByIdAsync(battle.FirstMovie?.Id ?? 0);
-            var m2 = await _movieRepository.GetMovieByIdAsync(battle.SecondMovie?.Id ?? 0);
+            var movie1 = await _movieRepository.GetMovieByIdAsync(battle.FirstMovie?.Id ?? 0);
+            var movie2 = await _movieRepository.GetMovieByIdAsync(battle.SecondMovie?.Id ?? 0);
 
-            double growth1 = (double)((m1?.Rating ?? 0) - (decimal)battle.InitialRatingFirstMovie);
-            double growth2 = (double)((m2?.Rating ?? 0) - (decimal)battle.InitialRatingSecondMovie);
+            double growth1 = (double)((movie1?.Rating ?? 0) - (decimal)battle.InitialRatingFirstMovie);
+            double growth2 = (double)((movie2?.Rating ?? 0) - (decimal)battle.InitialRatingSecondMovie);
 
-            return growth1 >= growth2 ? (m1?.Id ?? 0) : (m2?.Id ?? 0);
+            return growth1 >= growth2 ? (movie1?.Id ?? 0) : (movie2?.Id ?? 0);
         }
 
-        public async Task DistributePayoutsAsync(int battleId, CancellationToken ct = default)
+        public async Task DistributePayoutsAsync(int battleId, CancellationToken cancellationToken = default)
         {
-            int winnerId = await this.DetermineWinnerAsync(battleId, ct);
-            var bets = await _betRepository.GetAllAsync(ct);
-            var battleBets = bets.Where(b => b.Battle?.BattleId == battleId).ToList();
+            int winnerId = await this.DetermineWinnerAsync(battleId, cancellationToken);
+            var bets = await _betRepository.GetAllAsync(cancellationToken);
+            var battleBets = bets.Where(battle => battle.Battle?.BattleId == battleId).ToList();
 
             foreach (var bet in battleBets)
             {
                 if (bet.Movie?.Id == winnerId)
                 {
-                    await _pointService.RefundPointsAsync(bet.User?.Id ?? 0, bet.Amount * 2, ct);
+                    await _pointService.RefundPointsAsync(bet.User?.Id ?? 0, bet.Amount * 2, cancellationToken);
                 }
             }
 
-            var battle = await _battleRepository.GetByIdAsync(battleId, ct);
+            var battle = await _battleRepository.GetByIdAsync(battleId, cancellationToken);
             if (battle != null)
             {
                 battle.Status = "Finished";
-                await _battleRepository.UpdateAsync(battle, ct);
+                await _battleRepository.UpdateAsync(battle, cancellationToken);
             }
         }
 
-        public async Task<Battle?> GetActiveBattleAsync(CancellationToken ct = default)
+        public async Task<Battle?> GetActiveBattleAsync(CancellationToken cancellationToken = default)
         {
-            var battles = await _battleRepository.GetAllAsync(ct);
+            var battles = await _battleRepository.GetAllAsync(cancellationToken);
             var active = battles.FirstOrDefault(b => b.Status == "Active");
 
             if (active != null)
@@ -134,48 +134,48 @@ namespace MovieApp.Logic.Services
             return active;
         }
 
-        public async Task SettleExpiredBattlesAsync(CancellationToken ct = default)
+        public async Task SettleExpiredBattlesAsync(CancellationToken cancellationToken = default)
         {
-            var battles = await _battleRepository.GetAllAsync(ct);
-            var expired = battles.Where(b => b.Status == "Active" && b.EndDate < DateTime.UtcNow.Date);
+            var battles = await _battleRepository.GetAllAsync(cancellationToken);
+            var expired = battles.Where(battle => battle.Status == "Active" && battle.EndDate < DateTime.UtcNow.Date);
 
             foreach (var battle in expired)
             {
-                await this.DistributePayoutsAsync(battle.BattleId, ct);
+                await this.DistributePayoutsAsync(battle.BattleId, cancellationToken);
             }
         }
 
-        public async Task<Battle?> GetCurrentBattleForUserAsync(int userId, CancellationToken ct = default)
+        public async Task<Battle?> GetCurrentBattleForUserAsync(int userId, CancellationToken cancellationToken = default)
         {
-            var active = await this.GetActiveBattleAsync(ct);
+            var active = await this.GetActiveBattleAsync(cancellationToken);
             if (active != null)
             {
                 return active;
             }
 
-            var battles = await _battleRepository.GetAllAsync(ct);
+            var battles = await _battleRepository.GetAllAsync(cancellationToken);
             return battles
-                .Where(b => b.Bets.Any(bet => bet.User?.Id == userId))
-                .OrderByDescending(b => b.EndDate)
-                .ThenByDescending(b => b.BattleId)
+                .Where(battle => battle.Bets.Any(bet => bet.User?.Id == userId))
+                .OrderByDescending(battle => battle.EndDate)
+                .ThenByDescending(battle => battle.BattleId)
                 .FirstOrDefault();
         }
 
-        public async Task<BattleBet> PlaceBetAsync(int userId, int battleId, int movieId, int amount, CancellationToken ct = default)
+        public async Task<BattleBet> PlaceBetAsync(int userId, int battleId, int movieId, int amount, CancellationToken cancellationToken = default)
         {
             if (amount <= 0)
             {
                 throw new InvalidOperationException("Amount must be positive.");
             }
 
-            var existingBet = await _betRepository.GetByIdAsync(userId, battleId, ct);
+            var existingBet = await _betRepository.GetByIdAsync(userId, battleId, cancellationToken);
             if (existingBet != null)
             {
                 throw new InvalidOperationException("User has already bet.");
             }
 
             var user = await _userRepository.GetUserByIdAsync(userId) ?? throw new InvalidOperationException("User not found.");
-            var battle = await _battleRepository.GetByIdAsync(battleId, ct) ?? throw new InvalidOperationException("Battle not found.");
+            var battle = await _battleRepository.GetByIdAsync(battleId, cancellationToken) ?? throw new InvalidOperationException("Battle not found.");
             var movie = await _movieRepository.GetMovieByIdAsync(movieId) ?? throw new InvalidOperationException("Movie not found.");
 
             if (!string.Equals(battle.Status, "Active", StringComparison.OrdinalIgnoreCase))
@@ -188,30 +188,30 @@ namespace MovieApp.Logic.Services
                 throw new InvalidOperationException("Selected movie is not part of this battle.");
             }
 
-            await _pointService.FreezePointsAsync(userId, amount, ct);
+            await _pointService.FreezePointsAsync(userId, amount, cancellationToken);
 
             var bet = new BattleBet { User = user, Battle = battle, Movie = movie, Amount = amount };
-            await _betRepository.InsertAsync(bet, ct);
+            await _betRepository.InsertAsync(bet, cancellationToken);
             return bet;
         }
 
-        public async Task ResetAllBattlesForDemoAsync(CancellationToken ct = default)
+        public async Task ResetAllBattlesForDemoAsync(CancellationToken cancellationToken = default)
         {
-            var battles = await _battleRepository.GetAllAsync(ct);
-            foreach (var b in battles)
+            var battles = await _battleRepository.GetAllAsync(cancellationToken);
+            foreach (var battle in battles)
             {
-                await _battleRepository.DeleteAsync(b.BattleId, ct);
+                await _battleRepository.DeleteAsync(battle.BattleId, cancellationToken);
             }
         }
 
-        public async Task ForceSettleBattleAsync(int battleId, CancellationToken ct = default)
+        public async Task ForceSettleBattleAsync(int battleId, CancellationToken cancellationToken = default)
         {
-            await this.DistributePayoutsAsync(battleId, ct);
+            await this.DistributePayoutsAsync(battleId, cancellationToken);
         }
 
-        public async Task<BattleBet?> GetBetAsync(int userId, int battleId, CancellationToken ct = default)
+        public async Task<BattleBet?> GetBetAsync(int userId, int battleId, CancellationToken cancellationToken = default)
         {
-            return await _betRepository.GetByIdAsync(userId, battleId, ct);
+            return await _betRepository.GetByIdAsync(userId, battleId, cancellationToken);
         }
 
         public async Task<IEnumerable<Battle>> GetBattlesAsync(CancellationToken cancellationToken = default)

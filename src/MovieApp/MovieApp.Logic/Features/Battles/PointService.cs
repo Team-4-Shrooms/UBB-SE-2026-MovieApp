@@ -27,9 +27,9 @@ namespace MovieApp.Logic.Features.Battles
         }
 
         /// <inheritdoc/>
-        public async Task<UserStats> GetUserStatsAsync(int userId, CancellationToken ct = default)
+        public async Task<UserStats> GetUserStatsAsync(int userId, CancellationToken cancellationToken = default)
         {
-            var stats = await _userStatsRepository.GetByUserIdAsync(userId, ct);
+            var stats = await _userStatsRepository.GetByUserIdAsync(userId, cancellationToken);
 
             if (stats == null)
             {
@@ -37,16 +37,16 @@ namespace MovieApp.Logic.Features.Battles
                     ?? throw new InvalidOperationException("User not found.");
 
                 stats = new UserStats { User = user, TotalPoints = 0, WeeklyScore = 0 };
-                await _userStatsRepository.InsertAsync(stats, ct);
+                await _userStatsRepository.InsertAsync(stats, cancellationToken);
             }
 
             return stats;
         }
 
         /// <inheritdoc/>
-        public async Task AddPointsAsync(int userId, int movieId, bool isBattleMovie, CancellationToken ct = default)
+        public async Task AddPointsAsync(int userId, int movieId, bool isBattleMovie, CancellationToken cancellationToken = default)
         {
-            var stats = await this.GetUserStatsAsync(userId, ct);
+            var stats = await this.GetUserStatsAsync(userId, cancellationToken);
             var movie = await _movieRepository.GetMovieByIdAsync(movieId);
 
             if (movie == null)
@@ -69,42 +69,42 @@ namespace MovieApp.Logic.Features.Battles
             }
 
             stats.TotalPoints = Math.Max(0, stats.TotalPoints + pointsToAdd);
-            await _userStatsRepository.UpdateAsync(stats, ct);
+            await _userStatsRepository.UpdateAsync(stats, cancellationToken);
 
-            await _badgeService.CheckAndAwardBadgesAsync(userId, ct);
+            await _badgeService.CheckAndAwardBadgesAsync(userId, cancellationToken);
         }
 
-        public async Task DeductPointsAsync(int userId, int points, CancellationToken ct = default)
+        public async Task DeductPointsAsync(int userId, int points, CancellationToken cancellationToken = default)
         {
-            var stats = await this.GetUserStatsAsync(userId, ct);
+            var stats = await this.GetUserStatsAsync(userId, cancellationToken);
             stats.TotalPoints = Math.Max(0, stats.TotalPoints - points);
-            await _userStatsRepository.UpdateAsync(stats, ct);
+            await _userStatsRepository.UpdateAsync(stats, cancellationToken);
         }
 
-        public async Task FreezePointsAsync(int userId, int amount, CancellationToken ct = default)
+        public async Task FreezePointsAsync(int userId, int amount, CancellationToken cancellationToken = default)
         {
-            var stats = await this.GetUserStatsAsync(userId, ct);
+            var stats = await this.GetUserStatsAsync(userId, cancellationToken);
             if (stats.TotalPoints < amount)
             {
                 throw new InvalidOperationException($"Insufficient points. Required: {amount}, available: {stats.TotalPoints}.");
             }
 
             stats.TotalPoints -= amount;
-            await _userStatsRepository.UpdateAsync(stats, ct);
+            await _userStatsRepository.UpdateAsync(stats, cancellationToken);
         }
 
-        public async Task RefundPointsAsync(int userId, int amount, CancellationToken ct = default)
+        public async Task RefundPointsAsync(int userId, int amount, CancellationToken cancellationToken = default)
         {
-            var stats = await this.GetUserStatsAsync(userId, ct);
+            var stats = await this.GetUserStatsAsync(userId, cancellationToken);
             stats.TotalPoints += amount;
-            await _userStatsRepository.UpdateAsync(stats, ct);
+            await _userStatsRepository.UpdateAsync(stats, cancellationToken);
         }
 
-        public async Task UpdateWeeklyScoreAsync(int userId, CancellationToken ct = default)
+        public async Task UpdateWeeklyScoreAsync(int userId, CancellationToken cancellationToken = default)
         {
-            var stats = await this.GetUserStatsAsync(userId, ct);
+            var stats = await this.GetUserStatsAsync(userId, cancellationToken);
             stats.WeeklyScore = stats.TotalPoints;
-            await _userStatsRepository.UpdateAsync(stats, ct);
+            await _userStatsRepository.UpdateAsync(stats, cancellationToken);
         }
     }
 }

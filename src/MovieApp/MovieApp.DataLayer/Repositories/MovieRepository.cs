@@ -24,7 +24,7 @@ namespace MovieApp.DataLayer.Repositories
 
         public async Task<bool> UserOwnsMovieAsync(int userId, int movieId)
         {
-            return await _context.OwnedMovies.AnyAsync(om => om.User.Id == userId && om.Movie.Id == movieId);
+            return await _context.OwnedMovies.AnyAsync(ownedMovie => ownedMovie.User.Id == userId && ownedMovie.Movie.Id == movieId);
         }
 
         public async Task AddOwnedMovieAsync(OwnedMovie ownership)
@@ -44,55 +44,54 @@ namespace MovieApp.DataLayer.Repositories
 
         public async Task<List<Movie>> SearchMoviesAsync(string pattern, int limit)
         {
-            return await _context.Movies.Where(m => m.Title.Contains(pattern)).Take(limit).ToListAsync();
+            return await _context.Movies.Where(movie => movie.Title.Contains(pattern)).Take(limit).ToListAsync();
         }
 
-        public async Task<IReadOnlyList<Genre>> GetGenresAsync(CancellationToken ct = default)
-        => await _context.Genres.ToListAsync(ct);
+        public async Task<IReadOnlyList<Genre>> GetGenresAsync(CancellationToken cancellationToken = default)
+        => await _context.Genres.ToListAsync(cancellationToken);
 
-        public async Task<IReadOnlyList<Actor>> GetActorsAsync(CancellationToken ct = default)
-            => await _context.Actors.ToListAsync(ct);
+        public async Task<IReadOnlyList<Actor>> GetActorsAsync(CancellationToken cancellationToken = default)
+            => await _context.Actors.ToListAsync(cancellationToken);
 
-        public async Task<IReadOnlyList<Director>> GetDirectorsAsync(CancellationToken ct = default)
-            => await _context.Directors.ToListAsync(ct);
+        public async Task<IReadOnlyList<Director>> GetDirectorsAsync(CancellationToken cancellationToken = default)
+            => await _context.Directors.ToListAsync(cancellationToken);
 
-        public async Task<IReadOnlyList<Movie>> FindMoviesByCriteriaAsync(int genreId, int actorId, int directorId, CancellationToken ct = default)
+        public async Task<IReadOnlyList<Movie>> FindMoviesByCriteriaAsync(int genreId, int actorId, int directorId, CancellationToken cancellationToken = default)
         {
             return await _context.Movies
-                .Where(m => m.Genres.Any(g => g.Id == genreId) &&
-                            m.Actors.Any(a => a.Id == actorId) &&
-                            m.Directors.Any(d => d.Id == directorId))
-                .ToListAsync(ct);
+                .Where(movie => movie.Genres.Any(genre => genre.Id == genreId) &&
+                            movie.Actors.Any(actor => actor.Id == actorId) &&
+                            movie.Directors.Any(director => director.Id == directorId))
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task<IReadOnlyList<Movie>> FindMoviesByAnyCriteriaAsync(int genreId, int actorId, int directorId, CancellationToken ct = default)
+        public async Task<IReadOnlyList<Movie>> FindMoviesByAnyCriteriaAsync(int genreId, int actorId, int directorId, CancellationToken cancellationToken = default)
         {
             return await _context.Movies
-                .Where(m => m.Genres.Any(g => g.Id == genreId) ||
-                            m.Actors.Any(a => a.Id == actorId) ||
-                            m.Directors.Any(d => d.Id == directorId))
-                .ToListAsync(ct);
+                .Where(movie => movie.Genres.Any(genre => genre.Id == genreId) ||
+                            movie.Actors.Any(actor => actor.Id == actorId) ||
+                            movie.Directors.Any(director => director.Id == directorId))
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task<IReadOnlyList<int>> FindScreeningEventIdsForMovieAsync(int movieId, CancellationToken ct = default)
+        public async Task<IReadOnlyList<int>> FindScreeningEventIdsForMovieAsync(int movieId, CancellationToken cancellationToken = default)
         {
             return await _context.Screenings
-                .Where(s => s.MovieId == movieId)
-                .Select(s => s.EventId)
-                .ToListAsync(ct);
+                .Where(screening => screening.MovieId == movieId)
+                .Select(screening => screening.EventId)
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task<IReadOnlyList<ReelCombination>> GetValidReelCombinationsAsync(CancellationToken ct = default)
+        public async Task<IReadOnlyList<ReelCombination>> GetValidReelCombinationsAsync(CancellationToken cancellationToken = default)
         {
             var now = DateTime.UtcNow;
 
-            // Get movies that have at least one screening in the future
             var moviesWithFutureScreenings = await _context.Movies
-                .Include(m => m.Genres)
-                .Include(m => m.Actors)
-                .Include(m => m.Directors)
-                .Where(m => _context.Screenings.Any(s => s.MovieId == m.Id && s.ScreeningTime >= now))
-                .ToListAsync(ct);
+                .Include(movie => movie.Genres)
+                .Include(movie => movie.Actors)
+                .Include(movie => movie.Directors)
+                .Where(movie => _context.Screenings.Any(screening => screening.MovieId == movie.Id && screening.ScreeningTime >= now))
+                .ToListAsync(cancellationToken);
 
             var combinations = new List<ReelCombination>();
 
@@ -115,13 +114,12 @@ namespace MovieApp.DataLayer.Repositories
                 }
             }
 
-            // Filter to unique combinations based on the IDs of the entities
             return combinations
-                .DistinctBy(c => new
+                .DistinctBy(combination => new
                 {
-                    GenreId = c.Genre.Id,
-                    ActorId = c.Actor.Id,
-                    DirectorId = c.Director.Id
+                    GenreId = combination.Genre.Id,
+                    ActorId = combination.Actor.Id,
+                    DirectorId = combination.Director.Id
                 })
                 .ToList();
         }

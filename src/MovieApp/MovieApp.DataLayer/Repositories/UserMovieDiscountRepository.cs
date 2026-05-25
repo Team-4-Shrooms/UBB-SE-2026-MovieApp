@@ -20,28 +20,28 @@ namespace MovieApp.DataLayer.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task AddAsync(Reward reward, CancellationToken ct = default)
+        public async Task AddAsync(Reward reward, CancellationToken cancellationToken = default)
         {
             this.context.Rewards.Add(reward);
-            await this.context.SaveChangesAsync(ct);
+            await this.context.SaveChangesAsync(cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<List<Reward>> GetDiscountsForUserAsync(int userIdentifier, CancellationToken ct = default)
+        public async Task<List<Reward>> GetDiscountsForUserAsync(int userIdentifier, CancellationToken cancellationToken = default)
         {
             return await this.context.Rewards
-                .Where(r => r.OwnerUserId == userIdentifier)
-                .ToListAsync(ct);
+                .Where(reward => reward.OwnerUserId == userIdentifier)
+                .ToListAsync(cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task MarkRedeemedAsync(int rewardIdentifier, CancellationToken ct = default)
+        public async Task MarkRedeemedAsync(int rewardIdentifier, CancellationToken cancellationToken = default)
         {
-            var reward = await this.context.Rewards.FindAsync(new object[] { rewardIdentifier }, ct);
+            var reward = await this.context.Rewards.FindAsync(new object[] { rewardIdentifier }, cancellationToken);
             if (reward != null)
             {
                 reward.Redeem();
-                await this.context.SaveChangesAsync(ct);
+                await this.context.SaveChangesAsync(cancellationToken);
             }
         }
     }

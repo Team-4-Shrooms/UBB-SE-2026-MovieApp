@@ -137,7 +137,7 @@ namespace MovieApp.Logic.Services
 
             if (jackpotMovie is not null)
             {
-                await GrantJackpotDiscount(userIdentifier, jackpotMovie.Id);
+                await GrantJackpotDiscountAsync(userIdentifier, jackpotMovie.Id);
                 result.JackpotDiscountApplied = true;
                 result.DiscountPercentage = DiscountPercentage;
             }
@@ -288,7 +288,7 @@ namespace MovieApp.Logic.Services
             return movies.FirstOrDefault();
         }
 
-        public async Task GrantJackpotDiscount(int userIdentifier, int movieIdentifier)
+        public async Task GrantJackpotDiscountAsync(int userIdentifier, int movieIdentifier)
         {
             Movie? movie = await _movieRepository.GetMovieByIdAsync(movieIdentifier);
             string title = movie?.Title ?? "a movie";
@@ -344,9 +344,5 @@ namespace MovieApp.Logic.Services
             return state;
         }
 
-        public Task GrantJackpotDiscountAsync(int userIdentifier, int movieIdentifier)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
