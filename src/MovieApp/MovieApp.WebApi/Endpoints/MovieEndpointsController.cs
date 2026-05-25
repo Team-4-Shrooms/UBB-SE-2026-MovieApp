@@ -27,7 +27,7 @@ public sealed class MovieEndpointsController : ControllerBase
     public async Task<IActionResult> GetAllMovies()
     {
         var movies = await _movieService.GetAllMoviesAsync();
-        return Ok(movies.Select(m => m.ToDto()));
+        return Ok(movies.Select(movie => movie.ToDto()));
     }
 
     [HttpGet("{movieId:int}")]
