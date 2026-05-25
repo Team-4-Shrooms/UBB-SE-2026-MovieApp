@@ -1,9 +1,9 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using MovieApp.Logic.Interfaces.Services;
-
 namespace MovieApp.WebApi.Endpoints
 {
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using MovieApp.Logic.Interfaces.Services;
+
     [Authorize]
     [ApiController]
     [Route("api/stats")]
@@ -19,7 +19,7 @@ namespace MovieApp.WebApi.Endpoints
         [HttpGet("{userId:int}")]
         public async Task<IActionResult> GetUserStats(int userId, CancellationToken ct = default)
         {
-            var stats = await _userStatsService.GetByUserIdAsync(userId, ct);
+            DataLayer.Models.UserStats? stats = await _userStatsService.GetByUserIdAsync(userId, ct);
             if (stats == null)
             {
                 return NotFound();

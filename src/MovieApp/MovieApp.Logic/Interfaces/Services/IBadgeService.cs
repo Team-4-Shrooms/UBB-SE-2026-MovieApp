@@ -1,6 +1,7 @@
+namespace MovieApp.Logic.Interfaces.Services;
+
 using MovieApp.DataLayer.Models;
 
-namespace MovieApp.Logic.Interfaces.Services;
 /// <summary>
 /// Defines business logic operations for badge/achievement management and awarding.
 /// </summary>

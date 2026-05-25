@@ -1,12 +1,12 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using MovieApp.DataLayer.Models;
-using MovieApp.Logic.Interfaces.Services;
-
 namespace MovieApp.Proxy.Services
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using MovieApp.DataLayer.Models;
+    using MovieApp.Logic.Interfaces.Services;
+
     public sealed class BadgeProxyService : IBadgeService
     {
         private readonly ApiClient _apiClient;
@@ -19,13 +19,13 @@ namespace MovieApp.Proxy.Services
 
         public async Task<List<UserBadge>> GetUserBadgesAsync(int userId, CancellationToken ct = default)
         {
-            var result = await _apiClient.GetAsync<List<UserBadge>>($"{_baseEndpoint}/{userId}", ct);
+            List<UserBadge>? result = await _apiClient.GetAsync<List<UserBadge>>($"{_baseEndpoint}/{userId}", ct);
             return result ?? new List<UserBadge>();
         }
 
         public async Task<List<Badge>> GetAllBadgesAsync(CancellationToken ct = default)
         {
-            var result = await _apiClient.GetAsync<List<Badge>>($"{_baseEndpoint}", ct);
+            List<Badge>? result = await _apiClient.GetAsync<List<Badge>>($"{_baseEndpoint}", ct);
             return result ?? new List<Badge>();
         }
 
@@ -36,7 +36,7 @@ namespace MovieApp.Proxy.Services
 
         public async Task<IList<UserStats>> GetLeaderboardAsync(CancellationToken ct = default)
         {
-            var result = await _apiClient.GetAsync<List<UserStats>>($"{_baseEndpoint}/leaderboard", ct);
+            IList<UserStats>? result = await _apiClient.GetAsync<List<UserStats>>($"{_baseEndpoint}/leaderboard", ct);
             return result ?? new List<UserStats>();
         }
     }

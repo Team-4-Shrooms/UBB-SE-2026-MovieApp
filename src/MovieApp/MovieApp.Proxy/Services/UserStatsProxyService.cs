@@ -1,11 +1,11 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using MovieApp.DataLayer.Models;
-using MovieApp.Logic.Interfaces.Services;
-
 namespace MovieApp.Proxy.Services
 {
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using MovieApp.DataLayer.Models;
+    using MovieApp.Logic.Interfaces.Services;
+
     public sealed class UserStatsProxyService : IUserStatsService
     {
         private readonly ApiClient _apiClient;
@@ -23,19 +23,19 @@ namespace MovieApp.Proxy.Services
 
         public async Task<List<UserStats>> GetAllAsync(CancellationToken ct = default)
         {
-            var result = await _apiClient.GetAsync<List<UserStats>>($"{_baseEndpoint}", ct);
+            List<UserStats>? result = await _apiClient.GetAsync<List<UserStats>>($"{_baseEndpoint}", ct);
             return result ?? new List<UserStats>();
         }
 
         public async Task<int> InsertAsync(UserStats userStats, CancellationToken ct = default)
         {
-            var result = await _apiClient.PostAsync<UserStats, int>($"{_baseEndpoint}", userStats, ct);
+            int result = await _apiClient.PostAsync<UserStats, int>($"{_baseEndpoint}", userStats, ct);
             return result;
         }
 
         public async Task<bool> UpdateAsync(UserStats userStats, CancellationToken ct = default)
         {
-            var result = await _apiClient.PutAsync<UserStats, bool>($"{_baseEndpoint}/{userStats.UserStatsId}", userStats, ct);
+            bool result = await _apiClient.PutAsync<UserStats, bool>($"{_baseEndpoint}/{userStats.UserStatsId}", userStats, ct);
             return result;
         }
 
@@ -47,7 +47,7 @@ namespace MovieApp.Proxy.Services
 
         public async Task<IList<UserStats>> GetLeaderboardAsync(CancellationToken ct = default)
         {
-            var result = await _apiClient.GetAsync<List<UserStats>>($"{_baseEndpoint}/leaderboard", ct);
+            List<UserStats>? result = await _apiClient.GetAsync<List<UserStats>>($"{_baseEndpoint}/leaderboard", ct);
             return result ?? new List<UserStats>();
         }
     }
