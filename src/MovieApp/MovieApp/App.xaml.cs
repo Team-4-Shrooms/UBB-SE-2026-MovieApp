@@ -22,6 +22,8 @@ using MovieApp.Features.Wallet.ViewModels;
 using MovieApp.Features.BattlesBet.ViewModels;
 using MovieApp.Features.Screenings.ViewModels;
 using MovieApp.Features.Ambassadors.ViewModels;
+using MovieApp.Features.Badges.ViewModels;
+using MovieApp.Features.Leaderboard.ViewModels;
 
 namespace MovieApp
 {
@@ -172,6 +174,10 @@ namespace MovieApp
 
             // Ambassadors
             services.AddTransient<AmbassadorViewModel>();
+
+            // Badges and Leaderboard
+            services.AddTransient<BadgeViewModel>();
+            services.AddTransient<LeaderboardViewModel>();
 
             // Screenings
             services.AddTransient<ScreeningViewModel>();

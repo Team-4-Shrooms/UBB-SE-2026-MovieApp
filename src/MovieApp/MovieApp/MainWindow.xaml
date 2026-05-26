@@ -43,6 +43,8 @@
             <NavigationViewItem Content="Battles" Tag="BattlesBet" Icon="Favorite"/>
             <NavigationViewItem Content="Price Watchers" Tag="PriceWatcher" Icon="Tag"/>
             <NavigationViewItem Content="Screenings" Tag="Screenings" Icon="VideoChat"/>
+            <NavigationViewItem Content="Badges" Tag="Badges" Icon="Tag"/>
+            <NavigationViewItem Content="Leaderboard" Tag="Leaderboard" Icon="List"/>
         </NavigationView.MenuItems>
 
         <Frame x:Name="ContentFrame" />

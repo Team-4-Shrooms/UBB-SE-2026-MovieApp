@@ -25,6 +25,8 @@ using MovieApp.Features.Ambassadors.Views;
 using MovieApp.Features.Referrals.Views;
 using MovieApp.Features.PriceWatcher.Views;
 using MovieApp.Features.Screenings.Views;
+using MovieApp.Features.Badges.Views;
+using MovieApp.Features.Leaderboard.Views;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -63,6 +65,8 @@ namespace MovieApp
             ["Referrals"] = typeof(ReferralPage),
             ["PriceWatcher"] = typeof(PriceWatcherPage),
             ["Screenings"] = typeof(ScreeningPage),
+            ["Badges"] = typeof(BadgePage),
+            ["Leaderboard"] = typeof(LeaderboardPage),
         };
 
         public MainWindow()
