@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,45 +16,51 @@ public sealed class TriviaProxyService : ITriviaService
         _apiClient = apiClient;
     }
 
-    public async Task<List<TriviaQuestion>> GetAllQuestionsAsync(CancellationToken cancellationToken = default)
+    public async Task<List<TriviaQuestion>> GetAllQuestionsAsync(CancellationToken ct = default)
     {
-        // Fetches questions from the "General" category as a representative set.
-        var questions = await _apiClient.GetAsync<List<TriviaQuestion>>(
-            "api/trivia/category/General", cancellationToken);
+        var questions = await _apiClient.GetAsync<List<TriviaQuestion>>("api/trivia/questions", ct);
         return questions ?? new List<TriviaQuestion>();
     }
 
-    public async Task<List<TriviaQuestion>> GetQuestionsByMovieIdAsync(int movieId, CancellationToken cancellationToken = default)
+    public async Task<List<TriviaQuestion>> GetQuestionsByCategoryAsync(
+        string category,
+        CancellationToken ct = default)
     {
         var questions = await _apiClient.GetAsync<List<TriviaQuestion>>(
-            $"api/trivia/movie/{movieId}", cancellationToken);
+            $"api/trivia/questions/category/{Uri.EscapeDataString(category)}", ct);
         return questions ?? new List<TriviaQuestion>();
     }
 
-    public Task<TriviaQuestion?> GetQuestionByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<List<TriviaQuestion>> GetQuestionsByMovieIdAsync(
+        int movieId,
+        CancellationToken ct = default)
     {
-        // No single-question-by-id endpoint exists; callers should use GetByCategoryAsync instead.
-        return Task.FromResult<TriviaQuestion?>(null);
+        var questions = await _apiClient.GetAsync<List<TriviaQuestion>>(
+            $"api/trivia/questions/movie/{movieId}", ct);
+        return questions ?? new List<TriviaQuestion>();
     }
 
-    public async Task<List<TriviaReward>> GetRewardsByUserIdAsync(int userId, CancellationToken cancellationToken = default)
+    public async Task<TriviaQuestion?> GetQuestionByIdAsync(int id, CancellationToken ct = default)
     {
-        var reward = await _apiClient.GetAsync<TriviaReward>(
-            $"api/trivia/reward/{userId}", cancellationToken);
-        return reward is null ? new List<TriviaReward>() : new List<TriviaReward> { reward };
+        return await _apiClient.GetAsync<TriviaQuestion>($"api/trivia/questions/{id}", ct);
     }
 
-    public async Task<int> AwardRewardAsync(int userId, CancellationToken cancellationToken = default)
+    public async Task<List<TriviaReward>> GetRewardsByUserIdAsync(int userId, CancellationToken ct = default)
+    {
+        var rewards = await _apiClient.GetAsync<List<TriviaReward>>($"api/trivia/rewards/{userId}", ct);
+        return rewards ?? new List<TriviaReward>();
+    }
+
+    public async Task<int> AwardRewardAsync(int userId, CancellationToken ct = default)
     {
         var rewardId = await _apiClient.PostAsync<object, int>(
-            "api/trivia/reward", new { UserId = userId }, cancellationToken);
+            $"api/trivia/rewards/{userId}/award", new { }, ct);
         return rewardId;
     }
 
-    public async Task<bool> RedeemRewardAsync(int rewardId, CancellationToken cancellationToken = default)
+    public async Task<bool> RedeemRewardAsync(int rewardId, CancellationToken ct = default)
     {
-        await _apiClient.PutAsync(
-            $"api/trivia/reward/{rewardId}/redeem", new { }, cancellationToken);
-        return true;
+        return await _apiClient.PostAsync<object, bool>(
+            $"api/trivia/rewards/{rewardId}/redeem", new { }, ct);
     }
 }

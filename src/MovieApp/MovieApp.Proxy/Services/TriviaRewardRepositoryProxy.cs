@@ -1,4 +1,5 @@
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MovieApp.DataLayer.Interfaces.Repositories;
@@ -6,6 +7,10 @@ using MovieApp.DataLayer.Models;
 
 namespace MovieApp.Proxy.Services;
 
+/// <summary>
+/// Proxy implementation of <see cref="ITriviaRewardRepository"/> that delegates to the
+/// WebApi service endpoints.
+/// </summary>
 public sealed class TriviaRewardRepositoryProxy : ITriviaRewardRepository
 {
     private readonly ApiClient _apiClient;
@@ -18,8 +23,8 @@ public sealed class TriviaRewardRepositoryProxy : ITriviaRewardRepository
     public async Task AddAsync(TriviaReward reward, CancellationToken cancellationToken = default)
     {
         await _apiClient.PostAsync(
-            "api/trivia/reward",
-            new { reward.UserId },
+            $"api/trivia/rewards/{reward.UserId}/award",
+            new { },
             cancellationToken);
     }
 
@@ -27,15 +32,18 @@ public sealed class TriviaRewardRepositoryProxy : ITriviaRewardRepository
         int userIdentifier,
         CancellationToken cancellationToken = default)
     {
-        return await _apiClient.GetAsync<TriviaReward>(
-            $"api/trivia/reward/{userIdentifier}",
+        var rewards = await _apiClient.GetAsync<List<TriviaReward>>(
+            $"api/trivia/rewards/{userIdentifier}",
             cancellationToken);
+        return rewards?.FirstOrDefault(reward => !reward.IsRedeemed);
     }
 
-    public Task MarkAsRedeemedAsync(int rewardIdentifier, CancellationToken cancellationToken = default)
+    public async Task MarkAsRedeemedAsync(
+        int rewardIdentifier,
+        CancellationToken cancellationToken = default)
     {
-        return _apiClient.PutAsync(
-            $"api/trivia/reward/{rewardIdentifier}/redeem",
+        await _apiClient.PostAsync(
+            $"api/trivia/rewards/{rewardIdentifier}/redeem",
             new { },
             cancellationToken);
     }
