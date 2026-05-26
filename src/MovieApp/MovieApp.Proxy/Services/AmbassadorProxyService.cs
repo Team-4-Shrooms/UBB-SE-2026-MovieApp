@@ -57,35 +57,35 @@ namespace MovieApp.Proxy.Services
             return result ?? false;
         }
 
-        public async Task ProcessReferralAsync(string referralCode, int friendId, int eventId, CancellationToken ct = default)
+        public async Task ProcessReferralAsync(string referralCode, int friendId, int eventId, CancellationToken cancellationToken = default)
         {
-            await _apiClient.PostAsync($"/api/ambassadors/referral/process", new { referralCode, friendId, eventId }, ct);
+            await _apiClient.PostAsync($"{_baseEndpoint}/referral/process", new { referralCode, friendId, eventId }, cancellationToken);
         }
 
-        public async Task RedeemRewardAsync(int userId, CancellationToken ct = default)
+        public async Task RedeemRewardAsync(int userId, CancellationToken cancellationToken = default)
         {
-            await _apiClient.PostAsync($"/api/ambassadors/{userId}/rewards/redeem", new { }, ct);
+            await _apiClient.PostAsync($"{_baseEndpoint}/{userId}/rewards/redeem", new { }, cancellationToken);
         }
 
         public async Task<int?> ResolveCodeToUserIdAsync(string referralCode, CancellationToken cancellationToken = default)
         {
-            return await _apiClient.GetAsync<int?>($"/api/ambassadors/resolve?code={referralCode}", cancellationToken);
+            return await _apiClient.GetAsync<int?>($"{_baseEndpoint}/resolve?code={referralCode}", cancellationToken);
         }
 
         public async Task<bool> ReferralLogExistsAsync(int ambassadorId, int friendId, int eventId, CancellationToken cancellationToken = default)
         {
-            var result = await _apiClient.GetAsync<bool?>($"/api/ambassadors/{ambassadorId}/referral-log/exists?friendId={friendId}&eventId={eventId}", cancellationToken);
+            var result = await _apiClient.GetAsync<bool?>($"{_baseEndpoint}/{ambassadorId}/referral-log/exists?friendId={friendId}&eventId={eventId}", cancellationToken);
             return result ?? false;
         }
 
         public async Task LogReferralByAmbassadorIdAsync(int ambassadorId, int friendId, int eventId, CancellationToken cancellationToken = default)
         {
-            await _apiClient.PostAsync($"/api/ambassadors/referral-log", new { ambassadorId, friendId, eventId }, cancellationToken);
+            await _apiClient.PostAsync($"{_baseEndpoint}/referral-log", new { ambassadorId, friendId, eventId }, cancellationToken);
         }
 
         public async Task DecrementRewardBalanceAsync(int userId, CancellationToken cancellationToken = default)
         {
-            await _apiClient.PostAsync($"/api/ambassadors/{userId}/rewards/decrement", new { }, cancellationToken);
+            await _apiClient.PostAsync($"{_baseEndpoint}/{userId}/rewards/decrement", new { }, cancellationToken);
         }
     }
 }
