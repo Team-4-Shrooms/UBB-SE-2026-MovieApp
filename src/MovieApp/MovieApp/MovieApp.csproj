@@ -197,14 +197,6 @@
         <None Remove="Features\Ambassadors\Views\AmbassadorPage.xaml" />
     </ItemGroup>
     <ItemGroup>
-      <Page Remove="Features\BattlesBet\Views\BattlePage.xaml" />
-    </ItemGroup>
-    <ItemGroup>
-      <None Update="Features\BattlesBet\Views\BattlePage.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </None>
-    </ItemGroup>
-    <ItemGroup>
         <Page Update="Features\MovieCatalog\Views\MovieCatalogPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>

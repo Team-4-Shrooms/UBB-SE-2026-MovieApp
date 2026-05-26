@@ -233,9 +233,9 @@ public class BattleViewModel : INotifyPropertyChanged
             ShowBetForm = false;
             await LoadBattleAsync(settleExpired: false);
         }
-        catch (InvalidOperationException ex)
+        catch (InvalidOperationException exception)
         {
-            StatusMessage = ex.Message;
+            StatusMessage = exception.Message;
         }
     }
 
@@ -254,9 +254,9 @@ public class BattleViewModel : INotifyPropertyChanged
             StatusMessage = "Battle settled! Points have been distributed.";
             await LoadBattleAsync(settleExpired: false);
         }
-        catch (InvalidOperationException ex)
+        catch (InvalidOperationException exception)
         {
-            StatusMessage = ex.Message;
+            StatusMessage = exception.Message;
         }
         finally
         {
@@ -275,9 +275,9 @@ public class BattleViewModel : INotifyPropertyChanged
             StatusMessage = "Demo reset! A new battle has been created — place your bet!";
             await LoadBattleAsync(settleExpired: false);
         }
-        catch (InvalidOperationException ex)
+        catch (InvalidOperationException exception)
         {
-            StatusMessage = ex.Message;
+            StatusMessage = exception.Message;
         }
         finally
         {
