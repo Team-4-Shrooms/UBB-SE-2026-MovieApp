@@ -25,7 +25,7 @@ namespace MovieApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            await this._battleService.SettleExpiredBattlesAsync();
+            //await this._battleService.SettleExpiredBattlesAsync();
 
             int currentUserId = this._currentUserService.UserId;
 

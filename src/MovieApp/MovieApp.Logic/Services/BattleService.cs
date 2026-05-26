@@ -188,7 +188,7 @@ namespace MovieApp.Logic.Services
                 throw new InvalidOperationException("Selected movie is not part of this battle.");
             }
 
-            await _pointService.FreezePointsAsync(userId, amount, ct);
+            //await _pointService.FreezePointsAsync(userId, amount, ct);
 
             var bet = new BattleBet { User = user, Battle = battle, Movie = movie, Amount = amount };
             await _betRepository.InsertAsync(bet, ct);
