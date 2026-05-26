@@ -34,7 +34,8 @@ public sealed class ScreeningsController : ControllerBase
             return Ok(screenings);
         }
 
-        return BadRequest("Must provide either eventId or movieId.");
+        var allScreenings = await _screeningService.GetAllScreeningsAsync();
+        return Ok(allScreenings);
     }
 
     [HttpGet("{id:int}")]

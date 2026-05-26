@@ -4,8 +4,9 @@ namespace MovieApp.Proxy.Services
     using System.Threading.Tasks;
     using MovieApp.DataLayer.Interfaces.Repositories;
     using MovieApp.DataLayer.Models;
+    using MovieApp.Logic.Interfaces.Services;
 
-    public sealed class PriceWatcherProxyService : IPriceWatcherRepository
+    public sealed class PriceWatcherProxyService : IPriceWatcherService
     {
         private readonly ApiClient _apiClient;
         private readonly string _baseEndpoint = "/api/price-watchers";
