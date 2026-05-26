@@ -13,6 +13,7 @@ using MovieApp.Proxy.Services;
 using MovieApp.Auth;
 using MovieApp.WebApi.Data;
 using MovieApp.Features.Marketplace.ViewModels;
+using MovieApp.Features.Notification.ViewModels;
 using MovieApp.Features.SlotMachine.ViewModels;
 using MovieApp.Features.Marathon.ViewModels;
 using MovieApp.Features.Wallet.ViewModels;
@@ -95,9 +96,15 @@ namespace MovieApp
             services.AddTransient<ISlotMachineService, SlotMachineProxyService>();
             //services.AddTransient<IScreeningService, ScreeningProxyService>();
             services.AddTransient<IBookingService, BookingProxyService>();
+            services.AddTransient<IReferralLogService, ReferralProxyService>();
+            services.AddTransient<IReferralValidator, ReferralProxyService>();
+            services.AddTransient<IReferralCodeGenerator, ReferralProxyService>();
             services.AddTransient<ICommentService, CommentProxyService>();
             services.AddTransient<IAmbassadorService, AmbassadorProxyService>();
             services.AddTransient<IMarathonService, MarathonProxyService>();
+            services.AddTransient<ITriviaService, TriviaProxyService>();
+            services.AddTransient<IPriceWatcherService, PriceWatcherProxyService>();
+            services.AddTransient<IExternalReviewService, ExternalReviewProxyService>();
 
             // Reels Upload
             services.AddTransient<MovieApp.Logic.Features.ReelsUpload.IVideoStorageService, VideoStorageProxyService>();
@@ -147,8 +154,13 @@ namespace MovieApp
             services.AddTransient<WalletViewModel>();
             services.AddTransient<FlashSaleViewModel>(sp => new FlashSaleViewModel(DateTime.Now.AddHours(2)));
 
+            // Notification — Singleton so MainWindow badge shares the same instance as the page
+            services.AddSingleton<NotificationViewModel>();
             // Slot Machine
             services.AddTransient<SlotMachineViewModel>();
+
+            // Ambassadors
+            services.AddTransient<MovieApp.Features.Ambassadors.ViewModels.AmbassadorViewModel>();
 
             var provider = services.BuildServiceProvider();
             Services = provider;

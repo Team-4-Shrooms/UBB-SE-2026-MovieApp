@@ -255,6 +255,24 @@ public sealed class BookSeatsRequestBody
     public List<SeatRequest> Seats { get; set; } = new();
 }
 
+public sealed class CreateAmbassadorProfileRequestBody
+{
+    public int UserId { get; set; }
+    public string Code { get; set; } = string.Empty;
+}
+
+public sealed class AddReferralLogRequestBody
+{
+    public int AmbassadorId { get; set; }
+    public int FriendId { get; set; }
+    public int EventId { get; set; }
+}
+
+public sealed class ApplyRewardRequestBody
+{
+    public int AmbassadorId { get; set; }
+}
+
 public class PlaceBetRequest
 {
     public int MovieId { get; set; }
@@ -280,10 +298,6 @@ public sealed class ReplyCommentRequest
 }
 
 
-public class CreateAmbassadorProfileRequestBody
-{
-    public string ReferralCode { get; set; } = string.Empty;
-}
 
 public class ProcessReferralRequestBody
 {
