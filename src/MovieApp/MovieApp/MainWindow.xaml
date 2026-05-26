@@ -30,7 +30,15 @@
             <NavigationViewItem Content="Events" Tag="Events" Icon="Calendar"/>
             <NavigationViewItem Content="Inventory" Tag="Inventory" Icon="AllApps"/>
             <NavigationViewItem Content="Wallet" Tag="Wallet" Icon="PreviewLink"/>
+            <NavigationViewItem Content="Notifications" Tag="Notification" Icon="Mail">
+                <NavigationViewItem.InfoBadge>
+                    <InfoBadge Value="{x:Bind NotificationViewModel.UnreadCount, Mode=OneWay}"
+                               Visibility="{x:Bind NotificationViewModel.BadgeVisibility, Mode=OneWay}"/>
+                </NavigationViewItem.InfoBadge>
+            </NavigationViewItem>
             <NavigationViewItem Content="Slot Machine" Tag="SlotMachine" Icon="Placeholder"/>
+            <NavigationViewItem Content="Marathons" Tag="Marathon" Icon="Go"/>
+            <NavigationViewItem Content="Ambassadors" Tag="Ambassadors" Icon="Contact"/>
         </NavigationView.MenuItems>
 
         <Frame x:Name="ContentFrame" />
