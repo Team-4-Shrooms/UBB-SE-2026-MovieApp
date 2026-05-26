@@ -19,6 +19,8 @@ using MovieApp.Features.Notification.ViewModels;
 using MovieApp.Features.Notification.Views;
 using MovieApp.Features.SlotMachine.Views;
 using MovieApp.Features.Wallet.Views;
+using MovieApp.Features.BattlesBet.Views;
+using MovieApp.Features.BattlesBet.ViewModels;
 using MovieApp.Features.Ambassadors.Views;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -53,6 +55,7 @@ namespace MovieApp
             ["Notification"] = typeof(NotificationPage),
             ["SlotMachine"] = typeof(SlotMachinePage),
             ["Marathon"] = typeof(MarathonPage),
+            ["BattlesBet"] = typeof(BattlePage),
             ["Ambassadors"] = typeof(AmbassadorPage),
         };
 
@@ -70,6 +73,11 @@ namespace MovieApp
                 PageMap.TryGetValue(tag, out Type? pageType))
             {
                 ContentFrame.Navigate(pageType);
+
+                if (ContentFrame.Content is BattlePage battlePage)
+                {
+                    battlePage.DataContext = App.Services.GetRequiredService<BattleViewModel>();
+                }
             }
         }
     }
