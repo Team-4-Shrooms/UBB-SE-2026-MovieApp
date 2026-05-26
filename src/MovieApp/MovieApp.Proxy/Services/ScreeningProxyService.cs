@@ -41,6 +41,12 @@ namespace MovieApp.Proxy.Services
             return result ?? new List<Seat>();
         }
 
+        public async Task<IReadOnlyList<Screening>> GetAllScreeningsAsync(CancellationToken cancellationToken = default)
+        {
+            var result = await _apiClient.GetAsync<List<Screening>>($"{_baseEndpoint}");
+            return result ?? new List<Screening>();
+        }
+        
         public async Task<ScreeningDetailsDto?> GetScreeningDetailsAsync(int screeningId, CancellationToken cancellationToken = default)
         {
             return await _apiClient.GetAsync<ScreeningDetailsDto>($"{_baseEndpoint}/{screeningId}/details");

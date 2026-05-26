@@ -39,6 +39,7 @@
             <NavigationViewItem Content="Slot Machine" Tag="SlotMachine" Icon="Placeholder"/>
             <NavigationViewItem Content="Marathons" Tag="Marathon" Icon="Go"/>
             <NavigationViewItem Content="Ambassadors" Tag="Ambassadors" Icon="Contact"/>
+            <NavigationViewItem Content="Screenings" Tag="Screenings" Icon="VideoChat"/>
         </NavigationView.MenuItems>
 
         <Frame x:Name="ContentFrame" />
