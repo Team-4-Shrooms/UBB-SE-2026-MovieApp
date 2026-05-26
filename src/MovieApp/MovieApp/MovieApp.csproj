@@ -90,7 +90,7 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
-        <PackageReference Include="Google.Apis.YouTube.v3" Version="1.73.0.4119" />
+        <PackageReference Include="Google.Apis.YouTube.v3" Version="1.73.0.4137" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.26" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.1721" />
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260416003" />
@@ -193,6 +193,8 @@
         <None Remove="Features\ReelsUpload\Views\ReelsUploadPage.xaml" />
         <None Remove="Features\TrailerScraping\Views\TrailerScrapingPage.xaml" />
         <None Remove="Features\Wallet\Views\WalletPage.xaml" />
+        <None Remove="Features\BattlesBet\Views\BattlePage.xaml" />
+        <None Remove="Features\Ambassadors\Views\AmbassadorPage.xaml" />
     </ItemGroup>
     <ItemGroup>
         <Page Update="Features\MovieCatalog\Views\MovieCatalogPage.xaml">
@@ -247,6 +249,12 @@
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Features\MovieSwipe\Views\MovieSwipePage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Features\BattlesBet\Views\BattlePage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Features\Ambassadors\Views\AmbassadorPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
     </ItemGroup>

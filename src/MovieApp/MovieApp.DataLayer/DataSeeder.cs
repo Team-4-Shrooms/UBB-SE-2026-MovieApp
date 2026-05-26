@@ -42,7 +42,10 @@ namespace MovieApp.DataLayer
             await SeedMovieEventsAsync();
             await SeedMovieReviewsAsync();
             await SeedEquipmentAsync();
+            await SeedScreeningsAndRoomsAsync();
+            await SeedAdditionalRoomsAsync();
             await FixExistingDataAsync();
+            await SeedTriviaQuestionsAsync();
         }
 
         /// <summary>
@@ -1514,6 +1517,304 @@ namespace MovieApp.DataLayer
 
             await _context.SaveChangesAsync();
         }
+        private async Task SeedTriviaQuestionsAsync()
+        {
+            if (await _context.TriviaQuestions.AnyAsync())
+            {
+                return;
+            }
+
+            // Look up movie IDs for movie-specific questions.
+            Movie? inception = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Inception");
+            Movie? darkKnight = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Dark Knight");
+            Movie? matrix = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Matrix");
+            Movie? interstellar = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Interstellar");
+            Movie? pulpFiction = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Pulp Fiction");
+            Movie? godfather = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Godfather");
+            Movie? shawshank = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Shawshank Redemption");
+            Movie? forrestGump = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Forrest Gump");
+            Movie? laLaLand = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "La La Land");
+
+            var questions = new List<TriviaQuestion>();
+
+            // ── Action ──────────────────────────────────────────────────────────
+            questions.AddRange(new[]
+            {
+                new TriviaQuestion { Category = "Action", QuestionText = "In 'The Dark Knight' (2008), who played the Joker?", OptionA = "Jared Leto", OptionB = "Heath Ledger", OptionC = "Joaquin Phoenix", OptionD = "Jack Nicholson", CorrectOption = 'B' },
+                new TriviaQuestion { Category = "Action", QuestionText = "In 'John Wick', what breed of dog is given to John Wick?", OptionA = "German Shepherd", OptionB = "Pit Bull", OptionC = "Beagle", OptionD = "Labrador", CorrectOption = 'C' },
+                new TriviaQuestion { Category = "Action", QuestionText = "In 'Mad Max: Fury Road', who is the main villain?", OptionA = "Lord Humungus", OptionB = "The Toecutter", OptionC = "Immortan Joe", OptionD = "Scabrous Scrotus", CorrectOption = 'C' },
+                new TriviaQuestion { Category = "Action", QuestionText = "In 'Avengers: Endgame', whose snap destroys Thanos's army?", OptionA = "Thor", OptionB = "Captain America", OptionC = "Hulk", OptionD = "Iron Man", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Action", QuestionText = "In 'Iron Man' (2008), what is Tony Stark's first suit designation?", OptionA = "Mark I", OptionB = "Mark II", OptionC = "Mark III", OptionD = "Mark IV", CorrectOption = 'A' },
+                new TriviaQuestion { Category = "Action", QuestionText = "In 'Gladiator' (2000), what is the name of Russell Crowe's character?", OptionA = "Commodus", OptionB = "Proximo", OptionC = "Lucilla", OptionD = "Maximus", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Action", QuestionText = "What city does Batman protect in 'The Dark Knight'?", OptionA = "Metropolis", OptionB = "Star City", OptionC = "Gotham City", OptionD = "Central City", CorrectOption = 'C' },
+                new TriviaQuestion { Category = "Action", QuestionText = "In 'Mad Max: Fury Road', what is the name of the female lead?", OptionA = "Toast the Knowing", OptionB = "The Splendid Angharad", OptionC = "The Dag", OptionD = "Furiosa", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Action", QuestionText = "In 'John Wick', what is John Wick's nickname among assassins?", OptionA = "The Ghost", OptionB = "The Shadow", OptionC = "The Boogeyman", OptionD = "The Reaper", CorrectOption = 'C' },
+                new TriviaQuestion { Category = "Action", QuestionText = "In 'Iron Man', what company does Tony Stark run?", OptionA = "Hammer Industries", OptionB = "S.H.I.E.L.D.", OptionC = "Oscorp", OptionD = "Stark Industries", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Action", QuestionText = "In 'Gladiator', who orders Maximus's family killed?", OptionA = "Marcus Aurelius", OptionB = "Lucius", OptionC = "Commodus", OptionD = "Proximo", CorrectOption = 'C' },
+                new TriviaQuestion { Category = "Action", QuestionText = "In 'Avengers: Endgame', who says 'I am Iron Man' before the final snap?", OptionA = "Thor", OptionB = "Captain America", OptionC = "Hulk", OptionD = "Tony Stark", CorrectOption = 'D' },
+            });
+
+            // ── Sci-Fi ───────────────────────────────────────────────────────────
+            questions.AddRange(new[]
+            {
+                new TriviaQuestion { Category = "Sci-Fi", QuestionText = "In 'Inception', what object does Dom Cobb use as a totem to test reality?", OptionA = "A coin", OptionB = "A ring", OptionC = "A spinning top", OptionD = "A die", CorrectOption = 'C' },
+                new TriviaQuestion { Category = "Sci-Fi", QuestionText = "In 'The Matrix' (1999), what colour pill does Neo take to see the truth?", OptionA = "Blue", OptionB = "Green", OptionC = "White", OptionD = "Red", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Sci-Fi", QuestionText = "In 'Interstellar', near which planet is the wormhole located?", OptionA = "Mars", OptionB = "Jupiter", OptionC = "Saturn", OptionD = "Neptune", CorrectOption = 'C' },
+                new TriviaQuestion { Category = "Sci-Fi", QuestionText = "In 'Blade Runner 2049', what is Ryan Gosling's character called?", OptionA = "Rick Deckard", OptionB = "Roy Batty", OptionC = "J", OptionD = "K", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Sci-Fi", QuestionText = "In 'Inception', what is a person called who can build dream architecture?", OptionA = "Extractor", OptionB = "Forger", OptionC = "Architect", OptionD = "Point Man", CorrectOption = 'C' },
+                new TriviaQuestion { Category = "Sci-Fi", QuestionText = "In 'The Matrix', what is the name of Morpheus's ship?", OptionA = "Enterprise", OptionB = "Nebuchadnezzar", OptionC = "Prometheus", OptionD = "Zion", CorrectOption = 'B' },
+                new TriviaQuestion { Category = "Sci-Fi", QuestionText = "Who composed the score for 'Interstellar' (2014)?", OptionA = "John Williams", OptionB = "Ennio Morricone", OptionC = "James Horner", OptionD = "Hans Zimmer", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Sci-Fi", QuestionText = "In 'Her' (2013), what is the name of the AI operating system?", OptionA = "Alexa", OptionB = "Samantha", OptionC = "Cortana", OptionD = "Aria", CorrectOption = 'B' },
+                new TriviaQuestion { Category = "Sci-Fi", QuestionText = "In 'The Matrix', who offers Neo the choice between pills?", OptionA = "Neo", OptionB = "Trinity", OptionC = "Agent Smith", OptionD = "Morpheus", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Sci-Fi", QuestionText = "Who played Dom Cobb in 'Inception' (2010)?", OptionA = "Matt Damon", OptionB = "Brad Pitt", OptionC = "Tom Hanks", OptionD = "Leonardo DiCaprio", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Sci-Fi", QuestionText = "Who directed 'Blade Runner 2049' (2017)?", OptionA = "Ridley Scott", OptionB = "Christopher Nolan", OptionC = "Denis Villeneuve", OptionD = "James Cameron", CorrectOption = 'C' },
+                new TriviaQuestion { Category = "Sci-Fi", QuestionText = "In 'The Matrix', what are the machines using humans for?", OptionA = "Entertainment", OptionB = "Soldiers", OptionC = "Energy", OptionD = "Food", CorrectOption = 'C' },
+            });
+
+            // ── Drama ────────────────────────────────────────────────────────────
+            questions.AddRange(new[]
+            {
+                new TriviaQuestion { Category = "Drama", QuestionText = "Who narrates 'The Shawshank Redemption' (1994)?", OptionA = "Andy Dufresne", OptionB = "Captain Hadley", OptionC = "Warden Norton", OptionD = "Red", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Drama", QuestionText = "What is Forrest Gump's famous quote about life?", OptionA = "\"Run, Forrest, run!\"", OptionB = "\"Life is like a box of chocolates\"", OptionC = "\"Stupid is as stupid does\"", OptionD = "\"I'm not a smart man\"", CorrectOption = 'B' },
+                new TriviaQuestion { Category = "Drama", QuestionText = "In 'Whiplash' (2014), what is the demanding music teacher's name?", OptionA = "Prof. Mueller", OptionB = "Mr. Davis", OptionC = "Morrison", OptionD = "Fletcher", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Drama", QuestionText = "In 'The Social Network', who is the main character?", OptionA = "Jack Dorsey", OptionB = "Larry Page", OptionC = "Bill Gates", OptionD = "Mark Zuckerberg", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Drama", QuestionText = "In 'The Shawshank Redemption', what crime is Andy Dufresne convicted of?", OptionA = "Armed robbery", OptionB = "Fraud", OptionC = "Kidnapping", OptionD = "Murder", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Drama", QuestionText = "In 'Whiplash', what instrument does the protagonist Andrew play?", OptionA = "Piano", OptionB = "Trumpet", OptionC = "Guitar", OptionD = "Drums", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Drama", QuestionText = "Who plays the title character in 'Forrest Gump' (1994)?", OptionA = "Tom Cruise", OptionB = "Kevin Costner", OptionC = "Tom Hanks", OptionD = "Robin Williams", CorrectOption = 'C' },
+                new TriviaQuestion { Category = "Drama", QuestionText = "What is the first rule of Fight Club (1999)?", OptionA = "Always fight", OptionB = "No weapons", OptionC = "You do not talk about Fight Club", OptionD = "Anything goes", CorrectOption = 'C' },
+                new TriviaQuestion { Category = "Drama", QuestionText = "In 'The Prestige' (2006), what is the name of the third and final act of a magic trick?", OptionA = "The Pledge", OptionB = "The Turn", OptionC = "The Reveal", OptionD = "The Prestige", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Drama", QuestionText = "In 'Memento' (2000), what condition does the protagonist Leonard suffer from?", OptionA = "Blindness", OptionB = "Short-term memory loss", OptionC = "Deafness", OptionD = "Paralysis", CorrectOption = 'B' },
+                new TriviaQuestion { Category = "Drama", QuestionText = "In 'The Social Network', what university does Mark Zuckerberg attend?", OptionA = "MIT", OptionB = "Stanford", OptionC = "Yale", OptionD = "Harvard", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Drama", QuestionText = "Who plays Tyler Durden in 'Fight Club' (1999)?", OptionA = "Leonardo DiCaprio", OptionB = "Edward Norton", OptionC = "Matt Damon", OptionD = "Brad Pitt", CorrectOption = 'D' },
+            });
+
+            // ── Animation ────────────────────────────────────────────────────────
+            questions.AddRange(new[]
+            {
+                new TriviaQuestion { Category = "Animation", QuestionText = "In 'Toy Story' (1995), what is the name of the space ranger toy?", OptionA = "Woody", OptionB = "Rex", OptionC = "Hamm", OptionD = "Buzz Lightyear", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Animation", QuestionText = "In 'Finding Nemo' (2003), what type of fish is Nemo?", OptionA = "Goldfish", OptionB = "Angelfish", OptionC = "Swordfish", OptionD = "Clownfish", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Animation", QuestionText = "In 'Up' (2009), what is the name of the old man who floats his house with balloons?", OptionA = "Russell", OptionB = "Charles Muntz", OptionC = "Carl Fredricksen", OptionD = "Kevin", CorrectOption = 'C' },
+                new TriviaQuestion { Category = "Animation", QuestionText = "In 'The Lion King' (1994), who is Simba's father?", OptionA = "Scar", OptionB = "Rafiki", OptionC = "Timon", OptionD = "Mufasa", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Animation", QuestionText = "In 'Frozen' (2013), what is the name of Elsa's sister?", OptionA = "Bella", OptionB = "Sofia", OptionC = "Elena", OptionD = "Anna", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Animation", QuestionText = "In 'Finding Nemo', what is the name of the forgetful fish who helps Marlin?", OptionA = "Nemo", OptionB = "Gill", OptionC = "Dory", OptionD = "Bloat", CorrectOption = 'C' },
+                new TriviaQuestion { Category = "Animation", QuestionText = "In 'Up', what is the name of the young scout who joins Carl?", OptionA = "Kevin", OptionB = "Dug", OptionC = "Alpha", OptionD = "Russell", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Animation", QuestionText = "In 'The Lion King', what is the name of the villain?", OptionA = "Hyena", OptionB = "Nala", OptionC = "Scar", OptionD = "Zazu", CorrectOption = 'C' },
+                new TriviaQuestion { Category = "Animation", QuestionText = "In 'Frozen', what is Elsa's power?", OptionA = "Controlling water", OptionB = "Controlling fire", OptionC = "Controlling wind", OptionD = "Controlling ice and snow", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Animation", QuestionText = "In 'Toy Story', what is Andy's last name?", OptionA = "Smith", OptionB = "Johnson", OptionC = "Williams", OptionD = "Davis", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Animation", QuestionText = "In 'Frozen', what is the name of the friendly snowman?", OptionA = "Jack", OptionB = "Sven", OptionC = "Kristoff", OptionD = "Olaf", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Animation", QuestionText = "In 'Up', what loyal animal companion accompanies Carl?", OptionA = "A bird named Kevin", OptionB = "A cat", OptionC = "A rabbit", OptionD = "A dog named Dug", CorrectOption = 'D' },
+            });
+
+            // ── Horror ───────────────────────────────────────────────────────────
+            questions.AddRange(new[]
+            {
+                new TriviaQuestion { Category = "Horror", QuestionText = "In 'The Conjuring' (2013), what is the name of the haunted farmhouse family?", OptionA = "Warrens", OptionB = "Lamson", OptionC = "Turner", OptionD = "Perron", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Horror", QuestionText = "Who directed 'Get Out' (2017)?", OptionA = "James Wan", OptionB = "Wes Craven", OptionC = "Ari Aster", OptionD = "Jordan Peele", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Horror", QuestionText = "Who directed 'A Quiet Place' (2018)?", OptionA = "Jordan Peele", OptionB = "James Wan", OptionC = "Mike Flanagan", OptionD = "John Krasinski", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Horror", QuestionText = "In 'The Conjuring', who are the paranormal investigators?", OptionA = "The Perron family", OptionB = "The Hodgsons", OptionC = "Ed and Lorraine Warren", OptionD = "The Lamberts", CorrectOption = 'C' },
+                new TriviaQuestion { Category = "Horror", QuestionText = "In 'Get Out', what hypnotic state are victims sent to?", OptionA = "The Void", OptionB = "The Dark Room", OptionC = "The Abyss", OptionD = "The Sunken Place", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Horror", QuestionText = "In 'A Quiet Place', why must the characters stay silent?", OptionA = "To avoid ghosts", OptionB = "To avoid being seen", OptionC = "Religious ritual", OptionD = "To avoid sound-hunting creatures", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Horror", QuestionText = "In 'Get Out', who plays the lead character Chris Washington?", OptionA = "Jordan Peele", OptionB = "Lakeith Stanfield", OptionC = "Lil Rel Howery", OptionD = "Daniel Kaluuya", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Horror", QuestionText = "In 'A Quiet Place', what family is at the centre of the story?", OptionA = "The Warrens", OptionB = "The Abbotts", OptionC = "The Meades", OptionD = "The Greens", CorrectOption = 'B' },
+                new TriviaQuestion { Category = "Horror", QuestionText = "In 'The Conjuring', who plays Lorraine Warren?", OptionA = "Toni Collette", OptionB = "Katie Sackhoff", OptionC = "Vera Farmiga", OptionD = "Naomi Watts", CorrectOption = 'C' },
+                new TriviaQuestion { Category = "Horror", QuestionText = "In 'A Quiet Place', who plays Evelyn Abbott?", OptionA = "Cate Blanchett", OptionB = "Sandra Bullock", OptionC = "Amy Adams", OptionD = "Emily Blunt", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Horror", QuestionText = "In 'Get Out', at what type of event does Chris first encounter the sinister plot?", OptionA = "A house party", OptionB = "A church gathering", OptionC = "A wedding", OptionD = "A garden party", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Horror", QuestionText = "In 'The Conjuring', what year is the case set in?", OptionA = "1960", OptionB = "1985", OptionC = "1952", OptionD = "1971", CorrectOption = 'D' },
+            });
+
+            // ── Thriller ─────────────────────────────────────────────────────────
+            questions.AddRange(new[]
+            {
+                new TriviaQuestion { Category = "Thriller", QuestionText = "Which country produced 'Parasite' (2019)?", OptionA = "Japan", OptionB = "China", OptionC = "Taiwan", OptionD = "South Korea", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Thriller", QuestionText = "In 'Memento' (2000), what tools does Leonard use to track information?", OptionA = "Notebook", OptionB = "Voice recorder", OptionC = "Map", OptionD = "Tattoos and Polaroid photos", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Thriller", QuestionText = "In 'Shutter Island' (2010), what is the name of the mental institution?", OptionA = "Blackwood", OptionB = "Westmore", OptionC = "Coldwater", OptionD = "Ashecliffe", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Thriller", QuestionText = "Who directed 'Parasite' (2019)?", OptionA = "Park Chan-wook", OptionB = "Kim Jee-woon", OptionC = "Lee Chang-dong", OptionD = "Bong Joon-ho", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Thriller", QuestionText = "In 'Memento', what is the full name of the protagonist?", OptionA = "John Shelby", OptionB = "Teddy Gammell", OptionC = "Jimmy Grantz", OptionD = "Leonard Shelby", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Thriller", QuestionText = "In 'Shutter Island', who plays U.S. Marshal Teddy Daniels?", OptionA = "Matt Damon", OptionB = "Tom Hanks", OptionC = "Ryan Gosling", OptionD = "Leonardo DiCaprio", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Thriller", QuestionText = "'Parasite' won Best Picture at which awards ceremony?", OptionA = "BAFTA", OptionB = "Golden Globes", OptionC = "Emmy Awards", OptionD = "Academy Awards", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Thriller", QuestionText = "In 'Shutter Island', what year is the film set in?", OptionA = "1945", OptionB = "1968", OptionC = "1975", OptionD = "1954", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Thriller", QuestionText = "Who directed 'Memento' (2000)?", OptionA = "Quentin Tarantino", OptionB = "David Fincher", OptionC = "Darren Aronofsky", OptionD = "Christopher Nolan", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Thriller", QuestionText = "In 'Parasite', what do the Kim family discover hidden in the Park basement?", OptionA = "A safe", OptionB = "A time machine", OptionC = "Evidence of crimes", OptionD = "A secret bunker", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Thriller", QuestionText = "Who directed 'Shutter Island' (2010)?", OptionA = "Clint Eastwood", OptionB = "Ridley Scott", OptionC = "Steven Spielberg", OptionD = "Martin Scorsese", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Thriller", QuestionText = "In 'Shutter Island', what is the shocking twist at the end?", OptionA = "The institution doesn't exist", OptionB = "Teddy is already dead", OptionC = "It is all a dream", OptionD = "Teddy is actually a patient", CorrectOption = 'D' },
+            });
+
+            // ── Comedy ───────────────────────────────────────────────────────────
+            questions.AddRange(new[]
+            {
+                new TriviaQuestion { Category = "Comedy", QuestionText = "Who directed 'The Grand Budapest Hotel' (2014)?", OptionA = "Tim Burton", OptionB = "Joel Coen", OptionC = "Michel Gondry", OptionD = "Wes Anderson", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Comedy", QuestionText = "Who plays concierge Monsieur Gustave in 'The Grand Budapest Hotel'?", OptionA = "Bill Murray", OptionB = "Owen Wilson", OptionC = "Jason Schwartzman", OptionD = "Ralph Fiennes", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Comedy", QuestionText = "What fictional country is 'The Grand Budapest Hotel' set in?", OptionA = "Fantasia", OptionB = "Ruritania", OptionC = "Grand Duchy of Fenwick", OptionD = "The Republic of Zubrowka", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Comedy", QuestionText = "What is the name of the young lobby boy in 'The Grand Budapest Hotel'?", OptionA = "Agatha", OptionB = "Dmitri", OptionC = "J.G. Jopling", OptionD = "Zero", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Comedy", QuestionText = "What is stolen from Madame D. in 'The Grand Budapest Hotel'?", OptionA = "A necklace", OptionB = "A statue", OptionC = "A diamond", OptionD = "A painting called Boy with Apple", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Comedy", QuestionText = "What is Monsieur Gustave's signature scent in 'The Grand Budapest Hotel'?", OptionA = "Midnight in Paris", OptionB = "Fleur de Rose", OptionC = "Grand Budapest", OptionD = "L'Air de Panache", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Comedy", QuestionText = "Who plays the villain Dmitri in 'The Grand Budapest Hotel'?", OptionA = "Jude Law", OptionB = "Tom Wilkinson", OptionC = "F. Murray Abraham", OptionD = "Adrien Brody", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Comedy", QuestionText = "Which iconic visual style is evident throughout 'The Grand Budapest Hotel'?", OptionA = "Found footage", OptionB = "Black and white photography", OptionC = "Documentary style", OptionD = "Symmetrical compositions and pastel colours", CorrectOption = 'D' },
+            });
+
+            // ── Romance ──────────────────────────────────────────────────────────
+            questions.AddRange(new[]
+            {
+                new TriviaQuestion { Category = "Romance", QuestionText = "Who plays Mia Dolan in 'La La Land' (2016)?", OptionA = "Anne Hathaway", OptionB = "Emma Watson", OptionC = "Amy Adams", OptionD = "Emma Stone", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Romance", QuestionText = "Who plays Sebastian Wilder in 'La La Land' (2016)?", OptionA = "Ryan Reynolds", OptionB = "Chris Evans", OptionC = "Jake Gyllenhaal", OptionD = "Ryan Gosling", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Romance", QuestionText = "Who directed 'Titanic' (1997)?", OptionA = "Steven Spielberg", OptionB = "Ridley Scott", OptionC = "Ron Howard", OptionD = "James Cameron", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Romance", QuestionText = "In 'Her' (2013), what actor plays Theodore Twombly?", OptionA = "Ryan Gosling", OptionB = "Oscar Isaac", OptionC = "Adam Driver", OptionD = "Joaquin Phoenix", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Romance", QuestionText = "In 'Titanic', what is the name of Kate Winslet's character?", OptionA = "Ruth", OptionB = "Molly", OptionC = "Margaret", OptionD = "Rose", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Romance", QuestionText = "In 'La La Land', what is the name of the jazz club Sebastian dreams of opening?", OptionA = "The Jazz Palace", OptionB = "Jazz Corner", OptionC = "Sebastian's", OptionD = "Seb's", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Romance", QuestionText = "In 'Titanic', in what year does the historic sinking take place?", OptionA = "1902", OptionB = "1922", OptionC = "1932", OptionD = "1912", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Romance", QuestionText = "Who directed 'La La Land' (2016)?", OptionA = "Derek Cianfrance", OptionB = "Tom McCarthy", OptionC = "Barry Jenkins", OptionD = "Damien Chazelle", CorrectOption = 'D' },
+            });
+
+            // ── Crime ────────────────────────────────────────────────────────────
+            questions.AddRange(new[]
+            {
+                new TriviaQuestion { Category = "Crime", QuestionText = "Who plays Vito Corleone in 'The Godfather' (1972)?", OptionA = "Robert De Niro", OptionB = "Al Pacino", OptionC = "James Caan", OptionD = "Marlon Brando", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Crime", QuestionText = "Who directed 'Pulp Fiction' (1994)?", OptionA = "Martin Scorsese", OptionB = "Oliver Stone", OptionC = "Brian De Palma", OptionD = "Quentin Tarantino", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Crime", QuestionText = "In 'The Godfather', who delivers the line 'I'm gonna make him an offer he can't refuse'?", OptionA = "Michael Corleone", OptionB = "Sonny Corleone", OptionC = "Tom Hagen", OptionD = "Vito Corleone", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Crime", QuestionText = "In 'Pulp Fiction', what dance do Vincent Vega and Mia Wallace perform?", OptionA = "The Fox Trot", OptionB = "The Lindy Hop", OptionC = "The Charleston", OptionD = "The Twist", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Crime", QuestionText = "In 'The Wolf of Wall Street' (2013), what is the name of DiCaprio's character?", OptionA = "John Doe", OptionB = "Frank Wheeler", OptionC = "Patrick Bateman", OptionD = "Jordan Belfort", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Crime", QuestionText = "Who plays German bounty hunter Dr. King Schultz in 'Django Unchained'?", OptionA = "Liam Neeson", OptionB = "Michael Fassbender", OptionC = "Tom Hardy", OptionD = "Christoph Waltz", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Crime", QuestionText = "In 'The Godfather', what animal's head is placed in a character's bed?", OptionA = "Dog", OptionB = "Cat", OptionC = "Pig", OptionD = "Horse", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Crime", QuestionText = "Who directed 'The Godfather' (1972)?", OptionA = "Martin Scorsese", OptionB = "Brian De Palma", OptionC = "Sergio Leone", OptionD = "Francis Ford Coppola", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Crime", QuestionText = "What is the name of Jordan Belfort's firm in 'The Wolf of Wall Street'?", OptionA = "Goldman Sachs", OptionB = "Lehman Brothers", OptionC = "JP Morgan", OptionD = "Stratton Oakmont", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Crime", QuestionText = "In 'Pulp Fiction', what are the names of the two hitmen?", OptionA = "Jimmy and Marvin", OptionB = "Butch and Fabienne", OptionC = "Lance and Jody", OptionD = "Vincent and Jules", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Crime", QuestionText = "In what time period is 'Django Unchained' (2012) set?", OptionA = "After the Civil War", OptionB = "During the Civil War", OptionC = "During World War I", OptionD = "Two years before the Civil War", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "Crime", QuestionText = "Who plays Django in 'Django Unchained' (2012)?", OptionA = "Will Smith", OptionB = "Denzel Washington", OptionC = "Idris Elba", OptionD = "Jamie Foxx", CorrectOption = 'D' },
+            });
+
+            // ── General Movie Knowledge ──────────────────────────────────────────
+            questions.AddRange(new[]
+            {
+                new TriviaQuestion { Category = "General", QuestionText = "The Academy Award statuette is commonly known as what?", OptionA = "The Globe", OptionB = "The Golden Ticket", OptionC = "The Emmy", OptionD = "The Oscar", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "General", QuestionText = "Which film won the first Academy Award for Best Picture?", OptionA = "Sunrise", OptionB = "Casablanca", OptionC = "Gone with the Wind", OptionD = "Wings", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "General", QuestionText = "Who played James Bond in 'Dr. No' (1962), the first official Bond film?", OptionA = "Roger Moore", OptionB = "Timothy Dalton", OptionC = "Pierce Brosnan", OptionD = "Sean Connery", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "General", QuestionText = "Which actress holds the record for the most Academy Award nominations?", OptionA = "Katharine Hepburn", OptionB = "Cate Blanchett", OptionC = "Glenn Close", OptionD = "Meryl Streep", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "General", QuestionText = "What was Disney's first feature-length animated film?", OptionA = "Cinderella", OptionB = "Bambi", OptionC = "Fantasia", OptionD = "Snow White and the Seven Dwarfs", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "General", QuestionText = "In which year was the first talking feature film 'The Jazz Singer' released?", OptionA = "1915", OptionB = "1920", OptionC = "1935", OptionD = "1927", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "General", QuestionText = "What is a 'MacGuffin' in film storytelling?", OptionA = "A type of camera lens", OptionB = "A dramatic plot twist", OptionC = "The final scene of a film", OptionD = "An object that drives the plot but is unimportant in itself", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "General", QuestionText = "Who directed 'Schindler's List' (1993)?", OptionA = "Martin Scorsese", OptionB = "Francis Ford Coppola", OptionC = "Stanley Kubrick", OptionD = "Steven Spielberg", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "General", QuestionText = "Which film is famous for the line 'I see dead people'?", OptionA = "The Ring", OptionB = "Poltergeist", OptionC = "Ghost", OptionD = "The Sixth Sense", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "General", QuestionText = "Which country is primarily associated with the spaghetti western genre?", OptionA = "United States", OptionB = "Spain", OptionC = "Mexico", OptionD = "Italy", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "General", QuestionText = "Which director is known for 'Psycho' (1960) and 'Rear Window' (1954)?", OptionA = "David Lynch", OptionB = "Orson Welles", OptionC = "Billy Wilder", OptionD = "Alfred Hitchcock", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "General", QuestionText = "Which film famously swept all five major Oscar categories (Picture, Director, Actor, Actress, Screenplay)?", OptionA = "One Flew Over the Cuckoo's Nest", OptionB = "The Godfather", OptionC = "All About Eve", OptionD = "The Silence of the Lambs", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "General", QuestionText = "What award is given to the best director at the Cannes Film Festival?", OptionA = "Golden Bear", OptionB = "Golden Lion", OptionC = "Silver Bear", OptionD = "Palme d'Or", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "General", QuestionText = "Which famous shower scene is set to Bernard Herrmann's screeching strings?", OptionA = "Vertigo", OptionB = "Rear Window", OptionC = "North by Northwest", OptionD = "Psycho", CorrectOption = 'D' },
+                new TriviaQuestion { Category = "General", QuestionText = "What filming technique involves overcranking the camera to produce slow motion?", OptionA = "Dolly shot", OptionB = "Dutch angle", OptionC = "Undercranking", OptionD = "Overcranking", CorrectOption = 'D' },
+            });
+
+            // ── Movie-specific questions ─────────────────────────────────────────
+            if (inception != null)
+            {
+                questions.AddRange(new[]
+                {
+                    new TriviaQuestion { Category = "Sci-Fi", MovieId = inception.Id, QuestionText = "In 'Inception', how many dream levels deep does the team ultimately go?", OptionA = "Two", OptionB = "Three", OptionC = "Five", OptionD = "Four", CorrectOption = 'D' },
+                    new TriviaQuestion { Category = "Sci-Fi", MovieId = inception.Id, QuestionText = "In 'Inception', what is the name of the deepest dream level with no way back?", OptionA = "The Void", OptionB = "The Dream", OptionC = "The Subconscious", OptionD = "Limbo", CorrectOption = 'D' },
+                    new TriviaQuestion { Category = "Sci-Fi", MovieId = inception.Id, QuestionText = "In 'Inception', who is Cobb's deceased wife whose memory haunts him?", OptionA = "Ariadne", OptionB = "Mal", OptionC = "Yusuf", OptionD = "Philippa", CorrectOption = 'B' },
+                    new TriviaQuestion { Category = "Sci-Fi", MovieId = inception.Id, QuestionText = "Who plays the Architect Ariadne in 'Inception'?", OptionA = "Natalie Portman", OptionB = "Keira Knightley", OptionC = "Ellen Page", OptionD = "Rooney Mara", CorrectOption = 'C' },
+                    new TriviaQuestion { Category = "Sci-Fi", MovieId = inception.Id, QuestionText = "In 'Inception', what does Cobb want to achieve by completing the job?", OptionA = "Gain wealth", OptionB = "Return to his children in the US", OptionC = "Destroy a corporation", OptionD = "Become the best extractor", CorrectOption = 'B' },
+                });
+            }
+
+            if (darkKnight != null)
+            {
+                questions.AddRange(new[]
+                {
+                    new TriviaQuestion { Category = "Action", MovieId = darkKnight.Id, QuestionText = "In 'The Dark Knight', what does the Joker want Gotham to descend into?", OptionA = "War", OptionB = "Plague", OptionC = "Poverty", OptionD = "Chaos", CorrectOption = 'D' },
+                    new TriviaQuestion { Category = "Action", MovieId = darkKnight.Id, QuestionText = "In 'The Dark Knight', who becomes the villain Two-Face?", OptionA = "Commissioner Gordon", OptionB = "Lucius Fox", OptionC = "Harvey Dent", OptionD = "Jonathan Crane", CorrectOption = 'C' },
+                    new TriviaQuestion { Category = "Action", MovieId = darkKnight.Id, QuestionText = "In 'The Dark Knight', what is the Joker's iconic question to Batman?", OptionA = "Why so afraid?", OptionB = "Why so sad?", OptionC = "Why so weak?", OptionD = "Why so serious?", CorrectOption = 'D' },
+                    new TriviaQuestion { Category = "Action", MovieId = darkKnight.Id, QuestionText = "Who plays Alfred in 'The Dark Knight'?", OptionA = "Ian McKellen", OptionB = "Michael Caine", OptionC = "Anthony Hopkins", OptionD = "Gary Oldman", CorrectOption = 'B' },
+                    new TriviaQuestion { Category = "Action", MovieId = darkKnight.Id, QuestionText = "In 'The Dark Knight', what vehicle does Batman primarily use for transport?", OptionA = "The Batwing", OptionB = "The Batpod", OptionC = "The Batboat", OptionD = "The Batmobile (Tumbler)", CorrectOption = 'D' },
+                });
+            }
+
+            if (matrix != null)
+            {
+                questions.AddRange(new[]
+                {
+                    new TriviaQuestion { Category = "Sci-Fi", MovieId = matrix.Id, QuestionText = "In 'The Matrix', who plays Neo?", OptionA = "Will Smith", OptionB = "Laurence Fishburne", OptionC = "Keanu Reeves", OptionD = "Hugo Weaving", CorrectOption = 'C' },
+                    new TriviaQuestion { Category = "Sci-Fi", MovieId = matrix.Id, QuestionText = "In 'The Matrix', what is Neo's real name?", OptionA = "Thomas Anderson", OptionB = "James Wilson", OptionC = "David Clark", OptionD = "Robert Hughes", CorrectOption = 'A' },
+                    new TriviaQuestion { Category = "Sci-Fi", MovieId = matrix.Id, QuestionText = "In 'The Matrix', who voices/plays the main villain Agent Smith?", OptionA = "Laurence Fishburne", OptionB = "Joe Pantoliano", OptionC = "Hugo Weaving", OptionD = "Keanu Reeves", CorrectOption = 'C' },
+                    new TriviaQuestion { Category = "Sci-Fi", MovieId = matrix.Id, QuestionText = "In 'The Matrix', what year does Morpheus believe the story takes place in?", OptionA = "1985", OptionB = "2000", OptionC = "2099", OptionD = "Close to 2199", CorrectOption = 'D' },
+                    new TriviaQuestion { Category = "Sci-Fi", MovieId = matrix.Id, QuestionText = "In 'The Matrix', what is the last human city called?", OptionA = "New Zion", OptionB = "The Last City", OptionC = "Zion", OptionD = "Eden", CorrectOption = 'C' },
+                });
+            }
+
+            if (interstellar != null)
+            {
+                questions.AddRange(new[]
+                {
+                    new TriviaQuestion { Category = "Sci-Fi", MovieId = interstellar.Id, QuestionText = "In 'Interstellar', who plays the astronaut Cooper?", OptionA = "Matt Damon", OptionB = "Ryan Gosling", OptionC = "Matthew McConaughey", OptionD = "Tom Hardy", CorrectOption = 'C' },
+                    new TriviaQuestion { Category = "Sci-Fi", MovieId = interstellar.Id, QuestionText = "In 'Interstellar', what is the name of the black hole?", OptionA = "Sagittarius A*", OptionB = "Gargantua", OptionC = "Nebula Prime", OptionD = "Event Horizon", CorrectOption = 'B' },
+                    new TriviaQuestion { Category = "Sci-Fi", MovieId = interstellar.Id, QuestionText = "In 'Interstellar', what is the name of Cooper's daughter?", OptionA = "Jessica", OptionB = "Emma", OptionC = "Murphy", OptionD = "Sarah", CorrectOption = 'C' },
+                    new TriviaQuestion { Category = "Sci-Fi", MovieId = interstellar.Id, QuestionText = "In 'Interstellar', which planet harbours Dr. Mann's frozen world?", OptionA = "Miller's Planet", OptionB = "Brand's Planet", OptionC = "Edmunds' Planet", OptionD = "Mann's Planet", CorrectOption = 'D' },
+                    new TriviaQuestion { Category = "Sci-Fi", MovieId = interstellar.Id, QuestionText = "Who directed 'Interstellar' (2014)?", OptionA = "Ridley Scott", OptionB = "Denis Villeneuve", OptionC = "James Cameron", OptionD = "Christopher Nolan", CorrectOption = 'D' },
+                });
+            }
+
+            if (pulpFiction != null)
+            {
+                questions.AddRange(new[]
+                {
+                    new TriviaQuestion { Category = "Crime", MovieId = pulpFiction.Id, QuestionText = "In 'Pulp Fiction', who plays Vincent Vega?", OptionA = "Samuel L. Jackson", OptionB = "John Travolta", OptionC = "Bruce Willis", OptionD = "Harvey Keitel", CorrectOption = 'B' },
+                    new TriviaQuestion { Category = "Crime", MovieId = pulpFiction.Id, QuestionText = "In 'Pulp Fiction', what is in the briefcase that everyone covets?", OptionA = "Money", OptionB = "Drugs", OptionC = "Diamonds", OptionD = "Never revealed (deliberately ambiguous)", CorrectOption = 'D' },
+                    new TriviaQuestion { Category = "Crime", MovieId = pulpFiction.Id, QuestionText = "In 'Pulp Fiction', what famous restaurant do Vincent and Mia visit?", OptionA = "Big Kahuna Burger", OptionB = "Jack Rabbit Slim's", OptionC = "The Pitt Stop", OptionD = "Red Apple", CorrectOption = 'B' },
+                    new TriviaQuestion { Category = "Crime", MovieId = pulpFiction.Id, QuestionText = "In 'Pulp Fiction', what does Jules quote before killing someone?", OptionA = "Psalms 21:4", OptionB = "Proverbs 14:7", OptionC = "Revelations 3:15", OptionD = "Ezekiel 25:17", CorrectOption = 'D' },
+                    new TriviaQuestion { Category = "Crime", MovieId = pulpFiction.Id, QuestionText = "In 'Pulp Fiction', what sport does Butch Coolidge (Bruce Willis) compete in?", OptionA = "Wrestling", OptionB = "Boxing", OptionC = "MMA", OptionD = "Kickboxing", CorrectOption = 'B' },
+                });
+            }
+
+            if (godfather != null)
+            {
+                questions.AddRange(new[]
+                {
+                    new TriviaQuestion { Category = "Crime", MovieId = godfather.Id, QuestionText = "In 'The Godfather', who does Michael Corleone ultimately become?", OptionA = "A senator", OptionB = "A lawyer", OptionC = "Head of the Corleone family", OptionD = "A police officer", CorrectOption = 'C' },
+                    new TriviaQuestion { Category = "Crime", MovieId = godfather.Id, QuestionText = "In 'The Godfather', what is the name of Vito Corleone's eldest son?", OptionA = "Michael", OptionB = "Fredo", OptionC = "Tom Hagen", OptionD = "Sonny", CorrectOption = 'D' },
+                    new TriviaQuestion { Category = "Crime", MovieId = godfather.Id, QuestionText = "Who plays Michael Corleone in 'The Godfather'?", OptionA = "Robert De Niro", OptionB = "James Caan", OptionC = "Al Pacino", OptionD = "Robert Duvall", CorrectOption = 'C' },
+                    new TriviaQuestion { Category = "Crime", MovieId = godfather.Id, QuestionText = "In 'The Godfather', what is the name of the rival drug lord who Vito refuses to support?", OptionA = "Barzini", OptionB = "Tattaglia", OptionC = "Virgil Sollozzo", OptionD = "Stracci", CorrectOption = 'C' },
+                    new TriviaQuestion { Category = "Crime", MovieId = godfather.Id, QuestionText = "In 'The Godfather', what does the phrase 'going to the mattresses' mean?", OptionA = "Taking a nap", OptionB = "Moving house", OptionC = "Going into hiding", OptionD = "Preparing for all-out gang war", CorrectOption = 'D' },
+                });
+            }
+
+            if (shawshank != null)
+            {
+                questions.AddRange(new[]
+                {
+                    new TriviaQuestion { Category = "Drama", MovieId = shawshank.Id, QuestionText = "In 'The Shawshank Redemption', how does Andy Dufresne escape?", OptionA = "He bribes a guard", OptionB = "He overpowers a guard", OptionC = "He tunnels through the wall over 19 years", OptionD = "He escapes during a prison riot", CorrectOption = 'C' },
+                    new TriviaQuestion { Category = "Drama", MovieId = shawshank.Id, QuestionText = "In 'The Shawshank Redemption', what object conceals Andy's escape tunnel?", OptionA = "A bookshelf", OptionB = "A poster of Raquel Welch", OptionC = "A window curtain", OptionD = "A map", CorrectOption = 'B' },
+                    new TriviaQuestion { Category = "Drama", MovieId = shawshank.Id, QuestionText = "Who plays Andy Dufresne in 'The Shawshank Redemption'?", OptionA = "Tom Hanks", OptionB = "Morgan Freeman", OptionC = "Tim Robbins", OptionD = "Kevin Spacey", CorrectOption = 'C' },
+                    new TriviaQuestion { Category = "Drama", MovieId = shawshank.Id, QuestionText = "In 'The Shawshank Redemption', where do Andy and Red reunite at the end?", OptionA = "Cancun, Mexico", OptionB = "Zihuatanejo, Mexico", OptionC = "Key West, Florida", OptionD = "Havana, Cuba", CorrectOption = 'B' },
+                    new TriviaQuestion { Category = "Drama", MovieId = shawshank.Id, QuestionText = "Who plays Red in 'The Shawshank Redemption'?", OptionA = "Denzel Washington", OptionB = "Samuel L. Jackson", OptionC = "Morgan Freeman", OptionD = "Will Smith", CorrectOption = 'C' },
+                });
+            }
+
+            if (forrestGump != null)
+            {
+                questions.AddRange(new[]
+                {
+                    new TriviaQuestion { Category = "Drama", MovieId = forrestGump.Id, QuestionText = "In 'Forrest Gump', what sport does Forrest excel at?", OptionA = "Basketball", OptionB = "Tennis", OptionC = "Swimming", OptionD = "Football (American)", CorrectOption = 'D' },
+                    new TriviaQuestion { Category = "Drama", MovieId = forrestGump.Id, QuestionText = "In 'Forrest Gump', what does Forrest shout as Lieutenant Dan falls into the river?", OptionA = "Jump in!", OptionB = "Lieutenant Dan!", OptionC = "Come on!", OptionD = "Watch out!", CorrectOption = 'B' },
+                    new TriviaQuestion { Category = "Drama", MovieId = forrestGump.Id, QuestionText = "In 'Forrest Gump', what is the name of Forrest's shrimping boat?", OptionA = "Gulf Star", OptionB = "Sea King", OptionC = "Jenny", OptionD = "Gulf Princess", CorrectOption = 'C' },
+                    new TriviaQuestion { Category = "Drama", MovieId = forrestGump.Id, QuestionText = "In 'Forrest Gump', what is the name of Forrest's childhood and lifelong love?", OptionA = "Susan", OptionB = "Mary", OptionC = "Jenny", OptionD = "Laura", CorrectOption = 'C' },
+                    new TriviaQuestion { Category = "Drama", MovieId = forrestGump.Id, QuestionText = "Who plays Lieutenant Dan in 'Forrest Gump'?", OptionA = "Tom Sizemore", OptionB = "Gary Sinise", OptionC = "Kevin Bacon", OptionD = "John Cusack", CorrectOption = 'B' },
+                });
+            }
+
+            if (laLaLand != null)
+            {
+                questions.AddRange(new[]
+                {
+                    new TriviaQuestion { Category = "Romance", MovieId = laLaLand.Id, QuestionText = "In 'La La Land', what instrument does Sebastian play?", OptionA = "Guitar", OptionB = "Trumpet", OptionC = "Piano (jazz)", OptionD = "Drums", CorrectOption = 'C' },
+                    new TriviaQuestion { Category = "Romance", MovieId = laLaLand.Id, QuestionText = "In 'La La Land', where do Mia and Sebastian share their first dance?", OptionA = "On a rooftop", OptionB = "At a jazz club", OptionC = "On the Hollywood Hills overlook", OptionD = "At a park", CorrectOption = 'C' },
+                    new TriviaQuestion { Category = "Romance", MovieId = laLaLand.Id, QuestionText = "How many Academy Awards did 'La La Land' win?", OptionA = "Four", OptionB = "Five", OptionC = "Seven", OptionD = "Six", CorrectOption = 'D' },
+                    new TriviaQuestion { Category = "Romance", MovieId = laLaLand.Id, QuestionText = "In 'La La Land', what is Mia Dolan's profession when we first meet her?", OptionA = "Singer", OptionB = "Barista on the Warner Bros. lot", OptionC = "Actress in films", OptionD = "Dancer", CorrectOption = 'B' },
+                    new TriviaQuestion { Category = "Romance", MovieId = laLaLand.Id, QuestionText = "At the end of 'La La Land', where does the 'what if' epilogue take place?", OptionA = "Paris", OptionB = "New York", OptionC = "Sebastian's jazz club", OptionD = "The original restaurant", CorrectOption = 'C' },
+                });
+            }
+
+            _context.TriviaQuestions.AddRange(questions);
+            await _context.SaveChangesAsync();
+        }
+
         private async Task FixExistingDataAsync()
         {
             // Fix existing events with 0 capacity from previous migrations
@@ -1531,6 +1832,92 @@ namespace MovieApp.DataLayer
             }
 
             if (zeroCapacityEvents.Any() || lowBalanceUsers.Any())
+            {
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task SeedScreeningsAndRoomsAsync()
+        {
+            if (await _context.Screenings.AnyAsync())
+            {
+                return;
+            }
+
+            var firstMovie = await _context.Movies.FirstOrDefaultAsync();
+            var firstUser = await _context.Users.FirstOrDefaultAsync();
+            if (firstMovie is null || firstUser is null)
+            {
+                return;
+            }
+
+            var cinemaEvent = new Event
+            {
+                Id = 0,
+                Title = "Demo Screening Event",
+                EventDateTime = DateTime.UtcNow.AddDays(7),
+                LocationReference = "Hall A",
+                TicketPrice = 12.50m,
+                MaxCapacity = 100,
+                CreatorUserId = firstUser.Id,
+            };
+            _context.Events.Add(cinemaEvent);
+            await _context.SaveChangesAsync();
+
+            var room = new Room
+            {
+                EventId = cinemaEvent.Id,
+                Name = "Hall A",
+                Rows = 5,
+                Columns = 8,
+            };
+            _context.Rooms.Add(room);
+            await _context.SaveChangesAsync();
+
+            var screening = new Screening
+            {
+                Id = 0,
+                EventId = cinemaEvent.Id,
+                MovieId = firstMovie.Id,
+                RoomId = room.Id,
+                ScreeningTime = cinemaEvent.EventDateTime,
+            };
+            _context.Screenings.Add(screening);
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task SeedAdditionalRoomsAsync()
+        {
+            var demoEvent = await _context.Events.FirstOrDefaultAsync(e => e.Title == "Demo Screening Event");
+            if (demoEvent is null)
+            {
+                return;
+            }
+
+            var desiredRooms = new[]
+            {
+                new Room { EventId = demoEvent.Id, Name = "Hall B (IMAX)", Rows = 8, Columns = 10 },
+                new Room { EventId = demoEvent.Id, Name = "Hall C (Premium)", Rows = 4, Columns = 6 },
+                new Room { EventId = demoEvent.Id, Name = "Hall D (Small)", Rows = 3, Columns = 5 },
+                new Room { EventId = demoEvent.Id, Name = "Hall E (Standard)", Rows = 6, Columns = 9 },
+            };
+
+            bool addedAny = false;
+            foreach (var desired in desiredRooms)
+            {
+                bool exists = await _context.Rooms.AnyAsync(r => r.EventId == desired.EventId && r.Name == desired.Name);
+                if (!exists)
+                {
+                    if (desired.Rows * desired.Columns > demoEvent.MaxCapacity)
+                    {
+                        demoEvent.MaxCapacity = desired.Rows * desired.Columns;
+                    }
+                    _context.Rooms.Add(desired);
+                    addedAny = true;
+                }
+            }
+
+            if (addedAny)
             {
                 await _context.SaveChangesAsync();
             }

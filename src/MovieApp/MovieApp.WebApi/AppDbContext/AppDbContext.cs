@@ -42,6 +42,7 @@ namespace MovieApp.WebApi.Data
         // Events & Screenings 
         public DbSet<Event> Events { get; set; }
         public DbSet<Screening> Screenings { get; set; }
+        public DbSet<Room> Rooms { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Notification> Notifications { get; set; }
 
@@ -58,6 +59,9 @@ namespace MovieApp.WebApi.Data
         // Marathons
         public DbSet<Marathon> Marathons { get; set; }
         public DbSet<MarathonProgress> MarathonProgressions { get; set; }
+
+        // Favorites
+        public DbSet<FavoriteEvent> FavoriteEvents { get; set; }
 
         // Ambassador & Referrals
         public DbSet<AmbassadorProfile> AmbassadorProfiles { get; set; }
