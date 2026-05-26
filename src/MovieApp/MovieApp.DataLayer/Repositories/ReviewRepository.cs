@@ -35,6 +35,24 @@ namespace MovieApp.DataLayer.Repositories
 
         public async Task AddReviewAsync(MovieReview review) => await _context.MovieReviews.AddAsync(review);
         public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();
+
+        public async Task<int> GetReviewCountByUserIdAsync(int userId, CancellationToken ct = default)
+        {
+            return await _context.Reviews
+                .AsNoTracking()
+                .CountAsync(review => review.User != null && review.User.Id == userId, ct);
+        }
+
+        public async Task<List<Review>> GetReviewsByUserIdAsync(int userId, CancellationToken ct = default)
+        {
+            return await _context.Reviews
+                .AsNoTracking()
+                .Include(review => review.Movie)
+                    .ThenInclude(movie => movie.Genres)
+                .Include(review => review.User)
+                .Where(review => review.User != null && review.User.Id == userId)
+                .ToListAsync(ct);
+        }
     }
 }
 

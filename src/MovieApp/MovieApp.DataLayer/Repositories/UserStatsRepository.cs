@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using MovieApp.DataLayer.Interfaces;
 using MovieApp.DataLayer.Interfaces.Repositories;
 using MovieApp.DataLayer.Models;
 
@@ -10,39 +7,68 @@ namespace MovieApp.DataLayer.Repositories
 {
     public sealed class UserStatsRepository : IUserStatsRepository
     {
-        public Task<bool> DeleteAsync(int id, CancellationToken ct = default)
+        private readonly IMovieAppDbContext _context;
+
+        public UserStatsRepository(IMovieAppDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Task<List<UserStats>> GetAllAsync(CancellationToken ct = default)
+        public async Task<List<UserStats>> GetAllAsync(CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            return await _context.UserStats
+                .AsNoTracking()
+                .ToListAsync(ct);
         }
 
-        public Task<UserStats?> GetByIdAsync(int id, CancellationToken ct = default)
+        public async Task<UserStats?> GetByIdAsync(int id, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            return await _context.UserStats
+                .AsNoTracking()
+                .FirstOrDefaultAsync(us => us.UserStatsId == id, ct);
         }
 
-        public Task<UserStats?> GetByUserIdAsync(int userId, CancellationToken ct = default)
+        public async Task<UserStats?> GetByUserIdAsync(int userId, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            return await _context.UserStats
+                .AsNoTracking()
+                .FirstOrDefaultAsync(us => us.UserId == userId, ct);
         }
 
-        public Task<IList<UserStats>> GetLeaderboardAsync(CancellationToken ct = default)
+        public async Task<int> InsertAsync(UserStats userStats, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            await _context.UserStats.AddAsync(userStats, ct);
+            await _context.SaveChangesAsync(ct);
+            return userStats.UserStatsId;
         }
 
-        public Task<int> InsertAsync(UserStats userStats, CancellationToken ct = default)
+        public async Task<bool> UpdateAsync(UserStats userStats, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            _context.UserStats.Update(userStats);
+            int rows = await _context.SaveChangesAsync(ct);
+            return rows > 0;
         }
 
-        public Task<bool> UpdateAsync(UserStats userStats, CancellationToken ct = default)
+        public async Task<bool> DeleteAsync(int id, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            UserStats? userStats = await _context.UserStats
+                .FirstOrDefaultAsync(us => us.UserStatsId == id, ct);
+            if (userStats is null)
+            {
+                return false;
+            }
+
+            _context.UserStats.Remove(userStats);
+            int rows = await _context.SaveChangesAsync(ct);
+            return rows > 0;
+        }
+
+        public async Task<IList<UserStats>> GetLeaderboardAsync(CancellationToken ct = default)
+        {
+            return await _context.UserStats
+                .AsNoTracking()
+                .OrderByDescending(us => us.TotalPoints)
+                .ToListAsync(ct);
         }
     }
 }
