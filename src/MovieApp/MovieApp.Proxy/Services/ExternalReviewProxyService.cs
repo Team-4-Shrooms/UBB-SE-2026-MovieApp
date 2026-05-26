@@ -16,17 +16,17 @@ public class ExternalReviewProxyService : IExternalReviewService
         _apiClient = apiClient;
     }
 
-    public async Task<List<CriticReview>> GetExternalReviewsAsync(string movieTitle, int releaseYear, CancellationToken ct = default)
+    public async Task<List<CriticReview>> GetExternalReviewsAsync(string movieTitle, int releaseYear, CancellationToken cancellationToken = default)
     {
         var reviews = await _apiClient.GetAsync<List<CriticReview>>(
             $"api/movies/external-reviews/by-title?title={Uri.EscapeDataString(movieTitle)}&year={releaseYear}",
-            ct);
+            cancellationToken);
 
         return reviews ?? new List<CriticReview>();
     }
 
     public List<(string Word, int Count)> AnalyseLexicon(List<CriticReview> reviews)
     {
-        throw new NotSupportedException("Lexicon analysis is not supported over the HTTP proxy. Run this on the real backend service.");
+        throw new NotSupportedException("Lexicon analysis is not supported over the HTTP proxy.");
     }
 }
