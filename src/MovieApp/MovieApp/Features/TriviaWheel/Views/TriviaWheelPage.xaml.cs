@@ -7,10 +7,10 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Shapes;
-using MovieApp.DataLayer.Interfaces.Repositories;
 using MovieApp.DataLayer.Models;
 using MovieApp.Features.Shared.Models;
 using MovieApp.Features.TriviaWheel.ViewModels;
+using MovieApp.Logic.Interfaces.Services;
 using Windows.UI;
 
 namespace MovieApp.Features.TriviaWheel.Views
@@ -40,8 +40,7 @@ namespace MovieApp.Features.TriviaWheel.Views
             try
             {
                 _viewModel = new TriviaWheelViewModel(
-                    App.Services.GetRequiredService<ITriviaRepository>(),
-                    App.Services.GetRequiredService<ITriviaRewardRepository>(),
+                    App.Services.GetRequiredService<ITriviaService>(),
                     SessionManager.CurrentUserID);
 
                 DrawWheel();

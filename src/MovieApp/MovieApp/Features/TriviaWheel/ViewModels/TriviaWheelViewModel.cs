@@ -6,8 +6,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using MovieApp.DataLayer.Interfaces.Repositories;
 using MovieApp.DataLayer.Models;
+using MovieApp.Logic.Interfaces.Services;
 
 /// <summary>
 /// Drives the Trivia Wheel feature: spinning the wheel to select a category,
@@ -15,8 +15,7 @@ using MovieApp.DataLayer.Models;
 /// </summary>
 public sealed class TriviaWheelViewModel : INotifyPropertyChanged
 {
-    private readonly ITriviaRepository _triviaRepository;
-    private readonly ITriviaRewardRepository _triviaRewardRepository;
+    private readonly ITriviaService _triviaService;
     private readonly int _currentUserId;
 
     private List<TriviaQuestion> _questions = new();
@@ -30,13 +29,9 @@ public sealed class TriviaWheelViewModel : INotifyPropertyChanged
     private bool _hintUsed;
     private List<char> _hiddenOptions = new();
 
-    public TriviaWheelViewModel(
-        ITriviaRepository triviaRepository,
-        ITriviaRewardRepository triviaRewardRepository,
-        int currentUserId)
+    public TriviaWheelViewModel(ITriviaService triviaService, int currentUserId)
     {
-        _triviaRepository = triviaRepository;
-        _triviaRewardRepository = triviaRewardRepository;
+        _triviaService = triviaService;
         _currentUserId = currentUserId;
     }
 
@@ -49,7 +44,7 @@ public sealed class TriviaWheelViewModel : INotifyPropertyChanged
         private set => SetProperty(ref _canSpin, value);
     }
 
-    /// <summary>Whether there are questions available in the default category.</summary>
+    /// <summary>Whether there are questions available in the data source.</summary>
     public bool IsTriviaAvailable
     {
         get => _isTriviaAvailable;
@@ -124,10 +119,10 @@ public sealed class TriviaWheelViewModel : INotifyPropertyChanged
         CanSpin = IsTriviaAvailable;
     }
 
-    /// <summary>Queries the API to determine whether any questions exist.</summary>
+    /// <summary>Queries the service to determine whether any questions exist.</summary>
     public async Task RefreshTriviaAvailabilityAsync()
     {
-        var questions = await _triviaRepository.GetByCategoryAsync("General");
+        var questions = await _triviaService.GetAllQuestionsAsync();
         IsTriviaAvailable = questions.Any();
     }
 
@@ -145,7 +140,7 @@ public sealed class TriviaWheelViewModel : INotifyPropertyChanged
     /// <summary>Loads questions for the given category and starts a trivia session.</summary>
     public async Task LoadQuestionsAsync(string category)
     {
-        var fetched = await _triviaRepository.GetByCategoryAsync(category);
+        var fetched = await _triviaService.GetQuestionsByCategoryAsync(category);
         _questions = fetched.ToList();
         _currentQuestionIndex = 0;
         Score = 0;
@@ -221,16 +216,10 @@ public sealed class TriviaWheelViewModel : INotifyPropertyChanged
         }
     }
 
-    /// <summary>Persists a new unredeemed reward for the current user.</summary>
+    /// <summary>Calls the service to grant a new reward to the current user.</summary>
     public async Task GrantRewardAsync()
     {
-        var reward = new TriviaReward
-        {
-            UserId = _currentUserId,
-            IsRedeemed = false,
-            CreatedAt = DateTime.UtcNow,
-        };
-        await _triviaRewardRepository.AddAsync(reward);
+        await _triviaService.AwardRewardAsync(_currentUserId);
     }
 
     // ── Helpers ────────────────────────────────────────────────────────────────
