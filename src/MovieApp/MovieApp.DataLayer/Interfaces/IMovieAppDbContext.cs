@@ -42,6 +42,7 @@ namespace MovieApp.DataLayer.Interfaces
         DbSet<TriviaReward> TriviaRewards { get; }
         DbSet<Marathon> Marathons { get; }
         DbSet<MarathonProgress> MarathonProgressions { get; }
+        DbSet<FavoriteEvent> FavoriteEvents { get; }
         DbSet<AmbassadorProfile> AmbassadorProfiles { get; }
         DbSet<ReferralLog> ReferralLogs { get; }
 

@@ -60,6 +60,9 @@ namespace MovieApp.WebApi.Data
         public DbSet<Marathon> Marathons { get; set; }
         public DbSet<MarathonProgress> MarathonProgressions { get; set; }
 
+        // Favorites
+        public DbSet<FavoriteEvent> FavoriteEvents { get; set; }
+
         // Ambassador & Referrals
         public DbSet<AmbassadorProfile> AmbassadorProfiles { get; set; }
         public DbSet<ReferralLog> ReferralLogs { get; set; }

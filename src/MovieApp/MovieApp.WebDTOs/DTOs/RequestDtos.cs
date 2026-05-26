@@ -258,6 +258,8 @@ public sealed class BookSeatsRequestBody
 public sealed class CancelBookingRequestBody
 {
     public int UserId { get; set; }
+    public string Code { get; set; } = string.Empty;
+    public string ReferralCode { get; set; } = string.Empty;
 }
 
 public sealed class CreateScreeningRequestBody
