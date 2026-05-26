@@ -107,6 +107,12 @@ builder.Services.AddScoped<IUserRepository>(serviceProvider => serviceProvider.G
 builder.Services.AddScoped<VideoStorageRepository>();
 builder.Services.AddScoped<IVideoStorageRepository>(serviceProvider => serviceProvider.GetRequiredService<VideoStorageRepository>());
 
+builder.Services.AddScoped<BadgeRepository>();
+builder.Services.AddScoped<IBadgeRepository>(serviceProvider => serviceProvider.GetRequiredService<BadgeRepository>());
+
+builder.Services.AddScoped<UserStatsRepository>();
+builder.Services.AddScoped<IUserStatsRepository>(serviceProvider => serviceProvider.GetRequiredService<UserStatsRepository>());
+
 // Core services
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IEquipmentService, EquipmentService>();
@@ -123,6 +129,8 @@ builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IScrapeJobService, ScrapeJobService>();
 builder.Services.AddScoped<IReelService, ReelService>();
+builder.Services.AddScoped<IBadgeService, BadgeService>();
+builder.Services.AddScoped<IUserStatsService, UserStatsService>();
 
 // Feature services
 builder.Services.AddScoped<IMovieCardFeedService, MovieCardFeedService>();

@@ -33,5 +33,10 @@ namespace MovieApp.Proxy.Services
             IList<UserStats>? result = await _apiClient.GetAsync<List<UserStats>>($"{_baseEndpoint}/leaderboard", ct);
             return result ?? new List<UserStats>();
         }
+
+        public Task CheckAndAwardBadgesAsync(int userId, CancellationToken ct = default)
+        {
+            return _apiClient.PostAsync($"{_baseEndpoint}/{userId}/award", new { }, ct);
+        }
     }
 }

@@ -20,22 +20,29 @@ namespace MovieApp.WebApi.Endpoints
         [HttpGet("")]
         public async Task<IActionResult> GetAllBadges(CancellationToken ct = default)
         {
-            List<Badge>? badges = await _badgeService.GetAllBadgesAsync(ct);
+            List<Badge> badges = await _badgeService.GetAllBadgesAsync(ct);
             return Ok(badges);
         }
 
         [HttpGet("leaderboard")]
         public async Task<IActionResult> GetLeaderboard(CancellationToken ct = default)
         {
-            IList<UserStats>? leaderboard = await _badgeService.GetLeaderboardAsync(ct);
+            IList<UserStats> leaderboard = await _badgeService.GetLeaderboardAsync(ct);
             return Ok(leaderboard);
         }
 
         [HttpGet("{userId:int}")]
         public async Task<IActionResult> GetUserBadges(int userId, CancellationToken ct = default)
         {
-            List<UserBadge>? userBadges = await _badgeService.GetUserBadgesAsync(userId, ct);
+            List<UserBadge> userBadges = await _badgeService.GetUserBadgesAsync(userId, ct);
             return Ok(userBadges);
+        }
+
+        [HttpPost("{userId:int}/award")]
+        public async Task<IActionResult> CheckAndAwardBadges(int userId, CancellationToken ct = default)
+        {
+            await _badgeService.CheckAndAwardBadgesAsync(userId, ct);
+            return NoContent();
         }
     }
 }

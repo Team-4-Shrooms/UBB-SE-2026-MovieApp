@@ -12,15 +12,18 @@ namespace MovieApp.Logic.Features.Battles
         private readonly IUserStatsRepository _userStatsRepository;
         private readonly IUserRepository _userRepository;
         private readonly IMovieRepository _movieRepository;
+        private readonly IBadgeService _badgeService;
 
         public PointService(
         IUserStatsRepository userStatsRepository,
         IUserRepository userRepository,
-        IMovieRepository movieRepository)
+        IMovieRepository movieRepository,
+        IBadgeService badgeService)
         {
             _userStatsRepository = userStatsRepository;
             _userRepository = userRepository;
             _movieRepository = movieRepository;
+            _badgeService = badgeService;
         }
 
         /// <inheritdoc/>
@@ -67,6 +70,8 @@ namespace MovieApp.Logic.Features.Battles
 
             stats.TotalPoints = Math.Max(0, stats.TotalPoints + pointsToAdd);
             await _userStatsRepository.UpdateAsync(stats, cancellationToken);
+
+            await _badgeService.CheckAndAwardBadgesAsync(userId, cancellationToken);
         }
 
         public async Task DeductPointsAsync(int userId, int points, CancellationToken cancellationToken = default)

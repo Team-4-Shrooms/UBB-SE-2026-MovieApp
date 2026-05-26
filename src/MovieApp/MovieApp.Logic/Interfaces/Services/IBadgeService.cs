@@ -28,4 +28,12 @@ public interface IBadgeService
     /// <param name="ct">A token to monitor for cancellation requests.</param>
     /// <returns>A list of <see cref="UserStats"/> representing the leaderboard entries.</returns>
     Task<IList<UserStats>> GetLeaderboardAsync(CancellationToken ct = default);
+
+    /// <summary>
+    /// Evaluates badge criteria for a user and persists any newly earned achievements.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user to evaluate.</param>
+    /// <param name="ct">A token to monitor for cancellation requests.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    Task CheckAndAwardBadgesAsync(int userId, CancellationToken ct = default);
 }
