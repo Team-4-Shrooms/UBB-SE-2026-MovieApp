@@ -20,13 +20,13 @@ namespace MovieApp.DataLayer.Repositories
         public async Task<bool> IsReferralCodeValidAsync(string referralCode, CancellationToken cancellationToken = default)
         {
             return await _context.AmbassadorProfiles
-                .AnyAsync(ap => ap.PermanentCode == referralCode, cancellationToken);
+                .AnyAsync(ambassadorProfile => ambassadorProfile.PermanentCode == referralCode, cancellationToken);
         }
 
         public async Task<string?> GetReferralCodeAsync(int userId, CancellationToken cancellationToken = default)
         {
             AmbassadorProfile? profile = await _context.AmbassadorProfiles
-                .FirstOrDefaultAsync(ap => ap.UserId == userId, cancellationToken);
+                .FirstOrDefaultAsync(ambassadorProfile => ambassadorProfile.UserId == userId, cancellationToken);
             return profile?.PermanentCode;
         }
 
@@ -45,7 +45,7 @@ namespace MovieApp.DataLayer.Repositories
         public async Task<int?> GetUserIdByReferralCodeAsync(string referralCode, CancellationToken cancellationToken = default)
         {
             AmbassadorProfile? profile = await _context.AmbassadorProfiles
-                .FirstOrDefaultAsync(ap => ap.PermanentCode == referralCode, cancellationToken);
+                .FirstOrDefaultAsync(ambassadorProfile => ambassadorProfile.PermanentCode == referralCode, cancellationToken);
             return profile?.UserId;
         }
 
@@ -65,9 +65,9 @@ namespace MovieApp.DataLayer.Repositories
         {
             return await _context.ReferralLogs
                 .AnyAsync(
-                    rl => rl.AmbassadorId == ambassadorId &&
-                          rl.ReferredUserId == friendId &&
-                          rl.EventId == eventId,
+                    referralLog => referralLog.AmbassadorId == ambassadorId &&
+                                   referralLog.ReferredUserId == friendId &&
+                                   referralLog.EventId == eventId,
                     cancellationToken);
         }
 
@@ -80,27 +80,27 @@ namespace MovieApp.DataLayer.Repositories
         public async Task<AmbassadorProfile?> GetAmbassadorByIdAsync(int userId, CancellationToken cancellationToken = default)
         {
             return await _context.AmbassadorProfiles
-                .FirstOrDefaultAsync(ap => ap.UserId == userId, cancellationToken);
+                .FirstOrDefaultAsync(ambassadorProfile => ambassadorProfile.UserId == userId, cancellationToken);
         }
 
         public async Task<int> GetRewardBalanceAsync(int userId, CancellationToken cancellationToken = default)
         {
             AmbassadorProfile? profile = await _context.AmbassadorProfiles
-                .FirstOrDefaultAsync(ap => ap.UserId == userId, cancellationToken);
+                .FirstOrDefaultAsync(ambassadorProfile => ambassadorProfile.UserId == userId, cancellationToken);
             return profile?.RewardBalance ?? 0;
         }
 
         public async Task<IEnumerable<ReferralHistoryItem>> GetReferralHistoryAsync(int ambassadorId, CancellationToken cancellationToken = default)
         {
             return await _context.ReferralLogs
-                .Where(rl => rl.AmbassadorId == ambassadorId)
-                .Include(rl => rl.ReferredUser)
-                .Include(rl => rl.Event)
-                .Select(rl => new ReferralHistoryItem
+                .Where(referralLog => referralLog.AmbassadorId == ambassadorId)
+                .Include(referralLog => referralLog.ReferredUser)
+                .Include(referralLog => referralLog.Event)
+                .Select(referralLog => new ReferralHistoryItem
                 {
-                    FriendName = rl.ReferredUser != null ? rl.ReferredUser.Username : "Unknown",
-                    EventTitle = rl.Event != null ? rl.Event.Title : "Deleted Event",
-                    UsedAt = rl.CreatedAt
+                    FriendName = referralLog.ReferredUser != null ? referralLog.ReferredUser.Username : "Unknown",
+                    EventTitle = referralLog.Event != null ? referralLog.Event.Title : "Deleted Event",
+                    UsedAt = referralLog.CreatedAt
                 })
                 .ToListAsync(cancellationToken);
         }
@@ -108,7 +108,7 @@ namespace MovieApp.DataLayer.Repositories
         public async Task IncrementRewardBalanceAsync(int ambassadorId, CancellationToken cancellationToken = default)
         {
             AmbassadorProfile? profile = await _context.AmbassadorProfiles
-                .FirstOrDefaultAsync(ap => ap.UserId == ambassadorId, cancellationToken);
+                .FirstOrDefaultAsync(ambassadorProfile => ambassadorProfile.UserId == ambassadorId, cancellationToken);
             if (profile != null)
             {
                 profile.RewardBalance++;
@@ -119,7 +119,7 @@ namespace MovieApp.DataLayer.Repositories
         public async Task DecrementRewardBalanceAsync(int userId, CancellationToken cancellationToken = default)
         {
             AmbassadorProfile? profile = await _context.AmbassadorProfiles
-                .FirstOrDefaultAsync(ap => ap.UserId == userId, cancellationToken);
+                .FirstOrDefaultAsync(ambassadorProfile => ambassadorProfile.UserId == userId, cancellationToken);
             if (profile != null && profile.RewardBalance > 0)
             {
                 profile.RewardBalance--;
