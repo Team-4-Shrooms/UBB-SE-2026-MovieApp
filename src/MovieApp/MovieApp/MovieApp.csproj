@@ -194,6 +194,7 @@
         <None Remove="Features\TrailerScraping\Views\TrailerScrapingPage.xaml" />
         <None Remove="Features\Wallet\Views\WalletPage.xaml" />
         <None Remove="Features\Ambassadors\Views\AmbassadorPage.xaml" />
+        <None Remove="Features\TriviaWheel\Views\TriviaWheelPage.xaml" />
     </ItemGroup>
     <ItemGroup>
         <Page Update="Features\MovieCatalog\Views\MovieCatalogPage.xaml">
@@ -251,6 +252,9 @@
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Features\Ambassadors\Views\AmbassadorPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Features\TriviaWheel\Views\TriviaWheelPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
     </ItemGroup>
