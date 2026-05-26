@@ -20,6 +20,7 @@ using MovieApp.Features.Notification.Views;
 using MovieApp.Features.SlotMachine.Views;
 using MovieApp.Features.Wallet.Views;
 using MovieApp.Features.Ambassadors.Views;
+using MovieApp.Features.Referrals.Views;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -54,6 +55,7 @@ namespace MovieApp
             ["SlotMachine"] = typeof(SlotMachinePage),
             ["Marathon"] = typeof(MarathonPage),
             ["Ambassadors"] = typeof(AmbassadorPage),
+            ["Referrals"] = typeof(ReferralPage),
         };
 
         public MainWindow()
