@@ -55,18 +55,6 @@ namespace MovieApp.Proxy
                 AttachToken();
                 response = await send(cancellationToken);
             }
-            if (!response.IsSuccessStatusCode)
-            {
-                // Read what the backend API is complaining about
-                string errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
-
-                System.Console.WriteLine("-------------------------------------------------------");
-                System.Console.WriteLine($"⚠️ API ERROR DETECTED: {(int)response.StatusCode} ({response.StatusCode})");
-                System.Console.WriteLine($"URL: {_httpClient.BaseAddress}{response.RequestMessage?.RequestUri}");
-                System.Console.WriteLine("RESPONSE BODY FROM SERVER BELOW:");
-                System.Console.WriteLine(errorContent);
-                System.Console.WriteLine("-------------------------------------------------------");
-            }
 
             response.EnsureSuccessStatusCode();
             return response;
