@@ -13,6 +13,11 @@ public interface ITriviaService
     Task<List<TriviaQuestion>> GetAllQuestionsAsync(CancellationToken ct = default);
 
     /// <summary>
+    /// Retrieves trivia questions belonging to a specific category.
+    /// </summary>
+    Task<List<TriviaQuestion>> GetQuestionsByCategoryAsync(string category, CancellationToken ct = default);
+
+    /// <summary>
     /// Retrieves trivia questions for a specific movie.
     /// </summary>
     Task<List<TriviaQuestion>> GetQuestionsByMovieIdAsync(int movieId, CancellationToken ct = default);
