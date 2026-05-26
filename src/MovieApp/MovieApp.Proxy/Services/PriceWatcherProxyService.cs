@@ -8,7 +8,7 @@ namespace MovieApp.Proxy.Services
     public sealed class PriceWatcherProxyService : IPriceWatcherRepository
     {
         private readonly ApiClient _apiClient;
-        private readonly string _baseEndpoint = "/api/PriceWatcher";
+        private readonly string _baseEndpoint = "/api/price-watchers";
 
         public PriceWatcherProxyService(ApiClient apiClient)
         {
