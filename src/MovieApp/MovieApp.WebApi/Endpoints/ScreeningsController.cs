@@ -79,6 +79,7 @@ public sealed class ScreeningsController : ControllerBase
                 MovieId = body.MovieId,
                 RoomId = body.RoomId,
                 ScreeningTime = body.ScreeningTime,
+                TicketPrice = body.TicketPrice,
             };
             await _screeningService.AddScreeningAsync(screening);
             return Ok(screening);

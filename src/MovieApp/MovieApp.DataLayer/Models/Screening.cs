@@ -14,4 +14,7 @@ public sealed class Screening
     required public int RoomId { get; init; }
 
     required public DateTime ScreeningTime { get; init; }
+
+    [System.ComponentModel.DataAnnotations.Schema.Column(TypeName = "decimal(18,2)")]
+    public decimal TicketPrice { get; set; }
 }

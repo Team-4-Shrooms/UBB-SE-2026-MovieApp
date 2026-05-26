@@ -124,7 +124,7 @@ public sealed class ScreeningsController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(int eventId, int movieId, int roomId, System.DateTime screeningTime)
+    public async Task<IActionResult> Create(int eventId, int movieId, int roomId, System.DateTime screeningTime, decimal ticketPrice)
     {
         try
         {
@@ -135,6 +135,7 @@ public sealed class ScreeningsController : Controller
                 MovieId = movieId,
                 RoomId = roomId,
                 ScreeningTime = screeningTime,
+                TicketPrice = ticketPrice,
             };
             await _screeningService.AddScreeningAsync(screening);
             TempData["Success"] = "Screening created.";

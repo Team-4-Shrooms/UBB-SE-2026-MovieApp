@@ -41,6 +41,12 @@
                 <input type="datetime-local" name="screeningTime" class="form-control rounded-3" value="@defaultTime" required />
             </div>
 
+            <div class="mb-3">
+                <label class="form-label fw-bold">Ticket Price (RON)</label>
+                <input type="number" name="ticketPrice" class="form-control rounded-3" value="0.00" min="0" step="0.01" required />
+                <small class="text-muted">Price per seat for this screening.</small>
+            </div>
+
             <div class="row g-3">
                 <div class="col-md-6">
                     <label class="form-label fw-bold">Event ID</label>

@@ -101,7 +101,7 @@ public sealed class ScreeningService : IScreeningService
             EventId = screening.EventId,
             EventTitle = cinemaEvent?.Title ?? $"Event #{screening.EventId}",
             EventLocation = cinemaEvent?.LocationReference ?? string.Empty,
-            TicketPrice = cinemaEvent?.TicketPrice ?? 0m,
+            TicketPrice = screening.TicketPrice > 0 ? screening.TicketPrice : (cinemaEvent?.TicketPrice ?? 0m),
             RoomId = screening.RoomId,
             RoomName = room?.Name ?? $"Room #{screening.RoomId}",
             Rows = rows,
