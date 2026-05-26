@@ -15,5 +15,5 @@ public interface IUserStatsService
     /// <param name="userId">The unique identifier of the user.</param>
     /// <param name="ct">A token to monitor for cancellation requests.</param>
     /// <returns>The user's stats, or <c>null</c> if no record exists.</returns>
-    Task<UserStats?> GetByUserIdAsync(int userId, CancellationToken ct = default);
+    Task<UserStats?> GetByUserIdAsync(int userId, CancellationToken cancellationToken = default);
 }
