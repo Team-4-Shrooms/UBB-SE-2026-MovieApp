@@ -9,15 +9,15 @@ namespace MovieApp.DataLayer.Interfaces.Repositories
 {
     public interface IBetRepository
     {
-        Task<List<BattleBet>> GetAllAsync(CancellationToken ct = default);
-        Task<BattleBet?> GetByIdAsync(int userId, int battleId, CancellationToken ct = default);
+        Task<List<BattleBet>> GetAllAsync(CancellationToken cancellationToken = default);
+        Task<BattleBet?> GetByIdAsync(int userId, int battleId, CancellationToken cancellationToken = default);
 
-        Task<bool> InsertAsync(BattleBet bet, CancellationToken ct = default);
+        Task<bool> InsertAsync(BattleBet bet, CancellationToken cancellationToken = default);
 
-        Task<bool> UpdateAsync(BattleBet bet, CancellationToken ct = default);
+        Task<bool> UpdateAsync(BattleBet bet, CancellationToken cancellationToken = default);
 
-        Task<bool> DeleteAsync(int userId, int battleId, CancellationToken ct = default);
+        Task<bool> DeleteAsync(int userId, int battleId, CancellationToken cancellationToken = default);
 
-        Task<bool> DeleteByBattleIdAsync(int battleId, CancellationToken ct = default);
+        Task<bool> DeleteByBattleIdAsync(int battleId, CancellationToken cancellationToken = default);
     }
 }

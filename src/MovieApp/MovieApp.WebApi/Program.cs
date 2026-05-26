@@ -116,6 +116,8 @@ builder.Services.AddScoped<IBetRepository>(serviceProvider => serviceProvider.Ge
 
 builder.Services.AddScoped<UserStatsRepository>();
 builder.Services.AddScoped<IUserStatsRepository>(serviceProvider => serviceProvider.GetRequiredService<UserStatsRepository>());
+builder.Services.AddScoped<CommentRepository>();
+builder.Services.AddScoped<ICommentRepository>(serviceProvider => serviceProvider.GetRequiredService<CommentRepository>());
 
 // Core services
 builder.Services.AddScoped<IMovieService, MovieService>();
@@ -137,6 +139,11 @@ builder.Services.AddScoped<IBattleService, BattleService>();
 builder.Services.AddScoped<IPointService, PointService>();
 builder.Services.AddScoped<IBadgeService, BadgeService>();
 
+builder.Services.AddScoped<ICommentService, CommentService>();
+
+// TODO: Add this back when PR #43 is merged
+// builder.Services.AddScoped<IExternalReviewService, ExternalReviewService>();
+builder.Services.AddScoped<IPriceWatcherService, PriceWatcherService>();
 
 // Feature services
 builder.Services.AddScoped<IMovieCardFeedService, MovieCardFeedService>();

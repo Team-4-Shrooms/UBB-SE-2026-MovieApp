@@ -16,7 +16,7 @@ public sealed class MarathonProxyService : IMarathonService
 
     public async Task<IEnumerable<Marathon>> GetWeeklyMarathonsAsync(int userIdentifier)
     {
-        var marathons = await _apiClient.GetAsync<IEnumerable<Marathon>>($"api/marathons");
+        var marathons = await _apiClient.GetAsync<IEnumerable<Marathon>>($"api/marathons/weekly/{userIdentifier}");
         return marathons ?? new List<Marathon>();
     }
 
@@ -29,7 +29,7 @@ public sealed class MarathonProxyService : IMarathonService
     public async Task<bool> StartMarathonAsync(int marathonIdentifier)
     {
         var success = await _apiClient.PostAsync<object, bool>(
-            $"api/marathons/{marathonIdentifier}/enroll",
+            $"api/marathons/{marathonIdentifier}/start",
             new { });
         return success;
     }

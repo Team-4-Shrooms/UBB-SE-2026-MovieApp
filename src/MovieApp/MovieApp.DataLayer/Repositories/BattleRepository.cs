@@ -19,52 +19,52 @@ namespace MovieApp.DataLayer.Repositories
             _context = context;
         }
 
-        public async Task<List<Battle>> GetAllAsync(CancellationToken ct = default)
+        public async Task<List<Battle>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _context.Battles
-                    .Include(b => b.FirstMovie)
-                    .Include(b => b.SecondMovie)
-                    .Include(b => b.Bets)
+                    .Include(battle => battle.FirstMovie)
+                    .Include(battle => battle.SecondMovie)
+                    .Include(battle => battle.Bets)
                         .ThenInclude(bet => bet.User)
-                    .Include(b => b.Bets)
+                    .Include(battle => battle.Bets)
                         .ThenInclude(bet => bet.Movie)
-                    .ToListAsync(ct);
+                    .ToListAsync(cancellationToken);
         }
 
-        public async Task<Battle?> GetByIdAsync(int id, CancellationToken ct = default)
+        public async Task<Battle?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _context.Battles
-                    .Include(b => b.FirstMovie)
-                    .Include(b => b.SecondMovie)
-                    .Include(b => b.Bets)
+                    .Include(battle => battle.FirstMovie)
+                    .Include(battle => battle.SecondMovie)
+                    .Include(battle => battle.Bets)
                         .ThenInclude(bet => bet.User)
-                    .Include(b => b.Bets)
+                    .Include(battle => battle.Bets)
                         .ThenInclude(bet => bet.Movie)
-                    .FirstOrDefaultAsync(b => b.BattleId == id, ct);
+                    .FirstOrDefaultAsync(battle => battle.BattleId == id, cancellationToken);
         }
 
-        public async Task<int> InsertAsync(Battle battle, CancellationToken ct = default)
+        public async Task<int> InsertAsync(Battle battle, CancellationToken cancellationToken = default)
         {
             _context.Battles.Add(battle);
-            await _context.SaveChangesAsync(ct);
+            await _context.SaveChangesAsync(cancellationToken);
             return battle.BattleId;
         }
 
-        public async Task<bool> UpdateAsync(Battle battle, CancellationToken ct = default)
+        public async Task<bool> UpdateAsync(Battle battle, CancellationToken cancellationToken = default)
         {
             _context.Battles.Update(battle);
-            return await _context.SaveChangesAsync(ct) > 0;
+            return await _context.SaveChangesAsync(cancellationToken) > 0;
         }
 
-        public async Task<bool> DeleteAsync(int id, CancellationToken ct = default)
+        public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            Battle? battle = await this.GetByIdAsync(id, ct);
+            Battle? battle = await this.GetByIdAsync(id, cancellationToken);
             if (battle == null)
             {
                 return false;
             }
             _context.Battles.Remove(battle);
-            return await _context.SaveChangesAsync(ct) > 0;
+            return await _context.SaveChangesAsync(cancellationToken) > 0;
         }
     }
 }

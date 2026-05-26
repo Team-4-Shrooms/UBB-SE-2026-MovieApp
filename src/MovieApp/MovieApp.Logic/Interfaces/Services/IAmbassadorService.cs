@@ -10,35 +10,68 @@ public interface IAmbassadorService
     /// <summary>
     /// Checks whether a referral code exists.
     /// </summary>
-    Task<bool> IsReferralCodeValidAsync(string referralCode, CancellationToken ct = default);
+    Task<bool> IsReferralCodeValidAsync(string referralCode, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets all ambassador profiles.
+    /// </summary>
+    Task<IEnumerable<AmbassadorProfile>> GetAllAmbassadorsAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets an ambassador profile by ID.
+    /// </summary>
+    Task<AmbassadorProfile?> GetAmbassadorByIdAsync(int id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets the ambassador referral code for a user, or null if not an ambassador.
     /// </summary>
-    Task<string?> GetReferralCodeAsync(int userId, CancellationToken ct = default);
+    Task<string?> GetReferralCodeAsync(int userId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Enrolls a user as an ambassador with a generated referral code.
     /// </summary>
-    Task CreateAmbassadorProfileAsync(int userId, string referralCode, CancellationToken ct = default);
+    Task CreateAmbassadorProfileAsync(int userId, string referralCode, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Processes a referral interaction when a friend joins an event using a referral code.
     /// </summary>
-    Task ProcessReferralAsync(string referralCode, int friendId, int eventId, CancellationToken ct = default);
+    Task ProcessReferralAsync(string referralCode, int friendId, int eventId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets the referral history for a specific ambassador.
     /// </summary>
-    Task<IEnumerable<ReferralHistoryItem>> GetReferralHistoryAsync(int ambassadorId, CancellationToken ct = default);
+    Task<IEnumerable<ReferralHistoryItem>> GetReferralHistoryAsync(int ambassadorId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets the current reward balance for a user.
     /// </summary>
-    Task<int> GetRewardBalanceAsync(int userId, CancellationToken ct = default);
+    Task<int> GetRewardBalanceAsync(int userId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Redeems one reward from the user's balance.
     /// </summary>
-    Task RedeemRewardAsync(int userId, CancellationToken ct = default);
+    Task RedeemRewardAsync(int userId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Looks up an ambassador's user ID based on their unique referral code.
+    /// Returns the user ID if found, or null if the code does not exist.
+    /// </summary>
+    Task<int?> ResolveCodeToUserIdAsync(string referralCode, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Checks if a referral log already exists for a specific ambassador, friend, and event combination
+    /// to prevent duplicate referrals for the same event.
+    /// </summary>
+    Task<bool> ReferralLogExistsAsync(int ambassadorId, int friendId, int eventId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Records a new referral interaction in the database when a friend joins an event
+    /// using an ambassador's referral code.
+    /// </summary>
+    Task LogReferralByAmbassadorIdAsync(int ambassadorId, int friendId, int eventId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Decreases the user's available reward balance after they have redeemed a referral reward.
+    /// </summary>
+    Task DecrementRewardBalanceAsync(int userId, CancellationToken cancellationToken = default);
 }
