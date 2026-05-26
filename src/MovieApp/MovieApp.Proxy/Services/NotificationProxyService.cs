@@ -85,4 +85,10 @@ public class NotificationProxyService : INotificationService
             new { EventId = eventIdentifier, NewCapacity = newCapacity },
             cancellationToken);
     }
+
+    public async Task<int> GetUnreadCountAsync(int userIdentifier, CancellationToken cancellationToken = default)
+    {
+        int count = await _apiClient.GetAsync<int>($"api/notifications/{userIdentifier}/unread-count", cancellationToken);
+        return count;
+    }
 }

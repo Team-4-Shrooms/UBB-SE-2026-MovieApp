@@ -65,6 +65,12 @@ builder.Services.AddScoped<IEquipmentRepository>(serviceProvider => serviceProvi
 builder.Services.AddScoped<EventRepository>();
 builder.Services.AddScoped<IEventRepository>(serviceProvider => serviceProvider.GetRequiredService<EventRepository>());
 
+builder.Services.AddScoped<ScreeningRepository>();
+builder.Services.AddScoped<IScreeningRepository>(serviceProvider => serviceProvider.GetRequiredService<ScreeningRepository>());
+
+builder.Services.AddScoped<BookingRepository>();
+builder.Services.AddScoped<IBookingRepository>(serviceProvider => serviceProvider.GetRequiredService<BookingRepository>());
+
 builder.Services.AddScoped<InteractionRepository>();
 builder.Services.AddScoped<IInteractionRepository>(serviceProvider => serviceProvider.GetRequiredService<InteractionRepository>());
 
@@ -101,6 +107,15 @@ builder.Services.AddScoped<IScrapeJobRepository>(serviceProvider => serviceProvi
 builder.Services.AddScoped<TransactionRepository>();
 builder.Services.AddScoped<ITransactionRepository>(serviceProvider => serviceProvider.GetRequiredService<TransactionRepository>());
 
+builder.Services.AddScoped<MarathonRepository>();
+builder.Services.AddScoped<IMarathonRepository>(serviceProvider => serviceProvider.GetRequiredService<MarathonRepository>());
+
+builder.Services.AddScoped<NotificationRepository>();
+builder.Services.AddScoped<INotificationRepository>(serviceProvider => serviceProvider.GetRequiredService<NotificationRepository>());
+
+builder.Services.AddScoped<FavoriteEventRepository>();
+builder.Services.AddScoped<IFavoriteEventRepository>(serviceProvider => serviceProvider.GetRequiredService<FavoriteEventRepository>());
+
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<IUserRepository>(serviceProvider => serviceProvider.GetRequiredService<UserRepository>());
 
@@ -115,10 +130,18 @@ builder.Services.AddScoped<ITriviaRewardRepository>(serviceProvider => servicePr
 builder.Services.AddScoped<CommentRepository>();
 builder.Services.AddScoped<ICommentRepository>(serviceProvider => serviceProvider.GetRequiredService<CommentRepository>());
 
+builder.Services.AddScoped<PriceWatcherRepository>();
+builder.Services.AddScoped<IPriceWatcherRepository>(serviceProvider => serviceProvider.GetRequiredService<PriceWatcherRepository>());
+
+builder.Services.AddScoped<AmbassadorRepository>();
+builder.Services.AddScoped<IAmbassadorRepository>(serviceProvider => serviceProvider.GetRequiredService<AmbassadorRepository>());
+
 // Core services
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IEquipmentService, EquipmentService>();
 builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IScreeningService, ScreeningService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IActiveSalesService, ActiveSalesService>();
@@ -131,12 +154,28 @@ builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IScrapeJobService, ScrapeJobService>();
 builder.Services.AddScoped<IReelService, ReelService>();
+builder.Services.AddScoped<IMarathonService, MarathonService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<ITriviaService, TriviaService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 
 // TODO: Add this back when PR #43 is merged
 // builder.Services.AddScoped<IExternalReviewService, ExternalReviewService>();
+builder.Services.AddScoped<IAmbassadorService, AmbassadorService>();
+
 builder.Services.AddScoped<IPriceWatcherService, PriceWatcherService>();
+
+// External review providers (P2)
+builder.Services.Configure<ExternalReviewsOptions>(
+    config.GetSection(ExternalReviewsOptions.SectionName));
+builder.Services.AddSingleton<ICacheService, LocalFileCacheService>();
+builder.Services.AddHttpClient<OmdbReviewProvider>();
+builder.Services.AddHttpClient<NytReviewProvider>();
+builder.Services.AddHttpClient<GuardianReviewProvider>();
+builder.Services.AddScoped<IExternalReviewProvider>(sp => sp.GetRequiredService<OmdbReviewProvider>());
+builder.Services.AddScoped<IExternalReviewProvider>(sp => sp.GetRequiredService<NytReviewProvider>());
+builder.Services.AddScoped<IExternalReviewProvider>(sp => sp.GetRequiredService<GuardianReviewProvider>());
+builder.Services.AddScoped<IExternalReviewService, ExternalReviewService>();
 
 // Feature services
 builder.Services.AddScoped<IMovieCardFeedService, MovieCardFeedService>();

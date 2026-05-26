@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MovieApp.DataLayer.Models;
 using MovieApp.Logic.Models;
+using MovieApp.WebDTOs.DTOs;
 
 public interface IScreeningService
 {
@@ -13,5 +14,6 @@ public interface IScreeningService
     Task<IReadOnlyList<Screening>> GetScreeningsByMovieAsync(int movieId, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<Screening>> GetAllScreeningsAsync(CancellationToken cancellationToken = default);
     Task<IReadOnlyList<Seat>> GetAvailableSeatsAsync(int screeningId, CancellationToken cancellationToken = default);
+    Task<ScreeningDetailsDto?> GetScreeningDetailsAsync(int screeningId, CancellationToken cancellationToken = default);
     Task AddScreeningAsync(Screening screening, CancellationToken cancellationToken = default);
 }

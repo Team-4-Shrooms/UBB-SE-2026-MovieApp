@@ -2,7 +2,6 @@ namespace MovieApp.Proxy.Services
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using MovieApp.DataLayer.Interfaces.Repositories;
     using MovieApp.DataLayer.Models;
     using MovieApp.Logic.Interfaces.Services;
 
