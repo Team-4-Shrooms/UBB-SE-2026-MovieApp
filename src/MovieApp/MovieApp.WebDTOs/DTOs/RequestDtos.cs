@@ -259,6 +259,7 @@ public sealed class CreateAmbassadorProfileRequestBody
 {
     public int UserId { get; set; }
     public string Code { get; set; } = string.Empty;
+    public string ReferralCode { get; set; } = string.Empty;
 }
 
 public sealed class AddReferralLogRequestBody
@@ -295,12 +296,6 @@ public sealed class ReplyCommentRequest
 {
     public int UserId { get; set; }
     public string Content { get; set; } = string.Empty;
-}
-
-
-public class CreateAmbassadorProfileRequestBody
-{
-    public string ReferralCode { get; set; } = string.Empty;
 }
 
 public class ProcessReferralRequestBody

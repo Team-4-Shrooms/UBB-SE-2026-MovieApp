@@ -66,5 +66,26 @@ namespace MovieApp.Proxy.Services
         {
             await _apiClient.PostAsync($"{_baseEndpoint}/{userId}/rewards/redeem", new { }, cancellationToken);
         }
+
+        public async Task<int?> ResolveCodeToUserIdAsync(string referralCode, CancellationToken cancellationToken = default)
+        {
+            return await _apiClient.GetAsync<int?>($"/api/referrals/code/{referralCode}/user", cancellationToken);
+        }
+
+        public async Task<bool> ReferralLogExistsAsync(int ambassadorId, int friendId, int eventId, CancellationToken cancellationToken = default)
+        {
+            var result = await _apiClient.GetAsync<bool?>($"/api/referrals/check?ambassadorId={ambassadorId}&friendId={friendId}&eventId={eventId}", cancellationToken);
+            return result ?? false;
+        }
+
+        public async Task LogReferralByAmbassadorIdAsync(int ambassadorId, int friendId, int eventId, CancellationToken cancellationToken = default)
+        {
+            await _apiClient.PostAsync("/api/referrals/log", new { ambassadorId, friendId, eventId }, cancellationToken);
+        }
+
+        public async Task DecrementRewardBalanceAsync(int userId, CancellationToken cancellationToken = default)
+        {
+            await _apiClient.PostAsync($"/api/referrals/user/{userId}/balance/decrement", new { }, cancellationToken);
+        }
     }
 }

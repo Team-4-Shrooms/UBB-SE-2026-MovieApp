@@ -8,6 +8,7 @@ using MovieApp.DataLayer.Interfaces;
 using MovieApp.DataLayer.Interfaces.Repositories;
 using MovieApp.DataLayer.Repositories;
 using MovieApp.Logic.Interfaces.Services;
+using MovieApp.Logic.Services;
 using MovieApp.Proxy;
 using MovieApp.Proxy.Services;
 using MovieApp.Auth;
@@ -63,6 +64,8 @@ namespace MovieApp
             services.AddTransient<ITransactionRepository, TransactionRepository>();
             services.AddTransient<IProfileRepository, ProfileRepository>();
             services.AddTransient<IMovieTournamentRepository, MovieTournamentRepository>();
+            services.AddTransient<ITriviaRepository, TriviaRepository>();
+            services.AddTransient<ITriviaRewardRepository, TriviaRewardRepository>();
 
             // Auth — login to WebApi and get JWT token.
             // Task.Run avoids deadlocking the WinUI UI thread's sync context.
@@ -102,6 +105,7 @@ namespace MovieApp
             services.AddTransient<ICommentService, CommentProxyService>();
             services.AddTransient<IAmbassadorService, AmbassadorProxyService>();
             services.AddTransient<IMarathonService, MarathonProxyService>();
+            services.AddTransient<ITriviaService, TriviaService>();
 
             // Reels Upload
             services.AddTransient<MovieApp.Logic.Features.ReelsUpload.IVideoStorageService, VideoStorageProxyService>();
