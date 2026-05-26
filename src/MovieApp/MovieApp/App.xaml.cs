@@ -161,6 +161,9 @@ namespace MovieApp
             // Ambassadors
             services.AddTransient<MovieApp.Features.Ambassadors.ViewModels.AmbassadorViewModel>();
 
+            // Price Watchers
+            services.AddTransient<MovieApp.Features.PriceWatcher.ViewModels.PriceWatcherViewModel>();
+
             var provider = services.BuildServiceProvider();
             Services = provider;
             Ioc.Default.ConfigureServices(provider);
