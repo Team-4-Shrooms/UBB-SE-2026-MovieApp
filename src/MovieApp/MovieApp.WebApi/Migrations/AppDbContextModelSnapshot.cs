@@ -100,10 +100,7 @@ namespace MovieApp.WebApi.Migrations
             modelBuilder.Entity("MovieApp.DataLayer.Models.AmbassadorProfile", b =>
                 {
                     b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<string>("PermanentCode")
                         .IsRequired()

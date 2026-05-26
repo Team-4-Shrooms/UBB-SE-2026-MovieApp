@@ -89,6 +89,9 @@ namespace MovieApp.WebApi.Data
 
             modelBuilder.Entity<AmbassadorProfile>()
                 .HasKey(ambassadorProfile => ambassadorProfile.UserId);
+            modelBuilder.Entity<AmbassadorProfile>()
+                .Property(ambassadorProfile => ambassadorProfile.UserId)
+                .ValueGeneratedNever();
 
             modelBuilder.Entity<UserSpinData>()
                 .HasKey(userSpinData => userSpinData.UserId);
