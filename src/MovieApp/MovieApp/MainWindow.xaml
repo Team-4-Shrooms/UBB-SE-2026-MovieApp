@@ -40,6 +40,7 @@
             <NavigationViewItem Content="Marathons" Tag="Marathon" Icon="Go"/>
             <NavigationViewItem Content="Ambassadors" Tag="Ambassadors" Icon="Contact"/>
             <NavigationViewItem Content="Price Watchers" Tag="PriceWatcher" Icon="Tag"/>
+            <NavigationViewItem Content="Screenings" Tag="Screenings" Icon="VideoChat"/>
         </NavigationView.MenuItems>
 
         <Frame x:Name="ContentFrame" />
