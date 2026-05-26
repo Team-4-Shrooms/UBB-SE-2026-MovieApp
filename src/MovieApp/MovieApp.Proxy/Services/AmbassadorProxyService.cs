@@ -67,24 +67,25 @@ namespace MovieApp.Proxy.Services
             await _apiClient.PostAsync($"/api/ambassadors/{userId}/rewards/redeem", new { }, ct);
         }
 
-        public Task<int?> ResolveCodeToUserIdAsync(string referralCode, CancellationToken cancellationToken = default)
+        public async Task<int?> ResolveCodeToUserIdAsync(string referralCode, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await _apiClient.GetAsync<int?>($"/api/ambassadors/resolve?code={referralCode}", cancellationToken);
         }
 
-        public Task<bool> ReferralLogExistsAsync(int ambassadorId, int friendId, int eventId, CancellationToken cancellationToken = default)
+        public async Task<bool> ReferralLogExistsAsync(int ambassadorId, int friendId, int eventId, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var result = await _apiClient.GetAsync<bool?>($"/api/ambassadors/{ambassadorId}/referral-log/exists?friendId={friendId}&eventId={eventId}", cancellationToken);
+            return result ?? false;
         }
 
-        public Task LogReferralByAmbassadorIdAsync(int ambassadorId, int friendId, int eventId, CancellationToken cancellationToken = default)
+        public async Task LogReferralByAmbassadorIdAsync(int ambassadorId, int friendId, int eventId, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            await _apiClient.PostAsync($"/api/ambassadors/referral-log", new { ambassadorId, friendId, eventId }, cancellationToken);
         }
 
-        public Task DecrementRewardBalanceAsync(int userId, CancellationToken cancellationToken = default)
+        public async Task DecrementRewardBalanceAsync(int userId, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            await _apiClient.PostAsync($"/api/ambassadors/{userId}/rewards/decrement", new { }, cancellationToken);
         }
     }
 }

@@ -71,5 +71,33 @@ namespace MovieApp.WebApi.Endpoints
             await _ambassadorService.RedeemRewardAsync(userId);
             return Ok();
         }
+
+        [HttpGet("resolve")]
+        public async Task<IActionResult> ResolveCodeToUserId([FromQuery] string code)
+        {
+            var userId = await _ambassadorService.ResolveCodeToUserIdAsync(code);
+            return Ok(userId);
+        }
+
+        [HttpGet("{ambassadorId:int}/referral-log/exists")]
+        public async Task<IActionResult> ReferralLogExists(int ambassadorId, [FromQuery] int friendId, [FromQuery] int eventId)
+        {
+            var exists = await _ambassadorService.ReferralLogExistsAsync(ambassadorId, friendId, eventId);
+            return Ok(exists);
+        }
+
+        [HttpPost("referral-log")]
+        public async Task<IActionResult> LogReferralByAmbassadorId([FromBody] AddReferralLogRequestBody request)
+        {
+            await _ambassadorService.LogReferralByAmbassadorIdAsync(request.AmbassadorId, request.FriendId, request.EventId);
+            return Ok();
+        }
+
+        [HttpPost("{userId:int}/rewards/decrement")]
+        public async Task<IActionResult> DecrementRewardBalance(int userId)
+        {
+            await _ambassadorService.DecrementRewardBalanceAsync(userId);
+            return Ok();
+        }
     }
 }
