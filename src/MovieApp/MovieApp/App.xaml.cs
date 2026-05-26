@@ -17,6 +17,7 @@ using MovieApp.Features.Marketplace.ViewModels;
 using MovieApp.Features.Notification.ViewModels;
 using MovieApp.Features.SlotMachine.ViewModels;
 using MovieApp.Features.Marathon.ViewModels;
+using MovieApp.Features.Referrals.ViewModels;
 using MovieApp.Features.Wallet.ViewModels;
 using MovieApp.Features.BattlesBet.ViewModels;
 using MovieApp.Features.Screenings.ViewModels;
@@ -75,6 +76,7 @@ namespace MovieApp
             var authProvider = new WinUiAuthTokenProvider();
             Task.Run(() => authProvider.InitializeAsync()).GetAwaiter().GetResult();
             services.AddSingleton<IAuthTokenProvider>(authProvider);
+            services.AddSingleton<ICurrentUserService>(authProvider);
 
             // HTTP client + ApiClient
             var httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:4544/") };
@@ -179,6 +181,9 @@ namespace MovieApp
             services.AddTransient<BattleViewModel>();
             // Price Watchers
             services.AddTransient<MovieApp.Features.PriceWatcher.ViewModels.PriceWatcherViewModel>();
+
+            // Referrals
+            services.AddTransient<ReferralViewModel>();
 
             var provider = services.BuildServiceProvider();
             Services = provider;
