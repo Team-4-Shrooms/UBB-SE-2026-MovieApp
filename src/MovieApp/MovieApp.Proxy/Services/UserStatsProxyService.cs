@@ -15,9 +15,9 @@ namespace MovieApp.Proxy.Services
             _apiClient = apiClient;
         }
 
-        public async Task<UserStats?> GetByUserIdAsync(int userId, CancellationToken ct = default)
+        public async Task<UserStats?> GetByUserIdAsync(int userId, CancellationToken cancellationToken = default)
         {
-            return await _apiClient.GetAsync<UserStats?>($"{_baseEndpoint}/{userId}", ct);
+            return await _apiClient.GetAsync<UserStats?>($"{_baseEndpoint}/{userId}", cancellationToken);
         }
     }
 }

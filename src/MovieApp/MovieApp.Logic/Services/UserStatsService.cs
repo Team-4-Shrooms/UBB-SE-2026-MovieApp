@@ -15,9 +15,9 @@ namespace MovieApp.Logic.Services
             _userStatsRepository = userStatsRepository;
         }
 
-        public Task<UserStats?> GetByUserIdAsync(int userId, CancellationToken ct = default)
+        public Task<UserStats?> GetByUserIdAsync(int userId, CancellationToken cancellationToken = default)
         {
-            return _userStatsRepository.GetByUserIdAsync(userId, ct);
+            return _userStatsRepository.GetByUserIdAsync(userId, cancellationToken);
         }
     }
 }

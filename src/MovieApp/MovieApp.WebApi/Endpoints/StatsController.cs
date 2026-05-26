@@ -18,9 +18,9 @@ namespace MovieApp.WebApi.Endpoints
         }
 
         [HttpGet("{userId:int}")]
-        public async Task<IActionResult> GetUserStats(int userId, CancellationToken ct = default)
+        public async Task<IActionResult> GetUserStats(int userId, CancellationToken cancellationToken = default)
         {
-            UserStats? stats = await _userStatsService.GetByUserIdAsync(userId, ct);
+            UserStats? stats = await _userStatsService.GetByUserIdAsync(userId, cancellationToken);
             if (stats == null)
             {
                 return NotFound();

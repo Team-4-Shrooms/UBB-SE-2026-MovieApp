@@ -16,27 +16,27 @@ namespace MovieApp.Proxy.Services
             _apiClient = apiClient;
         }
 
-        public async Task<List<UserBadge>> GetUserBadgesAsync(int userId, CancellationToken ct = default)
+        public async Task<List<UserBadge>> GetUserBadgesAsync(int userId, CancellationToken cancellationToken = default)
         {
-            List<UserBadge>? result = await _apiClient.GetAsync<List<UserBadge>>($"{_baseEndpoint}/{userId}", ct);
+            List<UserBadge>? result = await _apiClient.GetAsync<List<UserBadge>>($"{_baseEndpoint}/{userId}", cancellationToken);
             return result ?? new List<UserBadge>();
         }
 
-        public async Task<List<Badge>> GetAllBadgesAsync(CancellationToken ct = default)
+        public async Task<List<Badge>> GetAllBadgesAsync(CancellationToken cancellationToken = default)
         {
-            List<Badge>? result = await _apiClient.GetAsync<List<Badge>>($"{_baseEndpoint}", ct);
+            List<Badge>? result = await _apiClient.GetAsync<List<Badge>>($"{_baseEndpoint}", cancellationToken);
             return result ?? new List<Badge>();
         }
 
-        public async Task<IList<UserStats>> GetLeaderboardAsync(CancellationToken ct = default)
+        public async Task<IList<UserStats>> GetLeaderboardAsync(CancellationToken cancellationToken = default)
         {
-            IList<UserStats>? result = await _apiClient.GetAsync<List<UserStats>>($"{_baseEndpoint}/leaderboard", ct);
+            IList<UserStats>? result = await _apiClient.GetAsync<List<UserStats>>($"{_baseEndpoint}/leaderboard", cancellationToken);
             return result ?? new List<UserStats>();
         }
 
-        public Task CheckAndAwardBadgesAsync(int userId, CancellationToken ct = default)
+        public Task CheckAndAwardBadgesAsync(int userId, CancellationToken cancellationToken = default)
         {
-            return _apiClient.PostAsync($"{_baseEndpoint}/{userId}/award", new { }, ct);
+            return _apiClient.PostAsync($"{_baseEndpoint}/{userId}/award", new { }, cancellationToken);
         }
     }
 }
