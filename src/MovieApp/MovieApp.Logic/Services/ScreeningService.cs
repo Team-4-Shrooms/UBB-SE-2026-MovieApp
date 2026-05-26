@@ -110,6 +110,9 @@ public sealed class ScreeningService : IScreeningService
         };
     }
 
+    public Task<IReadOnlyList<Screening>> GetAllScreeningsAsync(CancellationToken cancellationToken = default)
+        => _screenings.GetAllAsync(cancellationToken);
+
     public async Task AddScreeningAsync(Screening screening, CancellationToken cancellationToken = default)
     {
         var room = await _screenings.GetRoomAsync(screening.RoomId, cancellationToken)

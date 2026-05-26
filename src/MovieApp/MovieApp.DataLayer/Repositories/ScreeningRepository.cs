@@ -47,6 +47,13 @@ public sealed class ScreeningRepository : IScreeningRepository
             .FirstOrDefaultAsync(cinemaEvent => cinemaEvent.Id == eventId, cancellationToken);
     }
 
+    public async Task<IReadOnlyList<Screening>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Screenings
+            .OrderBy(screening => screening.ScreeningTime)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task AddAsync(Screening screening, CancellationToken cancellationToken = default)
     {
         await _context.Screenings.AddAsync(screening, cancellationToken);

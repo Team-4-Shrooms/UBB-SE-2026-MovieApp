@@ -273,6 +273,14 @@ namespace MovieApp.Features.MovieDetail.Views
             Frame.Navigate(typeof(MovieEventsPage), new MovieEventsNavArgs { Movie = _movie });
         }
 
+        private void ReplyButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is int commentId)
+            {
+                CommentsViewModel.StartReplyCommand.Execute(commentId);
+            }
+        }
+
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             if (Frame.CanGoBack) Frame.GoBack();
