@@ -102,9 +102,9 @@ public sealed class MovieDetailViewModel : INotifyPropertyChanged
             NewCommentContent = string.Empty;
             await LoadCommentsAsync();
         }
-        catch (InvalidOperationException ex)
+        catch (InvalidOperationException exception)
         {
-            StatusMessage = ex.Message;
+            StatusMessage = exception.Message;
         }
     }
 
@@ -115,7 +115,7 @@ public sealed class MovieDetailViewModel : INotifyPropertyChanged
             return;
         }
 
-        var roots = await _commentService.GetCommentsForMovieAsync(Movie.Id);
+        List<Comment> roots = await _commentService.GetCommentsForMovieAsync(Movie.Id);
         ApplyCommentsFromApi(roots);
     }
 
@@ -133,9 +133,9 @@ public sealed class MovieDetailViewModel : INotifyPropertyChanged
             ReplyToCommentId = 0;
             await LoadCommentsAsync();
         }
-        catch (InvalidOperationException ex)
+        catch (InvalidOperationException exception)
         {
-            StatusMessage = ex.Message;
+            StatusMessage = exception.Message;
         }
     }
 
