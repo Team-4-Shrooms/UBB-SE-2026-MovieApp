@@ -106,6 +106,9 @@ namespace MovieApp
             services.AddTransient<IAmbassadorService, AmbassadorProxyService>();
             services.AddTransient<IMarathonService, MarathonProxyService>();
             services.AddTransient<ITriviaService, TriviaService>();
+            services.AddTransient<ITriviaService, TriviaProxyService>();
+            services.AddTransient<IPriceWatcherService, PriceWatcherProxyService>();
+            services.AddTransient<IExternalReviewService, ExternalReviewProxyService>();
 
             // Reels Upload
             services.AddTransient<MovieApp.Logic.Features.ReelsUpload.IVideoStorageService, VideoStorageProxyService>();
@@ -159,6 +162,9 @@ namespace MovieApp
             services.AddSingleton<NotificationViewModel>();
             // Slot Machine
             services.AddTransient<SlotMachineViewModel>();
+
+            // Ambassadors
+            services.AddTransient<MovieApp.Features.Ambassadors.ViewModels.AmbassadorViewModel>();
 
             var provider = services.BuildServiceProvider();
             Services = provider;
