@@ -298,10 +298,6 @@ public sealed class ReplyCommentRequest
 }
 
 
-public class CreateAmbassadorProfileRequestBody
-{
-    public string ReferralCode { get; set; } = string.Empty;
-}
 
 public class ProcessReferralRequestBody
 {

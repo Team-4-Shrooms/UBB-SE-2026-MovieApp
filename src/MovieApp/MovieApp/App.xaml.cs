@@ -157,6 +157,9 @@ namespace MovieApp
             // Slot Machine
             services.AddTransient<SlotMachineViewModel>();
 
+            // Ambassadors
+            services.AddTransient<MovieApp.Features.Ambassadors.ViewModels.AmbassadorViewModel>();
+
             var provider = services.BuildServiceProvider();
             Services = provider;
             Ioc.Default.ConfigureServices(provider);
