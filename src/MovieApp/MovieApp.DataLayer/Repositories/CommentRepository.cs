@@ -15,40 +15,40 @@ namespace MovieApp.DataLayer.Repositories
         }
 
         /// <inheritdoc />
-        public async Task<List<Comment>> GetAllAsync(CancellationToken ct = default)
+        public async Task<List<Comment>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _context.Comments
                 .AsNoTracking()
-                .Include(c => c.Author)
-                .Include(c => c.Replies)
-                    .ThenInclude(r => r.Author)
-                .OrderByDescending(c => c.CreatedAt)
-                .ToListAsync(ct);
+                .Include(comment => comment.Author)
+                .Include(comment => comment.Replies)
+                    .ThenInclude(reply => reply.Author)
+                .OrderByDescending(comment => comment.CreatedAt)
+                .ToListAsync(cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task<Comment?> GetByIdAsync(int id, CancellationToken ct = default)
+        public async Task<Comment?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _context.Comments
-                .Include(c => c.Author)
-                .Include(c => c.Replies)
-                    .ThenInclude(r => r.Author)
-                .FirstOrDefaultAsync(c => c.CommentId == id, ct);
+                .Include(comment => comment.Author)
+                .Include(comment => comment.Replies)
+                    .ThenInclude(reply => reply.Author)
+                .FirstOrDefaultAsync(comment => comment.CommentId == id, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task<int> InsertAsync(Comment comment, CancellationToken ct = default)
+        public async Task<int> InsertAsync(Comment comment, CancellationToken cancellationToken = default)
         {
             _context.Comments.Add(comment);
-            await _context.SaveChangesAsync(ct);
+            await _context.SaveChangesAsync(cancellationToken);
             return comment.CommentId;
         }
 
         /// <inheritdoc />
-        public async Task<bool> UpdateAsync(Comment comment, CancellationToken ct = default)
+        public async Task<bool> UpdateAsync(Comment comment, CancellationToken cancellationToken = default)
         {
             var existing = await _context.Comments
-                .FirstOrDefaultAsync(c => c.CommentId == comment.CommentId, ct);
+                .FirstOrDefaultAsync(existingComment => existingComment.CommentId == comment.CommentId, cancellationToken);
 
             if (existing == null)
             {
@@ -56,15 +56,15 @@ namespace MovieApp.DataLayer.Repositories
             }
 
             existing.Content = comment.Content;
-            await _context.SaveChangesAsync(ct);
+            await _context.SaveChangesAsync(cancellationToken);
             return true;
         }
 
         /// <inheritdoc />
-        public async Task<bool> DeleteAsync(int id, CancellationToken ct = default)
+        public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
             var comment = await _context.Comments
-                .FirstOrDefaultAsync(c => c.CommentId == id, ct);
+                .FirstOrDefaultAsync(existingComment => existingComment.CommentId == id, cancellationToken);
 
             if (comment == null)
             {
@@ -72,7 +72,7 @@ namespace MovieApp.DataLayer.Repositories
             }
 
             _context.Comments.Remove(comment);
-            await _context.SaveChangesAsync(ct);
+            await _context.SaveChangesAsync(cancellationToken);
             return true;
         }
     }
