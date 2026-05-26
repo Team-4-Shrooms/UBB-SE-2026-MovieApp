@@ -116,6 +116,11 @@ builder.Services.AddScoped<IBetRepository>(serviceProvider => serviceProvider.Ge
 
 builder.Services.AddScoped<UserStatsRepository>();
 builder.Services.AddScoped<IUserStatsRepository>(serviceProvider => serviceProvider.GetRequiredService<UserStatsRepository>());
+builder.Services.AddScoped<TriviaRepository>();
+builder.Services.AddScoped<ITriviaRepository>(serviceProvider => serviceProvider.GetRequiredService<TriviaRepository>());
+
+builder.Services.AddScoped<TriviaRewardRepository>();
+builder.Services.AddScoped<ITriviaRewardRepository>(serviceProvider => serviceProvider.GetRequiredService<TriviaRewardRepository>());
 builder.Services.AddScoped<CommentRepository>();
 builder.Services.AddScoped<ICommentRepository>(serviceProvider => serviceProvider.GetRequiredService<CommentRepository>());
 
@@ -139,6 +144,7 @@ builder.Services.AddScoped<IBattleService, BattleService>();
 builder.Services.AddScoped<IPointService, PointService>();
 builder.Services.AddScoped<IBadgeService, BadgeService>();
 
+builder.Services.AddScoped<ITriviaService, TriviaService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 
 // TODO: Add this back when PR #43 is merged
