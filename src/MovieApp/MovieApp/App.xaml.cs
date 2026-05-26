@@ -166,6 +166,9 @@ namespace MovieApp
             // Ambassadors
             services.AddTransient<MovieApp.Features.Ambassadors.ViewModels.AmbassadorViewModel>();
 
+            // Movie detail comments
+            services.AddTransient<MovieApp.Features.MovieDetail.ViewModels.MovieDetailViewModel>();
+
             var provider = services.BuildServiceProvider();
             Services = provider;
             Ioc.Default.ConfigureServices(provider);
