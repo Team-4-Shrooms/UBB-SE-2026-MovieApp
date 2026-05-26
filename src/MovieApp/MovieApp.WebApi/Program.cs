@@ -160,6 +160,18 @@ builder.Services.AddScoped<ICommentService, CommentService>();
 // builder.Services.AddScoped<IExternalReviewService, ExternalReviewService>();
 builder.Services.AddScoped<IPriceWatcherService, PriceWatcherService>();
 
+// External review providers (P2)
+builder.Services.Configure<ExternalReviewsOptions>(
+    config.GetSection(ExternalReviewsOptions.SectionName));
+builder.Services.AddSingleton<ICacheService, LocalFileCacheService>();
+builder.Services.AddHttpClient<OmdbReviewProvider>();
+builder.Services.AddHttpClient<NytReviewProvider>();
+builder.Services.AddHttpClient<GuardianReviewProvider>();
+builder.Services.AddScoped<IExternalReviewProvider>(sp => sp.GetRequiredService<OmdbReviewProvider>());
+builder.Services.AddScoped<IExternalReviewProvider>(sp => sp.GetRequiredService<NytReviewProvider>());
+builder.Services.AddScoped<IExternalReviewProvider>(sp => sp.GetRequiredService<GuardianReviewProvider>());
+builder.Services.AddScoped<IExternalReviewService, ExternalReviewService>();
+
 // Feature services
 builder.Services.AddScoped<IMovieCardFeedService, MovieCardFeedService>();
 builder.Services.AddScoped<ISwipeService, SwipeService>();
