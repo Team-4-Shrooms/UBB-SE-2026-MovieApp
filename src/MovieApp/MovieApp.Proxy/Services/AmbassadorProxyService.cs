@@ -25,13 +25,13 @@ namespace MovieApp.Proxy.Services
 
         public async Task<IEnumerable<AmbassadorProfile>> GetAllAmbassadorsAsync(CancellationToken cancellationToken = default)
         {
-            var result = await _apiClient.GetAsync<IEnumerable<AmbassadorProfile>>($"/api/ambassadors", cancellationToken);
+            var result = await _apiClient.GetAsync<IEnumerable<AmbassadorProfile>>($"{_baseEndpoint}", cancellationToken);
             return result ?? Enumerable.Empty<AmbassadorProfile>();
         }
 
         public async Task<AmbassadorProfile?> GetAmbassadorByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            return await _apiClient.GetAsync<AmbassadorProfile?>($"/api/ambassadors/{id}", cancellationToken);
+            return await _apiClient.GetAsync<AmbassadorProfile?>($"{_baseEndpoint}/{id}", cancellationToken);
         }
 
         public async Task<string?> GetReferralCodeAsync(int userId, CancellationToken cancellationToken = default)
