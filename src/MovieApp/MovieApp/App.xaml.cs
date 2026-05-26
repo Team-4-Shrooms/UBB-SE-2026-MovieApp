@@ -102,7 +102,8 @@ namespace MovieApp
             services.AddTransient<ICommentService, CommentProxyService>();
             services.AddTransient<IAmbassadorService, AmbassadorProxyService>();
             services.AddTransient<IMarathonService, MarathonProxyService>();
-            //services.AddTransient<IPriceWatcherService, PriceWatcherProxyService>();
+            services.AddTransient<ITriviaService, TriviaProxyService>();
+            services.AddTransient<IPriceWatcherService, PriceWatcherProxyService>();
             services.AddTransient<IExternalReviewService, ExternalReviewProxyService>();
 
             // Reels Upload
