@@ -17,14 +17,17 @@ namespace MovieApp.Features.TriviaWheel.Views
 {
     public sealed partial class TriviaWheelPage : Page
     {
-        // Wheel segment configuration
+        // Wheel segment configuration — categories match the seeded trivia question data
         private static readonly (string Category, Color Color)[] Segments = new[]
         {
-            ("General",    Color.FromArgb(255, 229,  57,  53)), // red
-            ("Science",    Color.FromArgb(255, 255, 160,   0)), // amber
-            ("History",    Color.FromArgb(255,  30, 136,  30)), // green
-            ("Movies",     Color.FromArgb(255,  21, 101, 192)), // blue
-            ("Music",      Color.FromArgb(255, 142,  36, 170)), // purple
+            ("Action",     Color.FromArgb(255, 229,  57,  53)), // red
+            ("Sci-Fi",     Color.FromArgb(255, 255, 160,   0)), // amber
+            ("Drama",      Color.FromArgb(255,  30, 136,  30)), // green
+            ("Horror",     Color.FromArgb(255,  21, 101, 192)), // blue
+            ("Thriller",   Color.FromArgb(255, 142,  36, 170)), // purple
+            ("Comedy",     Color.FromArgb(255,   0, 172, 193)), // teal
+            ("Romance",    Color.FromArgb(255, 233,  30,  99)), // pink
+            ("Crime",      Color.FromArgb(255,  69,  90, 100)), // slate
         };
 
         private TriviaWheelViewModel? _viewModel;
