@@ -249,7 +249,7 @@ namespace MovieApp.Features.TriviaWheel.Views
             var question = _viewModel.CurrentQuestion;
             int current = _viewModel.TotalQuestions - (_viewModel.TotalQuestions - _viewModel.Score) + 1;
 
-            QuestionProgressText.Text = $"Question {GetCurrentQuestionNumber()} of {_viewModel.TotalQuestions}  ·  Category: {_selectedCategory}";
+            QuestionProgressText.Text = $"Question {_viewModel.CurrentQuestionIndex + 1} of {_viewModel.TotalQuestions}  ·  Category: {_selectedCategory}";
             QuestionText.Text = question.QuestionText;
 
             OptionA.Content = $"A) {question.OptionA}";
@@ -266,26 +266,6 @@ namespace MovieApp.Features.TriviaWheel.Views
 
             // Apply hint visibility
             ApplyHintVisibility();
-        }
-
-        private int GetCurrentQuestionNumber()
-        {
-            if (_viewModel is null)
-            {
-                return 1;
-            }
-
-            // Derive from score and remaining questions (simple linear tracking)
-            // The ViewModel tracks index internally; we count from 1
-            var scoreText = _viewModel.ScoreText; // "X/Y"
-            return _viewModel.TotalQuestions - CountRemainingQuestions() + 1;
-        }
-
-        private int CountRemainingQuestions()
-        {
-            // Estimate remaining from current question text matching
-            // Since we don't expose the index, use TotalQuestions as upper bound
-            return _viewModel?.TotalQuestions ?? 0;
         }
 
         private void ApplyHintVisibility()

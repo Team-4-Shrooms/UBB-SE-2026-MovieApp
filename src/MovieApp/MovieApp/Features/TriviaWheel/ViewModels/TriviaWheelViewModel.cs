@@ -100,6 +100,9 @@ public sealed class TriviaWheelViewModel : INotifyPropertyChanged
         private set => SetProperty(ref _hiddenOptions, value);
     }
 
+    /// <summary>Zero-based index of the current question within the session.</summary>
+    public int CurrentQuestionIndex => _currentQuestionIndex;
+
     /// <summary>The question the user is currently answering, or null when idle.</summary>
     public TriviaQuestion? CurrentQuestion =>
         _currentQuestionIndex < _questions.Count ? _questions[_currentQuestionIndex] : null;
@@ -237,6 +240,7 @@ public sealed class TriviaWheelViewModel : INotifyPropertyChanged
         }
 
         OnPropertyChanged(nameof(CurrentQuestion));
+        OnPropertyChanged(nameof(CurrentQuestionIndex));
         OnPropertyChanged(nameof(ScoreText));
     }
 
