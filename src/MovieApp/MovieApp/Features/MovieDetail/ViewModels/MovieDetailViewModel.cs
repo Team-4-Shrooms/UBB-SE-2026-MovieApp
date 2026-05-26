@@ -162,9 +162,9 @@ public sealed class MovieDetailViewModel : INotifyPropertyChanged
         Comments.Clear();
         RootComments.Clear();
 
-        foreach (var root in roots)
+        foreach (Comment? root in roots)
         {
-            var clone = CloneCommentTree(root);
+            Comment? clone = CloneCommentTree(root);
             RootComments.Add(clone);
             AddToFlat(clone, Comments);
         }
@@ -173,7 +173,7 @@ public sealed class MovieDetailViewModel : INotifyPropertyChanged
     private static void AddToFlat(Comment comment, ObservableCollection<Comment> flat)
     {
         flat.Add(comment);
-        foreach (var reply in comment.Replies)
+        foreach (Comment? reply in comment.Replies)
         {
             AddToFlat(reply, flat);
         }
