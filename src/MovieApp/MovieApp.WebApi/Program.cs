@@ -124,6 +124,12 @@ builder.Services.AddScoped<ITriviaRewardRepository>(serviceProvider => servicePr
 builder.Services.AddScoped<CommentRepository>();
 builder.Services.AddScoped<ICommentRepository>(serviceProvider => serviceProvider.GetRequiredService<CommentRepository>());
 
+builder.Services.AddScoped<UserSlotMachineStateRepository>();
+builder.Services.AddScoped<IUserSlotMachineStateRepository>(serviceProvider => serviceProvider.GetRequiredService<UserSlotMachineStateRepository>());
+
+builder.Services.AddScoped<UserMovieDiscountRepository>();
+builder.Services.AddScoped<IUserMovieDiscountRepository>(serviceProvider => serviceProvider.GetRequiredService<UserMovieDiscountRepository>());
+
 // Core services
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IEquipmentService, EquipmentService>();
@@ -144,10 +150,12 @@ builder.Services.AddScoped<IMarathonService, MarathonService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<ITriviaService, TriviaService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<ISlotMachineService, SlotMachineService>();
+builder.Services.AddScoped<ISlotMachineResultService, SlotMachineResultService>();
 
 // TODO: Add this back when PR #43 is merged
 // builder.Services.AddScoped<IExternalReviewService, ExternalReviewService>();
-builder.Services.AddScoped<IPriceWatcherService, PriceWatcherService>();
+//builder.Services.AddScoped<IPriceWatcherService, PriceWatcherService>();
 
 // Feature services
 builder.Services.AddScoped<IMovieCardFeedService, MovieCardFeedService>();

@@ -89,9 +89,6 @@ namespace MovieApp.WebApi.Data
             modelBuilder.Entity<AmbassadorProfile>()
                 .HasKey(ambassadorProfile => ambassadorProfile.UserId);
 
-            modelBuilder.Entity<UserSpinData>()
-                .HasKey(userSpinData => userSpinData.UserId);
-
             modelBuilder.Entity<MarathonProgress>()
                 .HasKey(marathonProgress => new { marathonProgress.UserId, marathonProgress.MarathonId });
 
@@ -214,6 +211,20 @@ namespace MovieApp.WebApi.Data
                 .WithOne(user => user.UserStats)
                 .HasForeignKey<UserStats>(userStats => userStats.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // UserSpinData
+            modelBuilder.Entity<UserSpinData>()
+                .HasKey(userSpinData => userSpinData.UserId);
+
+            modelBuilder.Entity<UserSpinData>()
+                .Property(userSpinData => userSpinData.UserId)
+                .ValueGeneratedNever();
+
+            modelBuilder.Entity<UserSpinData>()
+                .HasOne<User>()
+                .WithOne()
+                .HasForeignKey<UserSpinData>(usd => usd.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // MarathonProgress
             modelBuilder.Entity<MarathonProgress>()

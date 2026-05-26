@@ -19,6 +19,7 @@ namespace MovieApp.DataLayer.Repositories
         }
         public async Task CreateAsync(UserSpinData userSpinData, CancellationToken cancellationToken = default)
         {
+            System.Diagnostics.Debug.WriteLine($"Saving UserSpinData for UserId: {userSpinData.UserId}");
             _context.UserSpinData.Add(userSpinData);
             await _context.SaveChangesAsync(cancellationToken);
         }

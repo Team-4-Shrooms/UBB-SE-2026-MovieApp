@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -79,7 +80,8 @@ namespace MovieApp.Logic.Services
 
                 if (distinctGenres.Count == 0 || distinctActors.Count == 0 || distinctDirectors.Count == 0)
                 {
-                    throw new InvalidOperationException("No movies with active screenings available");
+                    throw new InvalidOperationException("-------" + distinctGenres.Count + "------" + distinctActors.Count + "---------------" + distinctDirectors.Count + "-----------" +
+                        "No movies with active screenings available");
                 }
             }
             else
@@ -104,7 +106,7 @@ namespace MovieApp.Logic.Services
             Actor selectedActor = distinctActors[_random.Next(distinctActors.Count)];
             Director selectedDirector = distinctDirectors[_random.Next(distinctDirectors.Count)];
 
-            IReadOnlyList<Event> matchingEvents =
+            IReadOnlyList<MovieEvent> matchingEvents =
                 await GetMatchingEventsAsync(selectedGenre.Id, selectedActor.Id, selectedDirector.Id);
 
             Movie? jackpotMovie =
@@ -137,7 +139,7 @@ namespace MovieApp.Logic.Services
 
             if (jackpotMovie is not null)
             {
-                await GrantJackpotDiscountAsync(userIdentifier, jackpotMovie.Id);
+                //await GrantJackpotDiscountAsync(userIdentifier, jackpotMovie.Id);
                 result.JackpotDiscountApplied = true;
                 result.DiscountPercentage = DiscountPercentage;
             }
@@ -250,7 +252,7 @@ namespace MovieApp.Logic.Services
         public Task<IReadOnlyList<Director>> GetDirectorsAsync(CancellationToken cancellationToken = default) =>
             _movieRepository.GetDirectorsAsync(cancellationToken);
 
-        public async Task<IReadOnlyList<Event>> GetMatchingEventsAsync(
+        public async Task<IReadOnlyList<MovieEvent>> GetMatchingEventsAsync(
             int genreIdentifier,
             int actorIdentifier,
             int directorIdentifier)
@@ -259,18 +261,18 @@ namespace MovieApp.Logic.Services
                 await _movieRepository.FindMoviesByAnyCriteriaAsync(
                     genreIdentifier, actorIdentifier, directorIdentifier);
 
-            List<Event> result = new();
+            List<MovieEvent> result = new();
 
             foreach (Movie movie in movies)
             {
                 IReadOnlyList<int> eventIds =
                     await _movieRepository.FindScreeningEventIdsForMovieAsync(movie.Id);
 
-                IEnumerable<Event> allEvents = (IEnumerable<Event>)await _eventRepository.GetAllEventsAsync();
+                IEnumerable<MovieEvent> allEvents = await _eventRepository.GetAllEventsAsync();
 
                 result.AddRange(allEvents.Where(e =>
                     eventIds.Contains(e.Id) &&
-                    e.EventDateTime > DateTime.UtcNow));
+                    e.Date > DateTime.UtcNow));
             }
 
             return result.DistinctBy(e => e.Id).ToList();
@@ -341,6 +343,7 @@ namespace MovieApp.Logic.Services
             };
 
             await _stateRepository.CreateAsync(state);
+
             return state;
         }
 

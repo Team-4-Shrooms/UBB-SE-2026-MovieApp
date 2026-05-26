@@ -22,7 +22,6 @@ public sealed class SlotMachineEndpointsController : ControllerBase
     }
 
     [HttpGet("state/{userId:int}")]
-    [RequireMatchingUser]
     public async Task<IActionResult> GetUserSpinState(int userId)
     {
         var spinState = await this._slotMachineService.GetUserSpinStateAsync(userId);
@@ -30,7 +29,6 @@ public sealed class SlotMachineEndpointsController : ControllerBase
     }
 
     [HttpGet("available-spins/{userId:int}")]
-    [RequireMatchingUser]
     public async Task<IActionResult> GetAvailableSpins(int userId)
     {
         int availableSpins = await this._slotMachineService.GetAvailableSpinsAsync(userId);
@@ -38,7 +36,6 @@ public sealed class SlotMachineEndpointsController : ControllerBase
     }
 
     [HttpPost("spin/{userId:int}")]
-    [RequireMatchingUser]
     public async Task<IActionResult> Spin(int userId)
     {
         var spinResult = await this._slotMachineService.SpinAsync(userId);
@@ -46,7 +43,6 @@ public sealed class SlotMachineEndpointsController : ControllerBase
     }
 
     [HttpPost("bonus-spin/{userId:int}")]
-    [RequireMatchingUser]
     public async Task<IActionResult> GrantBonusSpin(int userId)
     {
         bool wasGranted = await this._slotMachineService.GrantBonusSpinForEventParticipationAsync(userId);
@@ -54,7 +50,6 @@ public sealed class SlotMachineEndpointsController : ControllerBase
     }
 
     [HttpPost("login-streak/{userId:int}")]
-    [RequireMatchingUser]
     public async Task<IActionResult> RecordLoginStreak(int userId)
     {
         bool wasRecorded = await this._slotMachineService.RecordLoginAndCheckStreakAsync(userId);
@@ -62,7 +57,6 @@ public sealed class SlotMachineEndpointsController : ControllerBase
     }
 
     [HttpPost("streak-spin/{userId:int}")]
-    [RequireMatchingUser]
     public async Task<IActionResult> GrantStreakSpin(int userId)
     {
         bool wasGranted = await this._slotMachineService.GrantStreakSpinAsync(userId);
@@ -142,7 +136,7 @@ public sealed class SlotMachineEndpointsController : ControllerBase
             return Forbid();
         }
 
-        await this._slotMachineService.GrantJackpotDiscountAsync(requestBody.UserId, requestBody.MovieId);
+        //await this._slotMachineService.GrantJackpotDiscountAsync(requestBody.UserId, requestBody.MovieId);
         return Ok();
     }
 }
