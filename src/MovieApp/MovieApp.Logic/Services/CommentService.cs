@@ -14,21 +14,21 @@ namespace MovieApp.Logic.Services
         }
 
         /// <inheritdoc />
-        public async Task<List<Comment>> GetCommentsForMovieAsync(int movieId, CancellationToken ct = default)
+        public async Task<List<Comment>> GetCommentsForMovieAsync(int movieId, CancellationToken cancellationToken = default)
         {
-            var allComments = await _commentRepo.GetAllAsync(ct);
+            var allComments = await _commentRepo.GetAllAsync(cancellationToken);
 
             // Filter to the requested movie and return only top-level comments.
             // Replies are already eagerly loaded via Include(), so the nested
             // thread structure is preserved without additional queries.
             return allComments
-                .Where(c => c.MovieId == movieId && c.ParentCommentId == null)
-                .OrderByDescending(c => c.CreatedAt)
+                .Where(comment => comment.MovieId == movieId && comment.ParentCommentId == null)
+                .OrderByDescending(comment => comment.CreatedAt)
                 .ToList();
         }
 
         /// <inheritdoc />
-        public async Task<Comment> AddCommentAsync(int userId, int movieId, string content, CancellationToken ct = default)
+        public async Task<Comment> AddCommentAsync(int userId, int movieId, string content, CancellationToken cancellationToken = default)
         {
             var comment = new Comment
             {
@@ -38,14 +38,14 @@ namespace MovieApp.Logic.Services
                 CreatedAt = DateTime.UtcNow,
             };
 
-            await _commentRepo.InsertAsync(comment, ct);
+            await _commentRepo.InsertAsync(comment, cancellationToken);
             return comment;
         }
 
         /// <inheritdoc />
-        public async Task<Comment> AddReplyAsync(int userId, int parentCommentId, string content, CancellationToken ct = default)
+        public async Task<Comment> AddReplyAsync(int userId, int parentCommentId, string content, CancellationToken cancellationToken = default)
         {
-            var parentComment = await _commentRepo.GetByIdAsync(parentCommentId, ct);
+            var parentComment = await _commentRepo.GetByIdAsync(parentCommentId, cancellationToken);
 
             if (parentComment == null)
             {
@@ -63,14 +63,14 @@ namespace MovieApp.Logic.Services
                 CreatedAt = DateTime.UtcNow,
             };
 
-            await _commentRepo.InsertAsync(reply, ct);
+            await _commentRepo.InsertAsync(reply, cancellationToken);
             return reply;
         }
 
         /// <inheritdoc />
-        public async Task DeleteCommentAsync(int commentId, CancellationToken ct = default)
+        public async Task DeleteCommentAsync(int commentId, CancellationToken cancellationToken = default)
         {
-            var deleted = await _commentRepo.DeleteAsync(commentId, ct);
+            var deleted = await _commentRepo.DeleteAsync(commentId, cancellationToken);
 
             if (!deleted)
             {
