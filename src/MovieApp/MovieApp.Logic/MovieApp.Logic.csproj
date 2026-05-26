@@ -22,7 +22,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-        <PackageReference Include="Google.Apis.YouTube.v3" Version="1.73.0.4119" />
+        <PackageReference Include="Google.Apis.YouTube.v3" Version="1.74.0.4137" />
     </ItemGroup>
 
     <ItemGroup>

@@ -123,8 +123,10 @@ builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IScrapeJobService, ScrapeJobService>();
 builder.Services.AddScoped<IReelService, ReelService>();
+
+// TODO: Add this back when PR #43 is merged
+// builder.Services.AddScoped<IExternalReviewService, ExternalReviewService>();
 builder.Services.AddScoped<IPriceWatcherService, PriceWatcherService>();
-builder.Services.AddScoped<IExternalReviewService, ExternalReviewService>();
 
 // Feature services
 builder.Services.AddScoped<IMovieCardFeedService, MovieCardFeedService>();
