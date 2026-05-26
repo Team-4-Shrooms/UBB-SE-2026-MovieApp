@@ -10,35 +10,35 @@ public interface ITriviaService
     /// <summary>
     /// Retrieves all trivia questions.
     /// </summary>
-    Task<List<TriviaQuestion>> GetAllQuestionsAsync(CancellationToken ct = default);
+    Task<List<TriviaQuestion>> GetAllQuestionsAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Retrieves trivia questions belonging to a specific category.
     /// </summary>
-    Task<List<TriviaQuestion>> GetQuestionsByCategoryAsync(string category, CancellationToken ct = default);
+    Task<List<TriviaQuestion>> GetQuestionsByCategoryAsync(string category, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Retrieves trivia questions for a specific movie.
     /// </summary>
-    Task<List<TriviaQuestion>> GetQuestionsByMovieIdAsync(int movieId, CancellationToken ct = default);
+    Task<List<TriviaQuestion>> GetQuestionsByMovieIdAsync(int movieId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Retrieves a trivia question by its unique identifier.
     /// </summary>
-    Task<TriviaQuestion?> GetQuestionByIdAsync(int id, CancellationToken ct = default);
+    Task<TriviaQuestion?> GetQuestionByIdAsync(int id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Retrieves all trivia rewards for a specific user.
     /// </summary>
-    Task<List<TriviaReward>> GetRewardsByUserIdAsync(int userId, CancellationToken ct = default);
+    Task<List<TriviaReward>> GetRewardsByUserIdAsync(int userId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Awards a new trivia reward to a user and returns its identifier.
     /// </summary>
-    Task<int> AwardRewardAsync(int userId, CancellationToken ct = default);
+    Task<int> AwardRewardAsync(int userId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Redeems a trivia reward for a user.
     /// </summary>
-    Task<bool> RedeemRewardAsync(int rewardId, CancellationToken ct = default);
+    Task<bool> RedeemRewardAsync(int rewardId, CancellationToken cancellationToken = default);
 }
