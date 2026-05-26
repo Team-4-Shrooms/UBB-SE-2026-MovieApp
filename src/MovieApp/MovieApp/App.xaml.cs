@@ -17,6 +17,7 @@ using MovieApp.Features.Notification.ViewModels;
 using MovieApp.Features.SlotMachine.ViewModels;
 using MovieApp.Features.Marathon.ViewModels;
 using MovieApp.Features.Wallet.ViewModels;
+using MovieApp.Features.BattlesBet.ViewModels;
 
 namespace MovieApp
 {
@@ -155,6 +156,9 @@ namespace MovieApp
             services.AddSingleton<NotificationViewModel>();
             // Slot Machine
             services.AddTransient<SlotMachineViewModel>();
+
+            // Battles
+            services.AddTransient<BattleViewModel>();
 
             var provider = services.BuildServiceProvider();
             Services = provider;
