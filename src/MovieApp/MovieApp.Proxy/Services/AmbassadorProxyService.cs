@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using MovieApp.DataLayer.Models;
 using MovieApp.Logic.Interfaces.Services;
@@ -20,7 +20,7 @@ namespace MovieApp.Proxy.Services
 
         public async Task CreateAmbassadorProfileAsync(int userId, string referralCode, CancellationToken cancellationToken = default)
         {
-            await _apiClient.PostAsync($"{_baseEndpoint}/{userId}/profile", new { referralCode }, cancellationToken);
+            await _apiClient.PostAsync($"{_baseEndpoint}/{userId}/profile", new { code = referralCode }, cancellationToken);
         }
 
         public async Task<IEnumerable<AmbassadorProfile>> GetAllAmbassadorsAsync(CancellationToken cancellationToken = default)
@@ -57,14 +57,34 @@ namespace MovieApp.Proxy.Services
             return result ?? false;
         }
 
-        public async Task ProcessReferralAsync(string referralCode, int friendId, int eventId, CancellationToken cancellationToken = default)
+        public async Task ProcessReferralAsync(string referralCode, int friendId, int eventId, CancellationToken ct = default)
         {
-            await _apiClient.PostAsync($"{_baseEndpoint}/referral/process", new { referralCode, friendId, eventId }, cancellationToken);
+            await _apiClient.PostAsync($"/api/ambassadors/referral/process", new { referralCode, friendId, eventId }, ct);
         }
 
-        public async Task RedeemRewardAsync(int userId, CancellationToken cancellationToken = default)
+        public async Task RedeemRewardAsync(int userId, CancellationToken ct = default)
         {
-            await _apiClient.PostAsync($"{_baseEndpoint}/{userId}/rewards/redeem", new { }, cancellationToken);
+            await _apiClient.PostAsync($"/api/ambassadors/{userId}/rewards/redeem", new { }, ct);
+        }
+
+        public Task<int?> ResolveCodeToUserIdAsync(string referralCode, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> ReferralLogExistsAsync(int ambassadorId, int friendId, int eventId, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task LogReferralByAmbassadorIdAsync(int ambassadorId, int friendId, int eventId, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DecrementRewardBalanceAsync(int userId, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
         }
     }
 }

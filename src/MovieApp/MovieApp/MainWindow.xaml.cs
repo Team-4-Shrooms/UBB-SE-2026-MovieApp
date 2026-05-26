@@ -52,6 +52,7 @@ namespace MovieApp
             ["Notification"] = typeof(NotificationPage),
             ["SlotMachine"] = typeof(SlotMachinePage),
             ["Marathon"] = typeof(MarathonPage),
+            ["Ambassadors"] = typeof(MovieApp.Features.Ambassadors.Views.AmbassadorPage),
         };
 
         public MainWindow()

@@ -40,7 +40,7 @@ namespace MovieApp.WebApi.Endpoints
         [HttpPost("{userId:int}/profile")]
         public async Task<IActionResult> CreateAmbassadorProfile(int userId, [FromBody] CreateAmbassadorProfileRequestBody request)
         {
-            await _ambassadorService.CreateAmbassadorProfileAsync(userId, request.ReferralCode);
+            await _ambassadorService.CreateAmbassadorProfileAsync(userId, request.Code);
             return Ok();
         }
 
