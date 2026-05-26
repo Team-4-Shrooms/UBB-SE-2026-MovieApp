@@ -171,6 +171,9 @@ namespace MovieApp
             // Screenings
             services.AddTransient<ScreeningViewModel>();
 
+            // Movie detail comments
+            services.AddTransient<MovieApp.Features.MovieDetail.ViewModels.MovieDetailViewModel>();
+
             var provider = services.BuildServiceProvider();
             Services = provider;
             Ioc.Default.ConfigureServices(provider);

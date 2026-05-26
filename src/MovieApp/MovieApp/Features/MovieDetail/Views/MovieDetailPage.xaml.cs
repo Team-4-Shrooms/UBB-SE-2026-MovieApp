@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Navigation;
 using MovieApp.DataLayer.Models;
 using MovieApp.DataLayer.Interfaces.Repositories;
 using MovieApp.Logic.Interfaces.Services;
+using MovieApp.Features.MovieDetail.ViewModels;
 using MovieApp.Features.Shared.Models;
 using MovieApp.Features.Events.Views;
 using System;
@@ -29,6 +30,9 @@ namespace MovieApp.Features.MovieDetail.Views
         private readonly IActiveSalesService _activeSalesService = App.Services.GetRequiredService<IActiveSalesService>();
         private readonly IReviewService _reviewService = App.Services.GetRequiredService<IReviewService>();
         private readonly AppDbContext _context = App.Services.GetRequiredService<AppDbContext>();
+
+        public MovieDetailViewModel CommentsViewModel { get; } =
+            App.Services.GetRequiredService<MovieDetailViewModel>();
 
         public MovieDetailPage()
         {
@@ -57,6 +61,8 @@ namespace MovieApp.Features.MovieDetail.Views
 
             PopulateUI();
             await RefreshBuyButtonStateAsync();
+
+            await CommentsViewModel.LoadMovieCommentsAsync(_movie);
 
             string tooltip = await BuildStarDistributionTooltipAsync(_movie.Id);
             ToolTipService.SetToolTip(ReviewsButton, tooltip);
