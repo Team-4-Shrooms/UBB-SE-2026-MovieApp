@@ -110,6 +110,12 @@ builder.Services.AddScoped<IVideoStorageRepository>(serviceProvider => servicePr
 builder.Services.AddScoped<CommentRepository>();
 builder.Services.AddScoped<ICommentRepository>(serviceProvider => serviceProvider.GetRequiredService<CommentRepository>());
 
+builder.Services.AddScoped<TriviaRepository>();
+builder.Services.AddScoped<ITriviaRepository>(serviceProvider => serviceProvider.GetRequiredService<TriviaRepository>());
+
+builder.Services.AddScoped<TriviaRewardRepository>();
+builder.Services.AddScoped<ITriviaRewardRepository>(serviceProvider => serviceProvider.GetRequiredService<TriviaRewardRepository>());
+
 // Core services
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IEquipmentService, EquipmentService>();
