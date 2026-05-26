@@ -143,7 +143,7 @@ builder.Services.AddScoped<ICommentService, CommentService>();
 
 // TODO: Add this back when PR #43 is merged
 // builder.Services.AddScoped<IExternalReviewService, ExternalReviewService>();
-builder.Services.AddScoped<IPriceWatcherService, PriceWatcherService>();
+//builder.Services.AddScoped<IPriceWatcherService, PriceWatcherService>();
 
 // Feature services
 builder.Services.AddScoped<IMovieCardFeedService, MovieCardFeedService>();
