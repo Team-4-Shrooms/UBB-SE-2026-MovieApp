@@ -103,6 +103,8 @@ namespace MovieApp
             services.AddTransient<IAmbassadorService, AmbassadorProxyService>();
             services.AddTransient<IMarathonService, MarathonProxyService>();
             services.AddTransient<ITriviaService, TriviaProxyService>();
+            services.AddTransient<ITriviaRepository, TriviaRepositoryProxy>();
+            services.AddTransient<ITriviaRewardRepository, TriviaRewardRepositoryProxy>();
             services.AddTransient<IPriceWatcherService, PriceWatcherProxyService>();
             services.AddTransient<IExternalReviewService, ExternalReviewProxyService>();
 

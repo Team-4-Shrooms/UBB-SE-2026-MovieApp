@@ -63,6 +63,8 @@ builder.Services.AddTransient<ICommentService, CommentProxyService>();
 builder.Services.AddTransient<IAmbassadorService, AmbassadorProxyService>();
 builder.Services.AddTransient<IMarathonService, MarathonProxyService>();
 builder.Services.AddTransient<ITriviaService, TriviaProxyService>();
+builder.Services.AddTransient<ITriviaRepository, TriviaRepositoryProxy>();
+builder.Services.AddTransient<ITriviaRewardRepository, TriviaRewardRepositoryProxy>();
 builder.Services.AddTransient<IPriceWatcherService, PriceWatcherProxyService>();
 
 
