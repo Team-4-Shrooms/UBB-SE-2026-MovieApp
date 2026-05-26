@@ -158,6 +158,10 @@ builder.Services.AddScoped<ICommentService, CommentService>();
 
 // TODO: Add this back when PR #43 is merged
 // builder.Services.AddScoped<IExternalReviewService, ExternalReviewService>();
+builder.Services.AddScoped<AmbassadorRepository>();
+builder.Services.AddScoped<IAmbassadorRepository>(sp => sp.GetRequiredService<AmbassadorRepository>());
+builder.Services.AddScoped<IAmbassadorService, AmbassadorService>();
+
 builder.Services.AddScoped<IPriceWatcherService, PriceWatcherService>();
 
 // External review providers (P2)
