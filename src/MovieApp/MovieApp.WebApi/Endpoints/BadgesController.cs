@@ -1,9 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using MovieApp.DataLayer.Models;
+using MovieApp.Logic.Interfaces.Services;
+
 namespace MovieApp.WebApi.Endpoints
 {
-    using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Mvc;
-    using MovieApp.Logic.Interfaces.Services;
-
     [Authorize]
     [ApiController]
     [Route("api/badges")]
@@ -26,14 +27,14 @@ namespace MovieApp.WebApi.Endpoints
         [HttpGet("leaderboard")]
         public async Task<IActionResult> GetLeaderboard(CancellationToken ct = default)
         {
-            IList<DataLayer.Models.UserStats>? leaderboard = await _badgeService.GetLeaderboardAsync(ct);
+            IList<UserStats>? leaderboard = await _badgeService.GetLeaderboardAsync(ct);
             return Ok(leaderboard);
         }
 
         [HttpGet("{userId:int}")]
         public async Task<IActionResult> GetUserBadges(int userId, CancellationToken ct = default)
         {
-            List<DataLayer.Models.UserBadge>? userBadges = await _badgeService.GetUserBadgesAsync(userId, ct);
+            List<UserBadge>? userBadges = await _badgeService.GetUserBadgesAsync(userId, ct);
             return Ok(userBadges);
         }
     }

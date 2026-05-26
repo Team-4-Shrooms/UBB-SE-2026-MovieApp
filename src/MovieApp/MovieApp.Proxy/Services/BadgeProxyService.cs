@@ -1,7 +1,6 @@
 namespace MovieApp.Proxy.Services
 {
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using MovieApp.DataLayer.Models;
@@ -27,11 +26,6 @@ namespace MovieApp.Proxy.Services
         {
             List<Badge>? result = await _apiClient.GetAsync<List<Badge>>($"{_baseEndpoint}", ct);
             return result ?? new List<Badge>();
-        }
-
-        public Task CheckAndAwardBadgesAsync(int userId, CancellationToken ct = default)
-        {
-            return _apiClient.PostAsync($"{_baseEndpoint}/{userId}/award", new { }, ct);
         }
 
         public async Task<IList<UserStats>> GetLeaderboardAsync(CancellationToken ct = default)
