@@ -176,7 +176,21 @@ namespace MovieApp.Features.TriviaWheel.Views
             storyboard.Completed += async (_, _) =>
             {
                 UpdateSpinButton();
-                await LoadQuestionsAsync(_selectedCategory);
+                try
+                {
+                    await LoadQuestionsAsync(_selectedCategory);
+                }
+                catch (Exception loadException)
+                {
+                    var errorDialog = new ContentDialog
+                    {
+                        Title = "Could not load questions",
+                        Content = loadException.Message,
+                        CloseButtonText = "OK",
+                        XamlRoot = this.XamlRoot,
+                    };
+                    await errorDialog.ShowAsync();
+                }
             };
 
             storyboard.Begin();
@@ -359,8 +373,18 @@ namespace MovieApp.Features.TriviaWheel.Views
             PlayingPanel.Visibility = Visibility.Collapsed;
             ResultsPanel.Visibility = Visibility.Collapsed;
 
-            // Re-use the idle panel to show the no-questions message
-            var icon = IdlePanel.Child as StackPanel;
+            // Update idle panel text to explain the situation
+            if (IdlePanel.Child is StackPanel idleStack)
+            {
+                foreach (var child in idleStack.Children)
+                {
+                    if (child is TextBlock textBlock)
+                    {
+                        textBlock.Text = $"No questions found for \"{category}\". Try spinning again!";
+                        break;
+                    }
+                }
+            }
         }
 
         private void ShowResults()

@@ -1517,9 +1517,21 @@ namespace MovieApp.DataLayer
         }
         private async Task SeedTriviaQuestionsAsync()
         {
-            if (await _context.TriviaQuestions.AnyAsync())
+            // Skip if already seeded with the correct genre-based categories.
+            bool hasCorrectData = await _context.TriviaQuestions
+                .AnyAsync(question => question.Category == "Action" || question.Category == "Sci-Fi");
+
+            if (hasCorrectData)
             {
                 return;
+            }
+
+            // Remove any stale placeholder data (e.g. General/Science/History/Movies/Music).
+            var staleQuestions = await _context.TriviaQuestions.ToListAsync();
+            if (staleQuestions.Count > 0)
+            {
+                _context.TriviaQuestions.RemoveRange(staleQuestions);
+                await _context.SaveChangesAsync();
             }
 
             // Look up movie IDs for movie-specific questions.
