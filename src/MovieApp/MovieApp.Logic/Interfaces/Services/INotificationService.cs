@@ -24,7 +24,12 @@ public interface INotificationService
     Task NotifySeatsAvailableAsync(int eventIdentifier, int newCapacity, CancellationToken cancellationToken = default);
 
     Task MarkAsReadOrRemoveAsync(int notificationIdentifier, CancellationToken cancellationToken = default);
+
     Task<IReadOnlyList<Notification>> GetUnreadNotificationsAsync(int userIdentifier, CancellationToken cancellationToken = default);
+
     Task MarkReadAsync(int notificationIdentifier, CancellationToken cancellationToken = default);
+
     Task MarkAllReadAsync(int userIdentifier, CancellationToken cancellationToken = default);
+
+    Task<int> GetUnreadCountAsync(int userIdentifier, CancellationToken cancellationToken = default);
 }

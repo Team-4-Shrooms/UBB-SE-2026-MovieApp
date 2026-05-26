@@ -54,7 +54,7 @@ builder.Services.AddSingleton<ITournamentLogicService, TournamentLogicProxyServi
 builder.Services.AddTransient<IMovieTournamentService, MovieTournamentProxyService>();
 builder.Services.AddTransient<INotificationService, NotificationProxyService>();
 builder.Services.AddTransient<ISlotMachineService, SlotMachineProxyService>();
-//builder.Services.AddTransient<IScreeningService, ScreeningProxyService>();
+builder.Services.AddTransient<IScreeningService, ScreeningProxyService>();
 builder.Services.AddTransient<IBookingService, BookingProxyService>();
 builder.Services.AddTransient<IReferralLogService, ReferralProxyService>();
 builder.Services.AddTransient<IReferralValidator, ReferralProxyService>();
@@ -64,6 +64,7 @@ builder.Services.AddTransient<IAmbassadorService, AmbassadorProxyService>();
 builder.Services.AddTransient<IMarathonService, MarathonProxyService>();
 builder.Services.AddTransient<ITriviaService, TriviaProxyService>();
 builder.Services.AddTransient<IPriceWatcherService, PriceWatcherProxyService>();
+
 
 
 // Cache and session
