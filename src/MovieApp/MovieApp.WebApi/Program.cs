@@ -158,6 +158,9 @@ builder.Services.AddScoped<IMarathonService, MarathonService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<ITriviaService, TriviaService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IReferralLogService, ReferralLogService>();
+builder.Services.AddScoped<IReferralValidator, ReferralValidator>();
+builder.Services.AddScoped<IReferralCodeGenerator, ReferralCodeGenerator>();
 
 // TODO: Add this back when PR #43 is merged
 // builder.Services.AddScoped<IExternalReviewService, ExternalReviewService>();
