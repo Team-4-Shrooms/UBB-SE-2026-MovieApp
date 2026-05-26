@@ -9,6 +9,13 @@ public interface ITriviaRepository
     public const int DefaultQuestionCount = 3;
 
     /// <summary>
+    /// Retrieves all trivia questions.
+    /// </summary>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A collection of all trivia questions.</returns>
+    Task<IEnumerable<TriviaQuestion>> GetAllAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Retrieves trivia questions belonging to a specific category.
     /// </summary>
     /// <param name="categoryName">The name of the trivia category.</param>

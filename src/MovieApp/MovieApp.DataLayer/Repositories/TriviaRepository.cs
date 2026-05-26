@@ -18,6 +18,14 @@ namespace MovieApp.DataLayer.Repositories
             _context = context;
         }
 
+        public async Task<IEnumerable<TriviaQuestion>> GetAllAsync(
+            CancellationToken cancellationToken = default)
+        {
+            return await _context.TriviaQuestions
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
+        }
+
         public async Task<IEnumerable<TriviaQuestion>> GetByCategoryAsync(
             string categoryName,
             CancellationToken cancellationToken = default)
