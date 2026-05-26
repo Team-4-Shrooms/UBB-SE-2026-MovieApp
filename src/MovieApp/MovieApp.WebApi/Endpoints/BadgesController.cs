@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieApp.DataLayer.Models;
 using MovieApp.Logic.Interfaces.Services;
+using MovieApp.WebApi.Mappings;
 
 namespace MovieApp.WebApi.Endpoints
 {
@@ -21,21 +22,21 @@ namespace MovieApp.WebApi.Endpoints
         public async Task<IActionResult> GetAllBadges(CancellationToken cancellationToken = default)
         {
             List<Badge> badges = await _badgeService.GetAllBadgesAsync(cancellationToken);
-            return Ok(badges);
+            return Ok(badges.Select(badge => badge.ToDto()).ToList());
         }
 
         [HttpGet("leaderboard")]
         public async Task<IActionResult> GetLeaderboard(CancellationToken cancellationToken = default)
         {
             IList<UserStats> leaderboard = await _badgeService.GetLeaderboardAsync(cancellationToken);
-            return Ok(leaderboard);
+            return Ok(leaderboard.Select(entry => entry.ToDto()).ToList());
         }
 
         [HttpGet("{userId:int}")]
         public async Task<IActionResult> GetUserBadges(int userId, CancellationToken cancellationToken = default)
         {
             List<UserBadge> userBadges = await _badgeService.GetUserBadgesAsync(userId, cancellationToken);
-            return Ok(userBadges);
+            return Ok(userBadges.Select(userBadge => userBadge.ToDto()).ToList());
         }
 
         [HttpPost("{userId:int}/award")]

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieApp.DataLayer.Models;
 using MovieApp.Logic.Interfaces.Services;
+using MovieApp.WebApi.Mappings;
 
 namespace MovieApp.WebApi.Endpoints
 {
@@ -26,7 +27,7 @@ namespace MovieApp.WebApi.Endpoints
                 return NotFound();
             }
 
-            return Ok(stats);
+            return Ok(stats.ToDto());
         }
     }
 }
