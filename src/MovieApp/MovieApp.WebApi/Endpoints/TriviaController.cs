@@ -24,7 +24,9 @@ public sealed class TriviaController : ControllerBase
     {
         var questions = await _triviaService.GetAllQuestionsAsync();
         if (questions.Count == 0)
+        {
             return NotFound();
+        }
         return Ok(questions[Random.Shared.Next(questions.Count)]);
     }
 
@@ -47,7 +49,9 @@ public sealed class TriviaController : ControllerBase
     {
         var question = await _triviaService.GetQuestionByIdAsync(id);
         if (question is null)
+        {
             return NotFound();
+        }
         return Ok(question);
     }
 
@@ -56,7 +60,9 @@ public sealed class TriviaController : ControllerBase
     {
         var question = await _triviaService.GetQuestionByIdAsync(request.QuestionId);
         if (question is null)
+        {
             return NotFound();
+        }
 
         bool correct = question.CorrectOption == request.SelectedOption;
         int? rewardId = correct ? await _triviaService.AwardRewardAsync(_currentUserService.UserId) : null;
