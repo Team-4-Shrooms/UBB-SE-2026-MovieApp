@@ -66,6 +66,7 @@ builder.Services.AddTransient<ITriviaService, TriviaProxyService>();
 builder.Services.AddTransient<IPriceWatcherService, PriceWatcherProxyService>();
 
 
+
 // Cache and session
 builder.Services.AddMemoryCache();
 builder.Services.AddSession();
