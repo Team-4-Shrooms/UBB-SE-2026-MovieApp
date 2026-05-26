@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieApp.DataLayer.Interfaces.Repositories;
 using MovieApp.DataLayer.Models;
-using MovieApp.WebApi.Auth;
 
 namespace MovieApp.WebApi.Endpoints;
 
@@ -15,16 +14,13 @@ public sealed class TriviaController : ControllerBase
 {
     private readonly ITriviaRepository _triviaRepository;
     private readonly ITriviaRewardRepository _triviaRewardRepository;
-    private readonly ICurrentUserService _currentUserService;
 
     public TriviaController(
         ITriviaRepository triviaRepository,
-        ITriviaRewardRepository triviaRewardRepository,
-        ICurrentUserService currentUserService)
+        ITriviaRewardRepository triviaRewardRepository)
     {
         _triviaRepository = triviaRepository;
         _triviaRewardRepository = triviaRewardRepository;
-        _currentUserService = currentUserService;
     }
 
     [HttpGet("category/{category}")]
