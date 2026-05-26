@@ -133,6 +133,9 @@ builder.Services.AddScoped<ICommentRepository>(serviceProvider => serviceProvide
 builder.Services.AddScoped<PriceWatcherRepository>();
 builder.Services.AddScoped<IPriceWatcherRepository>(serviceProvider => serviceProvider.GetRequiredService<PriceWatcherRepository>());
 
+builder.Services.AddScoped<AmbassadorRepository>();
+builder.Services.AddScoped<IAmbassadorRepository>(serviceProvider => serviceProvider.GetRequiredService<AmbassadorRepository>());
+
 // Core services
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IEquipmentService, EquipmentService>();
@@ -155,9 +158,14 @@ builder.Services.AddScoped<IMarathonService, MarathonService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<ITriviaService, TriviaService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IReferralLogService, ReferralLogService>();
+builder.Services.AddScoped<IReferralValidator, ReferralValidator>();
+builder.Services.AddScoped<IReferralCodeGenerator, ReferralCodeGenerator>();
 
 // TODO: Add this back when PR #43 is merged
 // builder.Services.AddScoped<IExternalReviewService, ExternalReviewService>();
+builder.Services.AddScoped<IAmbassadorService, AmbassadorService>();
+
 builder.Services.AddScoped<IPriceWatcherService, PriceWatcherService>();
 
 // External review providers (P2)

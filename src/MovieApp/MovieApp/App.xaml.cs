@@ -19,6 +19,8 @@ using MovieApp.Features.SlotMachine.ViewModels;
 using MovieApp.Features.Marathon.ViewModels;
 using MovieApp.Features.Wallet.ViewModels;
 using MovieApp.Features.BattlesBet.ViewModels;
+using MovieApp.Features.Screenings.ViewModels;
+using MovieApp.Features.Ambassadors.ViewModels;
 
 namespace MovieApp
 {
@@ -165,7 +167,13 @@ namespace MovieApp
             services.AddTransient<SlotMachineViewModel>();
 
             // Ambassadors
-            services.AddTransient<MovieApp.Features.Ambassadors.ViewModels.AmbassadorViewModel>();
+            services.AddTransient<AmbassadorViewModel>();
+
+            // Screenings
+            services.AddTransient<ScreeningViewModel>();
+
+            // Movie detail comments
+            services.AddTransient<MovieApp.Features.MovieDetail.ViewModels.MovieDetailViewModel>();
 
             // Battles
             services.AddTransient<BattleViewModel>();
