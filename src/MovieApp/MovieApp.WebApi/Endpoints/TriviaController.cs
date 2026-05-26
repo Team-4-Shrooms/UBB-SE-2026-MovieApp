@@ -2,8 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MovieApp.DataLayer.Interfaces.Repositories;
-using MovieApp.DataLayer.Models;
+using MovieApp.Logic.Interfaces.Services;
 
 namespace MovieApp.WebApi.Endpoints;
 
@@ -12,64 +11,98 @@ namespace MovieApp.WebApi.Endpoints;
 [Route("api/trivia")]
 public sealed class TriviaController : ControllerBase
 {
-    private readonly ITriviaRepository _triviaRepository;
-    private readonly ITriviaRewardRepository _triviaRewardRepository;
+    private readonly ITriviaService _triviaService;
+    private readonly ICurrentUserService _currentUserService;
 
-    public TriviaController(
-        ITriviaRepository triviaRepository,
-        ITriviaRewardRepository triviaRewardRepository)
+    public TriviaController(ITriviaService triviaService, ICurrentUserService currentUserService)
     {
-        _triviaRepository = triviaRepository;
-        _triviaRewardRepository = triviaRewardRepository;
+        _triviaService = triviaService;
+        _currentUserService = currentUserService;
     }
 
-    [HttpGet("category/{category}")]
-    public async Task<IActionResult> GetByCategory(string category)
+    [HttpGet("question")]
+    public async Task<IActionResult> GetRandomQuestion()
     {
-        var questions = await _triviaRepository.GetByCategoryAsync(category);
-        return Ok(questions);
-    }
-
-    [HttpGet("movie/{movieId:int}")]
-    public async Task<IActionResult> GetByMovieId(
-        int movieId,
-        [FromQuery] int count = ITriviaRepository.DefaultQuestionCount)
-    {
-        var questions = await _triviaRepository.GetByMovieIdAsync(movieId, count);
-        return Ok(questions);
-    }
-
-    [HttpGet("reward/{userId:int}")]
-    public async Task<IActionResult> GetUnredeemedReward(int userId)
-    {
-        var reward = await _triviaRewardRepository.GetUnredeemedByUserAsync(userId);
-        if (reward is null)
+        var questions = await _triviaService.GetAllQuestionsAsync();
+        if (questions.Count == 0)
         {
             return NotFound();
         }
 
-        return Ok(reward);
+        return Ok(questions[Random.Shared.Next(questions.Count)]);
     }
 
-    [HttpPost("reward")]
-    public async Task<IActionResult> AddReward([FromBody] AddTriviaRewardRequest request)
+    [HttpGet("questions")]
+    public async Task<IActionResult> GetAllQuestions()
     {
-        var reward = new TriviaReward
-        {
-            UserId = request.UserId,
-            IsRedeemed = false,
-            CreatedAt = DateTime.UtcNow,
-        };
-        await _triviaRewardRepository.AddAsync(reward);
-        return Ok(reward.Id);
+        var questions = await _triviaService.GetAllQuestionsAsync();
+        return Ok(questions);
     }
 
-    [HttpPut("reward/{rewardId:int}/redeem")]
+    [HttpGet("questions/category/{category}")]
+    public async Task<IActionResult> GetQuestionsByCategory(string category)
+    {
+        var questions = await _triviaService.GetQuestionsByCategoryAsync(category);
+        return Ok(questions);
+    }
+
+    [HttpGet("questions/movie/{movieId:int}")]
+    public async Task<IActionResult> GetQuestionsByMovie(int movieId)
+    {
+        var questions = await _triviaService.GetQuestionsByMovieIdAsync(movieId);
+        return Ok(questions);
+    }
+
+    [HttpGet("questions/{id:int}")]
+    public async Task<IActionResult> GetQuestion(int id)
+    {
+        var question = await _triviaService.GetQuestionByIdAsync(id);
+        if (question is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(question);
+    }
+
+    [HttpPost("answer")]
+    public async Task<IActionResult> SubmitAnswer([FromBody] TriviaAnswerRequest request)
+    {
+        var question = await _triviaService.GetQuestionByIdAsync(request.QuestionId);
+        if (question is null)
+        {
+            return NotFound();
+        }
+
+        bool correct = question.CorrectOption == request.SelectedOption;
+        int? rewardId = correct
+            ? await _triviaService.AwardRewardAsync(_currentUserService.UserId)
+            : null;
+
+        return Ok(new TriviaAnswerResult(correct, rewardId));
+    }
+
+    [HttpGet("rewards/{userId:int}")]
+    public async Task<IActionResult> GetRewards(int userId)
+    {
+        var rewards = await _triviaService.GetRewardsByUserIdAsync(userId);
+        return Ok(rewards);
+    }
+
+    [HttpPost("rewards/{userId:int}/award")]
+    public async Task<IActionResult> AwardReward(int userId)
+    {
+        int rewardId = await _triviaService.AwardRewardAsync(userId);
+        return Ok(rewardId);
+    }
+
+    [HttpPost("rewards/{rewardId:int}/redeem")]
     public async Task<IActionResult> RedeemReward(int rewardId)
     {
-        await _triviaRewardRepository.MarkAsRedeemedAsync(rewardId);
-        return Ok();
+        bool success = await _triviaService.RedeemRewardAsync(rewardId);
+        return Ok(success);
     }
 }
 
-public sealed record AddTriviaRewardRequest(int UserId);
+public sealed record TriviaAnswerRequest(int QuestionId, char SelectedOption);
+public sealed record TriviaAnswerResult(bool Correct, int? RewardId);

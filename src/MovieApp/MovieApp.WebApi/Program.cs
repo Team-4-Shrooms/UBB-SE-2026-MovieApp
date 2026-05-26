@@ -117,6 +117,7 @@ builder.Services.AddScoped<TriviaRewardRepository>();
 builder.Services.AddScoped<ITriviaRewardRepository>(serviceProvider => serviceProvider.GetRequiredService<TriviaRewardRepository>());
 
 // Core services
+builder.Services.AddScoped<ITriviaService, TriviaService>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IEquipmentService, EquipmentService>();
 builder.Services.AddScoped<IEventService, EventService>();
