@@ -177,6 +177,8 @@ namespace MovieApp
 
             // Battles
             services.AddTransient<BattleViewModel>();
+            // Price Watchers
+            services.AddTransient<MovieApp.Features.PriceWatcher.ViewModels.PriceWatcherViewModel>();
 
             var provider = services.BuildServiceProvider();
             Services = provider;

@@ -22,6 +22,7 @@ using MovieApp.Features.Wallet.Views;
 using MovieApp.Features.BattlesBet.Views;
 using MovieApp.Features.BattlesBet.ViewModels;
 using MovieApp.Features.Ambassadors.Views;
+using MovieApp.Features.PriceWatcher.Views;
 using MovieApp.Features.Screenings.Views;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -58,6 +59,7 @@ namespace MovieApp
             ["Marathon"] = typeof(MarathonPage),
             ["BattlesBet"] = typeof(BattlePage),
             ["Ambassadors"] = typeof(AmbassadorPage),
+            ["PriceWatcher"] = typeof(PriceWatcherPage),
             ["Screenings"] = typeof(ScreeningPage),
         };
 
