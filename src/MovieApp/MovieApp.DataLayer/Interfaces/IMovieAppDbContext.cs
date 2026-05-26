@@ -29,6 +29,7 @@ namespace MovieApp.DataLayer.Interfaces
         DbSet<Comment> Comments { get; }
         DbSet<Event> Events { get; }
         DbSet<Screening> Screenings { get; }
+        DbSet<Room> Rooms { get; }
         DbSet<Booking> Bookings { get; }
         DbSet<Notification> Notifications { get; }
         DbSet<Battle> Battles { get; }

@@ -42,6 +42,7 @@ namespace MovieApp.WebApi.Data
         // Events & Screenings 
         public DbSet<Event> Events { get; set; }
         public DbSet<Screening> Screenings { get; set; }
+        public DbSet<Room> Rooms { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Notification> Notifications { get; set; }
 

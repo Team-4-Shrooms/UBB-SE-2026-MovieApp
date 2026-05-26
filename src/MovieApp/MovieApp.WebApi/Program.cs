@@ -65,6 +65,12 @@ builder.Services.AddScoped<IEquipmentRepository>(serviceProvider => serviceProvi
 builder.Services.AddScoped<EventRepository>();
 builder.Services.AddScoped<IEventRepository>(serviceProvider => serviceProvider.GetRequiredService<EventRepository>());
 
+builder.Services.AddScoped<ScreeningRepository>();
+builder.Services.AddScoped<IScreeningRepository>(serviceProvider => serviceProvider.GetRequiredService<ScreeningRepository>());
+
+builder.Services.AddScoped<BookingRepository>();
+builder.Services.AddScoped<IBookingRepository>(serviceProvider => serviceProvider.GetRequiredService<BookingRepository>());
+
 builder.Services.AddScoped<InteractionRepository>();
 builder.Services.AddScoped<IInteractionRepository>(serviceProvider => serviceProvider.GetRequiredService<InteractionRepository>());
 
@@ -124,10 +130,15 @@ builder.Services.AddScoped<ITriviaRewardRepository>(serviceProvider => servicePr
 builder.Services.AddScoped<CommentRepository>();
 builder.Services.AddScoped<ICommentRepository>(serviceProvider => serviceProvider.GetRequiredService<CommentRepository>());
 
+builder.Services.AddScoped<PriceWatcherRepository>();
+builder.Services.AddScoped<IPriceWatcherRepository>(serviceProvider => serviceProvider.GetRequiredService<PriceWatcherRepository>());
+
 // Core services
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IEquipmentService, EquipmentService>();
 builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IScreeningService, ScreeningService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IActiveSalesService, ActiveSalesService>();
