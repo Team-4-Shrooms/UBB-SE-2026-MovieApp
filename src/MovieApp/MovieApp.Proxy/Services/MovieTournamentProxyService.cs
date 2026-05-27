@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MovieApp.DataLayer.Interfaces.Repositories;
 using MovieApp.DataLayer.Models;
 using MovieApp.Logic.Interfaces.Services;
 
 namespace MovieApp.Proxy.Services
 {
-    public class MovieTournamentProxyService : IMovieTournamentService
+    public class MovieTournamentProxyService : IMovieTournamentService, IMovieTournamentRepository
     {
         private readonly ApiClient _apiClient;
 

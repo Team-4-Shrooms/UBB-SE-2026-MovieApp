@@ -36,8 +36,7 @@
 
                     <Grid ColumnSpacing="12" RowSpacing="8">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="3*" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
@@ -47,24 +46,24 @@
                         </Grid.RowDefinitions>
 
                         <TextBlock Grid.Row="0" Grid.Column="0"
-                                   Text="Movie / Event ID" FontSize="12" Opacity="0.7" />
+                                   Text="Movie / Event" FontSize="12" Opacity="0.7" />
                         <TextBlock Grid.Row="0" Grid.Column="1"
-                                   Text="Title (optional)" FontSize="12" Opacity="0.7" />
-                        <TextBlock Grid.Row="0" Grid.Column="2"
                                    Text="Target Price" FontSize="12" Opacity="0.7" />
 
-                        <NumberBox Grid.Row="1" Grid.Column="0"
-                                   Value="{x:Bind ViewModel.NewMovieId, Mode=TwoWay}"
-                                   Minimum="0"
-                                   SpinButtonPlacementMode="Compact" />
-                        <TextBox Grid.Row="1" Grid.Column="1"
-                                 PlaceholderText="Defaults to 'Movie #id'"
-                                 Text="{x:Bind ViewModel.NewWatchTitle, Mode=TwoWay}" />
-                        <NumberBox Grid.Row="1" Grid.Column="2"
+                        <AutoSuggestBox Grid.Row="1" Grid.Column="0"
+                                        x:Name="MovieSearchBox"
+                                        PlaceholderText="Search by title..."
+                                        Text="{x:Bind ViewModel.SearchText, Mode=TwoWay}"
+                                        ItemsSource="{x:Bind ViewModel.SearchSuggestions, Mode=OneWay}"
+                                        DisplayMemberPath="Title"
+                                        TextMemberPath="Title"
+                                        TextChanged="MovieSearchBox_TextChanged"
+                                        SuggestionChosen="MovieSearchBox_SuggestionChosen" />
+                        <NumberBox Grid.Row="1" Grid.Column="1"
                                    Value="{x:Bind ViewModel.NewTargetPrice, Mode=TwoWay}"
                                    Minimum="0"
                                    SpinButtonPlacementMode="Compact" />
-                        <Button Grid.Row="1" Grid.Column="3"
+                        <Button Grid.Row="1" Grid.Column="2"
                                 Content="Add"
                                 Style="{ThemeResource AccentButtonStyle}"
                                 Command="{x:Bind ViewModel.AddWatchCommand}" />

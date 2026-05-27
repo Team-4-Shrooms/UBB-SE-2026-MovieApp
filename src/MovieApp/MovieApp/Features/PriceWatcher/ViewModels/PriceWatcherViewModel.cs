@@ -1,6 +1,7 @@
 namespace MovieApp.Features.PriceWatcher.ViewModels;
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -9,52 +10,47 @@ using CommunityToolkit.Mvvm.Input;
 using MovieApp.DataLayer.Models;
 using MovieApp.Logic.Interfaces.Services;
 
-/// <summary>
-/// View model for the Price Watcher page. Loads watchers from the DB (via the
-/// registered <see cref="IPriceWatcherService"/> — backed by PriceWatcherProxyService
-/// in the Desktop DI container) and exposes commands to add or remove a watcher.
-/// </summary>
 public sealed class PriceWatcherViewModel : INotifyPropertyChanged
 {
     private readonly IPriceWatcherService _priceWatcherService;
+    private readonly IMovieService _movieService;
 
-    private string _newWatchTitle = string.Empty;
+    private string _searchText = string.Empty;
+    private Movie? _selectedMovie;
     private double _newTargetPrice;
-    private double _newMovieId;
     private bool _isLoading;
     private string _errorMessage = string.Empty;
     private string _successMessage = string.Empty;
 
-    public PriceWatcherViewModel(IPriceWatcherService priceWatcherService)
+    public PriceWatcherViewModel(IPriceWatcherService priceWatcherService, IMovieService movieService)
     {
         _priceWatcherService = priceWatcherService;
+        _movieService = movieService;
 
         LoadWatchersCommand = new AsyncRelayCommand(LoadWatchersAsync);
-        AddWatchCommand = new AsyncRelayCommand(() => AddWatchAsync((int)NewMovieId));
+        AddWatchCommand = new AsyncRelayCommand(AddWatchAsync);
         RemoveWatchCommand = new AsyncRelayCommand<int>(RemoveWatchAsync);
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public ObservableCollection<PriceWatcher> Watchers { get; } = new();
+    public ObservableCollection<Movie> SearchSuggestions { get; } = new();
 
     public IAsyncRelayCommand LoadWatchersCommand { get; }
     public IAsyncRelayCommand AddWatchCommand { get; }
     public IAsyncRelayCommand<int> RemoveWatchCommand { get; }
 
-    /// <summary>
-    /// Backed by <see cref="double"/> so it can be bound directly to NumberBox.Value.
-    /// </summary>
-    public double NewMovieId
+    public string SearchText
     {
-        get => _newMovieId;
-        set => SetProperty(ref _newMovieId, value);
+        get => _searchText;
+        set => SetProperty(ref _searchText, value);
     }
 
-    public string NewWatchTitle
+    public Movie? SelectedMovie
     {
-        get => _newWatchTitle;
-        set => SetProperty(ref _newWatchTitle, value);
+        get => _selectedMovie;
+        set => SetProperty(ref _selectedMovie, value);
     }
 
     /// <summary>
@@ -85,9 +81,6 @@ public sealed class PriceWatcherViewModel : INotifyPropertyChanged
         private set => SetProperty(ref _successMessage, value);
     }
 
-    /// <summary>
-    /// Loads the full list of price watchers from the database via the proxy service.
-    /// </summary>
     public async Task LoadWatchersAsync()
     {
         IsLoading = true;
@@ -96,8 +89,7 @@ public sealed class PriceWatcherViewModel : INotifyPropertyChanged
 
         try
         {
-            System.Collections.Generic.List<PriceWatcher> result =
-                await _priceWatcherService.GetAllWatchedEventsAsync();
+            List<PriceWatcher> result = await _priceWatcherService.GetAllWatchedEventsAsync();
 
             Watchers.Clear();
             foreach (PriceWatcher watcher in result)
@@ -115,18 +107,44 @@ public sealed class PriceWatcherViewModel : INotifyPropertyChanged
         }
     }
 
-    /// <summary>
-    /// Adds a new price watcher for the given movie / event id and refreshes the list
-    /// so the database state is reflected immediately in the UI.
-    /// </summary>
-    public async Task AddWatchAsync(int movieId)
+    public async Task SearchMoviesAsync(string text)
+    {
+        SelectedMovie = null;
+        SearchSuggestions.Clear();
+
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return;
+        }
+
+        try
+        {
+            List<Movie> results = await _movieService.SearchMoviesAsync(text);
+            foreach (Movie movie in results)
+            {
+                SearchSuggestions.Add(movie);
+            }
+        }
+        catch
+        {
+            // silently swallow search errors — suggestions are best-effort
+        }
+    }
+
+    public void SelectMovie(Movie movie)
+    {
+        SelectedMovie = movie;
+        SearchText = movie.Title;
+    }
+
+    public async Task AddWatchAsync()
     {
         ErrorMessage = string.Empty;
         SuccessMessage = string.Empty;
 
-        if (movieId <= 0)
+        if (SelectedMovie is null)
         {
-            ErrorMessage = "Please enter a valid movie id.";
+            ErrorMessage = "Please select a movie or event from the dropdown.";
             return;
         }
 
@@ -138,10 +156,8 @@ public sealed class PriceWatcherViewModel : INotifyPropertyChanged
 
         PriceWatcher newWatch = new PriceWatcher
         {
-            EventId = movieId,
-            EventTitle = string.IsNullOrWhiteSpace(NewWatchTitle)
-                ? $"Movie #{movieId}"
-                : NewWatchTitle,
+            EventId = SelectedMovie.Id,
+            EventTitle = SelectedMovie.Title,
             TargetPrice = (decimal)NewTargetPrice,
         };
 
@@ -165,9 +181,6 @@ public sealed class PriceWatcherViewModel : INotifyPropertyChanged
         }
     }
 
-    /// <summary>
-    /// Removes the price watcher identified by <paramref name="id"/> and refreshes the list.
-    /// </summary>
     public async Task RemoveWatchAsync(int id)
     {
         ErrorMessage = string.Empty;
@@ -187,14 +200,15 @@ public sealed class PriceWatcherViewModel : INotifyPropertyChanged
 
     private void ClearForm()
     {
-        NewMovieId = 0;
-        NewWatchTitle = string.Empty;
+        SearchText = string.Empty;
+        SelectedMovie = null;
+        SearchSuggestions.Clear();
         NewTargetPrice = 0;
     }
 
     private void SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
-        if (!System.Collections.Generic.EqualityComparer<T>.Default.Equals(field, value))
+        if (!EqualityComparer<T>.Default.Equals(field, value))
         {
             field = value;
             OnPropertyChanged(propertyName);

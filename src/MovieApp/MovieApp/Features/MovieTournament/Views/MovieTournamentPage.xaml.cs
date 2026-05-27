@@ -23,15 +23,17 @@ namespace MovieApp.Features.MovieTournament.Views
             this.Loaded += this.OnLoaded;
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
+        private async void OnLoaded(object sender, RoutedEventArgs e)
         {
             ITournamentLogicService tournamentLogicService = Ioc.Default.GetRequiredService<ITournamentLogicService>();
+            int userId = 1;
 
-            if (tournamentLogicService.IsTournamentActive)
+            MatchPair? currentMatch = await tournamentLogicService.GetCurrentMatchAsync(userId);
+            if (currentMatch != null)
             {
                 this.TournamentFrame.Navigate(typeof(TournamentMatchPage));
             }
-            else if (tournamentLogicService.IsTournamentComplete())
+            else if (await tournamentLogicService.IsTournamentCompleteAsync(userId))
             {
                 this.TournamentFrame.Navigate(typeof(TournamentWinnerPage));
             }

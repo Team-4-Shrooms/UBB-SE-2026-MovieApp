@@ -69,7 +69,7 @@ namespace MovieApp
             services.AddTransient<IEquipmentRepository, EquipmentRepository>();
             services.AddTransient<ITransactionRepository, TransactionRepository>();
             services.AddTransient<IProfileRepository, ProfileRepository>();
-            services.AddTransient<IMovieTournamentRepository, MovieTournamentRepository>();
+            services.AddTransient<IMovieTournamentRepository, MovieTournamentProxyService>();
             services.AddTransient<ITriviaRepository, TriviaRepository>();
             services.AddTransient<ITriviaRewardRepository, TriviaRewardRepository>();
 
