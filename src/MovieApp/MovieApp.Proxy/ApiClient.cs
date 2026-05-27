@@ -84,7 +84,8 @@ namespace MovieApp.Proxy
                 response = await _httpClient.GetAsync(uri, cancellationToken);
             }
 
-            if (response.StatusCode == HttpStatusCode.NotFound)
+            if (response.StatusCode == HttpStatusCode.NotFound ||
+                response.StatusCode == HttpStatusCode.NoContent)
                 return default;
 
             if (!response.IsSuccessStatusCode)
@@ -93,6 +94,10 @@ namespace MovieApp.Proxy
             }
 
             response.EnsureSuccessStatusCode();
+
+            if ((response.Content.Headers.ContentLength ?? 1) == 0)
+                return default;
+
             return await response.Content.ReadFromJsonAsync<T>(DeserializeOptions, cancellationToken);
         }
 

@@ -52,17 +52,17 @@ namespace MovieApp.Features.MovieTournament.ViewModels
         public TournamentMatchViewModel(ITournamentLogicService tournamentLogicService)
         {
             this.tournamentLogicService = tournamentLogicService;
-            this.RefreshCurrentMatch();
+            _ = this.RefreshCurrentMatchAsync();
         }
 
         /// <summary>
-        /// Refreshes the displayed match by reading the current pending match from the service.
+        /// Refreshes the displayed match by fetching the current pending match from the service.
         /// Updates both the movie models and their corresponding image sources.
-        /// Does nothing if <see cref="ITournamentLogicService.GetCurrentMatch"/> returns <see langword="null"/>.
+        /// Does nothing if no current match exists.
         /// </summary>
-        public void RefreshCurrentMatch()
+        public async Task RefreshCurrentMatchAsync()
         {
-            MatchPair currentMatch = this.tournamentLogicService.GetCurrentMatch();
+            MatchPair? currentMatch = await this.tournamentLogicService.GetCurrentMatchAsync(CurrentUserId);
             if (currentMatch == null)
             {
                 return;
@@ -74,7 +74,6 @@ namespace MovieApp.Features.MovieTournament.ViewModels
             this.MovieOptionBImage = currentMatch.SecondMovie != null
                 ? this.GetImageSource(currentMatch.SecondMovie.PosterUrl)
                 : null;
-            this.RoundDisplay = $"Round {this.tournamentLogicService.CurrentState.CurrentRound}";
         }
 
         /// <summary>
@@ -112,13 +111,13 @@ namespace MovieApp.Features.MovieTournament.ViewModels
         {
             await this.tournamentLogicService.AdvanceWinnerAsync(CurrentUserId, movieId);
 
-            if (this.tournamentLogicService.IsTournamentComplete())
+            if (await this.tournamentLogicService.IsTournamentCompleteAsync(CurrentUserId))
             {
                 this.TournamentComplete?.Invoke(this, EventArgs.Empty);
             }
             else
             {
-                this.RefreshCurrentMatch();
+                await this.RefreshCurrentMatchAsync();
             }
         }
 
@@ -127,9 +126,9 @@ namespace MovieApp.Features.MovieTournament.ViewModels
         /// to return the view to the setup page.
         /// </summary>
         [RelayCommand]
-        public void GoBack()
+        public async Task GoBackAsync()
         {
-            this.tournamentLogicService.ResetTournament();
+            await this.tournamentLogicService.ResetTournamentAsync(CurrentUserId);
             this.NavigateBack?.Invoke(this, EventArgs.Empty);
         }
     }

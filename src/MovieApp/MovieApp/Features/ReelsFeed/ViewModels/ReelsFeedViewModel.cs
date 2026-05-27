@@ -104,6 +104,11 @@ namespace MovieApp.Features.ReelsFeed.ViewModels
                 await this.LoadLikeDataAsync(recommendedReels);
                 foreach (var recommendedReel in recommendedReels)
                 {
+                    if (!recommendedReel.VideoUrl.StartsWith("http"))
+                    {
+                        recommendedReel.VideoUrl = "http://localhost:4544" + recommendedReel.VideoUrl;
+                    }
+
                     this.ReelQueue.Add(recommendedReel);
                 }
 

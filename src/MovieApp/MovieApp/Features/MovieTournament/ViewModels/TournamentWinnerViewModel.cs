@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Media;
@@ -14,6 +15,8 @@ namespace MovieApp.Features.MovieTournament.ViewModels
     /// </summary>
     public partial class TournamentWinnerViewModel : ObservableObject
     {
+        private const int CurrentUserId = 1;
+
         private readonly ITournamentLogicService tournamentLogicService;
 
         [ObservableProperty]
@@ -36,11 +39,16 @@ namespace MovieApp.Features.MovieTournament.ViewModels
         public TournamentWinnerViewModel(ITournamentLogicService tournamentLogicService)
         {
             this.tournamentLogicService = tournamentLogicService;
+            _ = this.LoadWinnerAsync();
+        }
 
-            if (this.tournamentLogicService.IsTournamentComplete())
+        private async Task LoadWinnerAsync()
+        {
+            if (await this.tournamentLogicService.IsTournamentCompleteAsync(CurrentUserId))
             {
-                this.WinnerMovie = this.tournamentLogicService.GetFinalWinner();
-                this.WinnerMovieImage = this.GetImageSource(this.WinnerMovie.PosterUrl);
+                Movie winner = await this.tournamentLogicService.GetFinalWinnerAsync(CurrentUserId);
+                this.WinnerMovie = winner;
+                this.WinnerMovieImage = this.GetImageSource(winner?.PosterUrl);
             }
         }
 
@@ -72,9 +80,9 @@ namespace MovieApp.Features.MovieTournament.ViewModels
         /// to return to the setup page.
         /// </summary>
         [RelayCommand]
-        public void StartAnotherTournament()
+        public async Task StartAnotherTournamentAsync()
         {
-            this.tournamentLogicService.ResetTournament();
+            await this.tournamentLogicService.ResetTournamentAsync(CurrentUserId);
             this.NavigateToSetup?.Invoke(this, EventArgs.Empty);
         }
     }
