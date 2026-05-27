@@ -78,6 +78,9 @@
                             <a class="nav-link" asp-controller="PriceWatcher" asp-action="MyWatchers">Price Watchers</a>
                         </li>
                     </ul>
+                    <div class="navbar-nav ms-auto">
+                        @await Component.InvokeAsync("NotificationBadge")
+                    </div>
                 </div>
             </div>
         </nav>
