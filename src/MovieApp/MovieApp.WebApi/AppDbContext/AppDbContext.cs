@@ -42,6 +42,7 @@ namespace MovieApp.WebApi.Data
         // Events & Screenings 
         public DbSet<Event> Events { get; set; }
         public DbSet<Screening> Screenings { get; set; }
+        public DbSet<Room> Rooms { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Notification> Notifications { get; set; }
 
@@ -88,6 +89,9 @@ namespace MovieApp.WebApi.Data
 
             modelBuilder.Entity<AmbassadorProfile>()
                 .HasKey(ambassadorProfile => ambassadorProfile.UserId);
+            modelBuilder.Entity<AmbassadorProfile>()
+                .Property(ambassadorProfile => ambassadorProfile.UserId)
+                .ValueGeneratedNever();
 
             modelBuilder.Entity<UserSpinData>()
                 .HasKey(userSpinData => userSpinData.UserId);

@@ -1,27 +1,43 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using MovieApp.DataLayer.Interfaces.Repositories;
 using MovieApp.DataLayer.Models;
+using MovieApp.Logic.Interfaces.Services;
 
 namespace MovieApp.Logic.Services
 {
-    public class BadgeService : IBadgeService
+    public sealed class BadgeService : IBadgeService
     {
-        public Task CheckAndAwardBadgesAsync(int userId, CancellationToken ct = default)
+        private readonly IBadgeRepository _badgeRepository;
+        private readonly IUserStatsRepository _userStatsRepository;
+
+        public BadgeService(IBadgeRepository badgeRepository, IUserStatsRepository userStatsRepository)
         {
-            throw new NotImplementedException();
+            _badgeRepository = badgeRepository;
+            _userStatsRepository = userStatsRepository;
         }
 
-        public Task<List<Badge>> GetAllBadgesAsync(CancellationToken ct = default)
+        public Task<List<UserBadge>> GetUserBadgesAsync(int userId, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new List<UserBadge>());
         }
 
-        public Task<List<UserBadge>> GetUserBadgesAsync(int userId, CancellationToken ct = default)
+        public Task<List<Badge>> GetAllBadgesAsync(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return _badgeRepository.GetAllAsync(cancellationToken);
+        }
+
+        public async Task<IList<UserStats>> GetLeaderboardAsync(CancellationToken cancellationToken = default)
+        {
+            return await _userStatsRepository.GetLeaderboardAsync(cancellationToken);
+        }
+
+        public Task CheckAndAwardBadgesAsync(int userId, CancellationToken cancellationToken = default)
+        {
+            // Server-side stub: badge evaluation logic to be implemented in a future ticket.
+            return Task.CompletedTask;
         }
     }
 }

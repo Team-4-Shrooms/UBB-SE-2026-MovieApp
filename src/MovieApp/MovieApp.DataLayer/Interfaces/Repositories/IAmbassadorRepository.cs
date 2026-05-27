@@ -47,14 +47,6 @@ public interface IAmbassadorRepository
     Task AddReferralLogAsync(int ambassadorId, int friendId, int eventId, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Evaluates whether a referral reward should be granted to an ambassador.
-    /// </summary>
-    /// <param name="ambassadorId">The identifier of the ambassador to evaluate.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>True if a reward was successfully applied; otherwise, false.</returns>
-    Task<bool> TryApplyRewardAsync(int ambassadorId, CancellationToken cancellationToken = default);
-
-    /// <summary>
     /// Gets referral history rows for the specified ambassador.
     /// </summary>
     /// <param name="ambassadorId">The identifier of the ambassador.</param>
@@ -87,4 +79,19 @@ public interface IAmbassadorRepository
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>True if a log entry already exists; otherwise, false.</returns>
     Task<bool> HasReferralLogAsync(int ambassadorId, int friendId, int eventId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets all ambassador profiles.
+    /// </summary>
+    Task<IEnumerable<AmbassadorProfile>> GetAllAmbassadorsAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets an ambassador profile by user ID.
+    /// </summary>
+    Task<AmbassadorProfile?> GetAmbassadorByIdAsync(int userId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Increments the reward balance for the specified ambassador by one.
+    /// </summary>
+    Task IncrementRewardBalanceAsync(int ambassadorId, CancellationToken cancellationToken = default);
 }
