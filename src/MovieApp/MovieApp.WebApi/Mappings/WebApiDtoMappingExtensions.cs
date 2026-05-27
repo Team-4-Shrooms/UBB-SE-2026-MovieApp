@@ -549,7 +549,7 @@ public static class WebApiDtoMappingExtensions
             Genre = result.Genre.ToDto(),
             Actor = result.Actor.ToDto(),
             Director = result.Director.ToDto(),
-            MatchingEvents = result.MatchingEvents.Select(slotEvent => slotEvent.ToDto()).ToList(),
+            MatchingEvents = result.MatchingEvents.Select(movieEvent => movieEvent.ToDto()).ToList(),
             JackpotEventIds = result.JackpotEventIds,
             JackpotMovie = result.JackpotMovie?.ToReferenceDto(),
             JackpotDiscountApplied = result.JackpotDiscountApplied,

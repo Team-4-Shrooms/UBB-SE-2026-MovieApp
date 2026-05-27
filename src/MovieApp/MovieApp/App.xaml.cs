@@ -77,6 +77,7 @@ namespace MovieApp
             // Task.Run avoids deadlocking the WinUI UI thread's sync context.
             var authProvider = new WinUiAuthTokenProvider();
             Task.Run(() => authProvider.InitializeAsync()).GetAwaiter().GetResult();
+            MovieApp.Features.Shared.Models.SessionManager.CurrentUserID = authProvider.UserId;
             services.AddSingleton<IAuthTokenProvider>(authProvider);
             services.AddSingleton<ICurrentUserService>(authProvider);
 

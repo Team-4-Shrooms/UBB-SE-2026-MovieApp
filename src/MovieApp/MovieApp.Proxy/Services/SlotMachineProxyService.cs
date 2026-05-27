@@ -96,11 +96,11 @@ public class SlotMachineProxyService : ISlotMachineService
         return director ?? new Director();
     }
 
-    public async Task<IReadOnlyList<Event>> GetMatchingEventsAsync(int genreIdentifier, int actorIdentifier, int directorIdentifier)
+    public async Task<IReadOnlyList<MovieEvent>> GetMatchingEventsAsync(int genreIdentifier, int actorIdentifier, int directorIdentifier)
     {
-        var matchingEvents = await _apiClient.GetAsync<List<Event>>(
+        var matchingEvents = await _apiClient.GetAsync<List<MovieEvent>>(
             $"api/slot-machine/matching-events?genreId={genreIdentifier}&actorId={actorIdentifier}&directorId={directorIdentifier}");
-        return matchingEvents ?? new List<Event>();
+        return matchingEvents ?? new List<MovieEvent>();
     }
 
     public async Task<Movie?> FindJackpotMovieAsync(int genreIdentifier, int actorIdentifier, int directorIdentifier)

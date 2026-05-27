@@ -46,6 +46,7 @@ namespace MovieApp.DataLayer
             await SeedAdditionalRoomsAsync();
             await FixExistingDataAsync();
             await SeedTriviaQuestionsAsync();
+            await SeedSlotMachineDataAsync();
         }
 
         /// <summary>
@@ -1895,6 +1896,54 @@ namespace MovieApp.DataLayer
                 ScreeningTime = cinemaEvent.EventDateTime,
             };
             _context.Screenings.Add(screening);
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task SeedSlotMachineDataAsync()
+        {
+            if (await _context.Genres.AnyAsync())
+            {
+                return;
+            }
+
+            var movies = await _context.Movies
+                .Include(movie => movie.Genres)
+                .Include(movie => movie.Actors)
+                .Include(movie => movie.Directors)
+                .ToListAsync();
+
+            if (movies.Count == 0)
+            {
+                return;
+            }
+
+            // Genre/Actor/Director are owned by a single Movie (one-to-many with MovieId FK).
+            // Each movie gets its own Genre record (derived from PrimaryGenre), one Actor, and
+            // one Director by cycling through sample names.
+            string[] actorNames =
+            [
+                "Leonardo DiCaprio", "Tom Hanks", "Meryl Streep", "Morgan Freeman",
+                "Cate Blanchett", "Denzel Washington", "Natalie Portman", "Brad Pitt",
+            ];
+            string[] directorNames =
+            [
+                "Christopher Nolan", "Steven Spielberg", "Martin Scorsese",
+                "Quentin Tarantino", "Ridley Scott", "James Cameron",
+            ];
+
+            int index = 0;
+            foreach (Movie movie in movies)
+            {
+                if (!string.IsNullOrEmpty(movie.PrimaryGenre))
+                {
+                    movie.Genres.Add(new Genre { Name = movie.PrimaryGenre });
+                }
+
+                movie.Actors.Add(new Actor { Name = actorNames[index % actorNames.Length] });
+                movie.Directors.Add(new Director { Name = directorNames[index % directorNames.Length] });
+                index++;
+            }
+
             await _context.SaveChangesAsync();
         }
 
