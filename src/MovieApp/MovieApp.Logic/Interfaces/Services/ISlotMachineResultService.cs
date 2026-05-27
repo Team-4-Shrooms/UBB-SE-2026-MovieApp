@@ -25,7 +25,7 @@ namespace MovieApp.Logic.Interfaces.Services
             Genre genre,
             Actor actor,
             Director director,
-            List<Event> matchingEvents,
+            List<MovieEvent> matchingEvents,
             Movie? jackpotMovie);
     }
 }

@@ -45,6 +45,19 @@
                               Margin="24,6,0,0"/>
             </StackPanel>
         </DataTemplate>
+        <DataTemplate x:Key="ExternalReviewTemplate" x:DataType="models:CriticReview">
+            <Border Padding="12" Margin="0,4" CornerRadius="6" 
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                <StackPanel>
+                    <Grid>
+                        <TextBlock Text="{x:Bind Source}" FontWeight="SemiBold" FontSize="13" Foreground="White" />
+                        <TextBlock Text="{x:Bind ScoreDisplay}" HorizontalAlignment="Right" FontWeight="Bold" Foreground="#1DB954" />
+                    </Grid>
+                    <TextBlock Text="{x:Bind Snippet}" TextWrapping="Wrap" Margin="0,6,0,0" 
+                               FontStyle="Italic" Foreground="#CCCCCC" />
+                </StackPanel>
+            </Border>
+        </DataTemplate>
     </Page.Resources>
 
     <Grid Background="#1E1E1E">
@@ -210,9 +223,20 @@
                             </StackPanel>
                         </Border>
 
-                        <ItemsControl ItemsSource="{x:Bind CommentsViewModel.RootComments, Mode=OneWay}"
+                            <ItemsControl ItemsSource="{x:Bind CommentsViewModel.RootComments, Mode=OneWay}"
                                       ItemTemplate="{StaticResource MovieDetailCommentTemplate}"/>
-                    </StackPanel>
+
+                            <StackPanel Spacing="8" Margin="0,24,0,32">
+                                <TextBlock Text="External Critic Reviews" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,8"/>
+
+                                <TextBlock Text="No external reviews available for this movie." 
+                                       Foreground="Gray" FontStyle="Italic"
+                                       Visibility="{x:Bind CommentsViewModel.ExternalReviews.Count, Mode=OneWay, Converter={StaticResource IntToVisibility}, FallbackValue=Collapsed}" />
+
+                                <ItemsControl ItemsSource="{x:Bind CommentsViewModel.ExternalReviews, Mode=OneWay}"
+                                          ItemTemplate="{StaticResource ExternalReviewTemplate}"/>
+                            </StackPanel>
+                        </StackPanel>
                 </StackPanel>
                 </ScrollViewer>
             </Grid>

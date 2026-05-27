@@ -1,7 +1,10 @@
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using MovieApp.DataLayer.Models;
@@ -11,11 +14,14 @@ using MovieApp.Logic.Interfaces.Services;
 namespace MovieApp.Features.MovieDetail.ViewModels;
 
 /// <summary>
-/// ViewModel for movie detail comments (load, post, reply).
+/// ViewModel for movie detail comments and external reviews.
 /// </summary>
 public sealed class MovieDetailViewModel : INotifyPropertyChanged
 {
     private readonly ICommentService _commentService;
+
+    private readonly IExternalReviewService _externalReviewService;
+
     private readonly int _currentUserId;
 
     private Movie? _movie;
@@ -24,9 +30,10 @@ public sealed class MovieDetailViewModel : INotifyPropertyChanged
     private int _replyToCommentId;
     private string _replyContent = string.Empty;
 
-    public MovieDetailViewModel(ICommentService commentService)
+    public MovieDetailViewModel(ICommentService commentService, IExternalReviewService externalReviewService)
     {
         _commentService = commentService;
+        _externalReviewService = externalReviewService;
         _currentUserId = SessionManager.CurrentUserID;
 
         AddCommentCommand = new AsyncRelayCommand(AddCommentAsync);
@@ -38,6 +45,8 @@ public sealed class MovieDetailViewModel : INotifyPropertyChanged
     public ObservableCollection<Comment> Comments { get; } = new();
 
     public ObservableCollection<Comment> RootComments { get; } = new();
+
+    public ObservableCollection<CriticReview> ExternalReviews { get; } = new();
 
     public Movie? Movie
     {
@@ -87,6 +96,30 @@ public sealed class MovieDetailViewModel : INotifyPropertyChanged
         Movie = movie;
         StatusMessage = string.Empty;
         await LoadCommentsAsync();
+
+        await LoadExternalReviewsAsync();
+    }
+
+    private async Task LoadExternalReviewsAsync()
+    {
+        ExternalReviews.Clear();
+        if (Movie == null) return;
+
+        try
+        {
+            var reviews = await _externalReviewService.GetExternalReviewsAsync(Movie.Title, Movie.ReleaseYear);
+
+            if (reviews != null)
+            {
+                foreach (var review in reviews)
+                {
+                    ExternalReviews.Add(review);
+                }
+            }
+        }
+        catch (Exception)
+        {
+        }
     }
 
     private async Task AddCommentAsync()

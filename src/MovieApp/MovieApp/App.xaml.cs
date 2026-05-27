@@ -77,6 +77,7 @@ namespace MovieApp
             // Task.Run avoids deadlocking the WinUI UI thread's sync context.
             var authProvider = new WinUiAuthTokenProvider();
             Task.Run(() => authProvider.InitializeAsync()).GetAwaiter().GetResult();
+            MovieApp.Features.Shared.Models.SessionManager.CurrentUserID = authProvider.UserId;
             services.AddSingleton<IAuthTokenProvider>(authProvider);
             services.AddSingleton<ICurrentUserService>(authProvider);
 
@@ -114,8 +115,9 @@ namespace MovieApp
             services.AddTransient<IMarathonService, MarathonProxyService>();
             services.AddTransient<IBadgeService, BadgeProxyService>();
             services.AddTransient<IUserStatsService, UserStatsProxyService>();
-            services.AddTransient<ITriviaService, TriviaService>();
             services.AddTransient<ITriviaService, TriviaProxyService>();
+            services.AddTransient<ITriviaRepository, TriviaRepositoryProxy>();
+            services.AddTransient<ITriviaRewardRepository, TriviaRewardRepositoryProxy>();
             services.AddTransient<IPriceWatcherService, PriceWatcherProxyService>();
             services.AddTransient<IExternalReviewService, ExternalReviewProxyService>();
 

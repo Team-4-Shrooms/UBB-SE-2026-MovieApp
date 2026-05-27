@@ -22,7 +22,7 @@ public sealed class SlotMachineResult
     /// <summary>
     /// Gets or sets Events matching the combination.
     /// </summary>
-    public List<Event> MatchingEvents { get; set; } = new List<Event>();
+    public List<MovieEvent> MatchingEvents { get; set; } = new List<MovieEvent>();
 
     /// <summary>
     /// Gets or sets IDs of events that contain the jackpot movie (for UI highlighting).

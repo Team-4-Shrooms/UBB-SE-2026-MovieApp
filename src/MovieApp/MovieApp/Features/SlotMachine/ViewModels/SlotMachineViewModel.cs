@@ -37,7 +37,7 @@ namespace MovieApp.Features.SlotMachine.ViewModels
 
         public ObservableCollection<SlotMachineResult> History { get; } = new ObservableCollection<SlotMachineResult>();
 
-        public ObservableCollection<Event> MatchingEvents { get; } = new ObservableCollection<Event>();
+        public ObservableCollection<MovieEvent> MatchingEvents { get; } = new ObservableCollection<MovieEvent>();
 
         public bool IsSpinning
         {
@@ -153,7 +153,7 @@ namespace MovieApp.Features.SlotMachine.ViewModels
                 SelectedDirector = result.Director;
                 LastResult = result;
                 MatchingEvents.Clear();
-                foreach (Event evt in result.MatchingEvents)
+                foreach (MovieEvent evt in result.MatchingEvents)
                 {
                     MatchingEvents.Add(evt);
                 }
