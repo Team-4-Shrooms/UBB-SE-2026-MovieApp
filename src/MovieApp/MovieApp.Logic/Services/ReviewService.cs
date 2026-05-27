@@ -25,11 +25,11 @@ namespace MovieApp.Logic.Services
         public async Task<int[]> GetStarRatingBucketsAsync(int movieId)
         {
             var ratings = await _reviewRepo.GetRawRatingsForMovieAsync(movieId);
-            int[] counts = new int[11]; 
+            int[] counts = new int[5];
             foreach (var r in ratings)
             {
-                int bucket = Math.Clamp((int)Math.Floor((double)r), 1, 10);
-                counts[bucket]++;
+                int bucket = Math.Clamp((int)Math.Floor((double)r), 1, 5);
+                counts[bucket - 1]++;
             }
             return counts;
         }
@@ -38,6 +38,10 @@ namespace MovieApp.Logic.Services
         {
             var movie = await _movieRepo.GetMovieByIdAsync(movieId) ?? throw new KeyNotFoundException("Movie not found");
             var user = await _userRepo.GetUserByIdAsync(userId) ?? throw new KeyNotFoundException("User not found");
+
+            var existingRatings = await _reviewRepo.GetRawRatingsForMovieAsync(movieId);
+            var allRatings = existingRatings.Append(rating).ToList();
+            movie.Rating = Math.Round(allRatings.Average(), 1);
 
             await _reviewRepo.AddReviewAsync(new MovieReview
             {

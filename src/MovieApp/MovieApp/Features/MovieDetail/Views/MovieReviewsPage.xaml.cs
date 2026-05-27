@@ -115,9 +115,9 @@ namespace MovieApp.Features.MovieDetail.Views
             rating = 0;
             error = "";
             string trimmedText = (text ?? "").Trim();
-            if (!int.TryParse(trimmedText, out rating) || rating < 1 || rating > 10)
+            if (!int.TryParse(trimmedText, out rating) || rating < 1 || rating > 5)
             {
-                error = "Please enter a rating between 1 and 10.";
+                error = "Please enter a rating between 1 and 5.";
                 return false;
             }
 

@@ -77,7 +77,7 @@ namespace MovieApp.Features.MovieDetail.Views
 
             TitleBlock.Text = _movie.Title;
             DescriptionBlock.Text = string.IsNullOrEmpty(_movie.Description) ? "—" : _movie.Description;
-            RatingBlock.Text = $"Rating: {_movie.Rating:0.0} / 10";
+            RatingBlock.Text = $"Rating: {_movie.Rating:0.#} / 5";
 
             UpdatePriceDisplay();
             TrySetPoster(_movie.PosterUrl);
@@ -293,8 +293,8 @@ namespace MovieApp.Features.MovieDetail.Views
             if (counts.Sum() == 0) return "No reviews yet.";
  
             var lines = new List<string> { "Rating distribution:" };
-            for (var i = 10; i >= 1; i--)
-                lines.Add($"{i}: {counts[i]}");
+            for (var i = 5; i >= 1; i--)
+                lines.Add($"{i}: {counts[i - 1]}");
  
             return string.Join("\n", lines);
         }

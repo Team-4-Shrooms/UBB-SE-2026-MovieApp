@@ -11,7 +11,7 @@
 
         public User User { get; set; }
 
-        public string DisplayStarRating => $"{StarRating:0.0}/10";
+        public string DisplayStarRating => $"{StarRating:0.#}/5";
         public string DisplayCreatedAt => CreatedAt.ToString("yyyy-MM-dd HH:mm");
     }
 }

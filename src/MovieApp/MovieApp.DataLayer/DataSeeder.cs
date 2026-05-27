@@ -1368,7 +1368,7 @@ namespace MovieApp.DataLayer
                 {
                     Movie = matrix,
                     User = seller1,
-                    StarRating = 9m,
+                    StarRating = 5m,
                     Comment = "A mind-bending classic with unforgettable world-building.",
                     CreatedAt = currentDate,
                 },
@@ -1376,7 +1376,7 @@ namespace MovieApp.DataLayer
                 {
                     Movie = matrix,
                     User = seller2,
-                    StarRating = 7m,
+                    StarRating = 4m,
                     Comment = "Great action and ideas, but definitely not for everyone.",
                     CreatedAt = currentDate,
                 },
@@ -1384,7 +1384,7 @@ namespace MovieApp.DataLayer
                 {
                     Movie = interstellar,
                     User = seller1,
-                    StarRating = 10m,
+                    StarRating = 5m,
                     Comment = "Epic, emotional, and incredibly thought-provoking.",
                     CreatedAt = currentDate,
                 },
@@ -1392,7 +1392,7 @@ namespace MovieApp.DataLayer
                 {
                     Movie = interstellar,
                     User = seller2,
-                    StarRating = 8m,
+                    StarRating = 4m,
                     Comment = "Beautiful visuals and a satisfying emotional payoff.",
                     CreatedAt = currentDate,
                 },
@@ -1400,7 +1400,7 @@ namespace MovieApp.DataLayer
                 {
                     Movie = parasite,
                     User = seller1,
-                    StarRating = 9m,
+                    StarRating = 5m,
                     Comment = "Smart, tense, and darkly funny all the way through.",
                     CreatedAt = currentDate,
                 },
@@ -1408,7 +1408,7 @@ namespace MovieApp.DataLayer
                 {
                     Movie = parasite,
                     User = seller2,
-                    StarRating = 6m,
+                    StarRating = 3m,
                     Comment = "Surprisingly entertaining, but the pacing felt uneven.",
                     CreatedAt = currentDate,
                 },
@@ -1416,7 +1416,7 @@ namespace MovieApp.DataLayer
                 {
                     Movie = johnWick,
                     User = seller1,
-                    StarRating = 8m,
+                    StarRating = 4m,
                     Comment = "Non-stop style and killer action choreography.",
                     CreatedAt = currentDate,
                 },
@@ -1424,7 +1424,7 @@ namespace MovieApp.DataLayer
                 {
                     Movie = johnWick,
                     User = seller2,
-                    StarRating = 7m,
+                    StarRating = 4m,
                     Comment = "Solid thrills and great atmosphere; easy to binge.",
                     CreatedAt = currentDate,
                 },
@@ -1432,7 +1432,7 @@ namespace MovieApp.DataLayer
                 {
                     Movie = whiplash,
                     User = seller1,
-                    StarRating = 9m,
+                    StarRating = 5m,
                     Comment = "A brutal, addictive rivalry that stays with you.",
                     CreatedAt = currentDate,
                 },
@@ -1440,7 +1440,7 @@ namespace MovieApp.DataLayer
                 {
                     Movie = whiplash,
                     User = seller2,
-                    StarRating = 8m,
+                    StarRating = 4m,
                     Comment = "Fantastic performances and a soundtrack that demands attention.",
                     CreatedAt = currentDate,
                 });
