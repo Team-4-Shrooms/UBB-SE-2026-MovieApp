@@ -56,32 +56,47 @@
             <div class="alert alert-danger mb-3">@TempData["PurchaseError"]</div>
         }
 
-        @if (Model.UserOwnsMovie)
-        {
-            <button class="btn btn-success btn-lg mb-4" disabled>
-                <i class="bi bi-check-circle-fill me-1"></i> Already Owned
-            </button>
-        }
-        else if (!Model.IsLoggedIn)
-        {
-            <button class="btn btn-secondary btn-lg mb-4" disabled title="You must be logged in to purchase">
-                <i class="bi bi-cart me-1"></i> Buy — $@(Model.Movie.HasActiveSale ? Model.Movie.DiscountedPriceText : Model.Movie.OriginalPriceText)
-            </button>
-        }
-        else
-        {
-            <form asp-action="PurchaseMovie" method="post" class="mb-4">
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="movieId" value="@Model.Movie.Id" />
-                <button type="submit" class="btn btn-primary btn-lg">
-                    <i class="bi bi-cart-fill me-1"></i> Buy — $@(Model.Movie.HasActiveSale ? Model.Movie.DiscountedPriceText : Model.Movie.OriginalPriceText)
+        <div class="d-flex flex-wrap gap-2 mb-4">
+            @if (Model.UserOwnsMovie)
+            {
+                <button class="btn btn-outline-success btn-action" disabled>
+                    <i class="bi bi-check-circle-fill me-1"></i> Already Owned
                 </button>
-            </form>
-        }
+            }
+            else if (!Model.IsLoggedIn)
+            {
+                <button class="btn btn-outline-secondary btn-action" disabled title="You must be logged in to purchase">
+                    <i class="bi bi-cart me-1"></i> Buy — $@(Model.Movie.HasActiveSale ? Model.Movie.DiscountedPriceText : Model.Movie.OriginalPriceText)
+                </button>
+            }
+            else
+            {
+                <form asp-action="PurchaseMovie" method="post" class="m-0">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="movieId" value="@Model.Movie.Id" />
+                    <button type="submit" class="btn btn-outline-primary btn-action">
+                        <i class="bi bi-cart-fill me-1"></i> Buy — $@(Model.Movie.HasActiveSale ? Model.Movie.DiscountedPriceText : Model.Movie.OriginalPriceText)
+                    </button>
+                </form>
+            }
 
-        <a asp-controller="Events" asp-action="Index" asp-route-movieId="@Model.Movie.Id" class="btn btn-outline-secondary btn-lg mb-4 ms-2">
-            <i class="bi bi-calendar-event me-1"></i> View Events
-        </a>
+            <a asp-controller="Events" asp-action="Index" asp-route-movieId="@Model.Movie.Id" class="btn btn-outline-secondary btn-action">
+                <i class="bi bi-calendar-event me-1"></i> View Events
+            </a>
+
+            <a asp-controller="Screening" asp-action="ForMovie" asp-route-id="@Model.Movie.Id" class="btn btn-outline-secondary btn-action">
+                <i class="bi bi-film me-1"></i> View Screenings
+            </a>
+        </div>
+
+        <style>
+            .btn-action {
+                padding: 0.65rem 1.75rem;
+                font-size: 1.05rem;
+                border-radius: 0.5rem;
+                font-weight: 500;
+            }
+        </style>
 
         <h5 class="fw-bold border-bottom pb-2">Synopsis</h5>
         <p class="lead" style="white-space: pre-line;">@Model.Movie.Synopsis</p>
