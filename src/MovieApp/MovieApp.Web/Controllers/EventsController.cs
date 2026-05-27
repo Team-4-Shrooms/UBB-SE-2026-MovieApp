@@ -10,11 +10,13 @@ namespace MovieApp.Web.Controllers
     {
         private readonly IEventService _eventService;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IPriceWatcherService _priceWatcherService;
 
-        public EventsController(IEventService eventService, ICurrentUserService currentUserService)
+        public EventsController(IEventService eventService, ICurrentUserService currentUserService, IPriceWatcherService priceWatcherService)
         {
             _eventService = eventService;
             _currentUserService = currentUserService;
+            _priceWatcherService = priceWatcherService;
         }
 
         public async Task<IActionResult> Index(string? search, int? movieId)
@@ -39,12 +41,8 @@ namespace MovieApp.Web.Controllers
 
             var userId = _currentUserService.UserId;
             ViewBag.HasTicket = await _eventService.UserHasTicketAsync(userId, id);
-            
-            // For sold out logic, we need to check capacity vs sold tickets.
-            // Since we don't have a direct count in IEventService yet, we'll assume it's handled or we'll add it.
-            // For now, let's assume we can check capacity.
-            // In a real app, I'd add GetSoldTicketsCountAsync to IEventService.
-            
+            ViewBag.IsWatching = await _priceWatcherService.IsWatchingAsync(id);
+
             return View(movieEvent);
         }
 

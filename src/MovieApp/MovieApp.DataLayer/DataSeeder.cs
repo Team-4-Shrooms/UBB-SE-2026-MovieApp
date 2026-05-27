@@ -42,6 +42,8 @@ namespace MovieApp.DataLayer
             await SeedMovieEventsAsync();
             await SeedMovieReviewsAsync();
             await SeedEquipmentAsync();
+            await SeedScreeningsAndRoomsAsync();
+            await SeedAdditionalRoomsAsync();
             await FixExistingDataAsync();
             await SeedTriviaQuestionsAsync();
         }
@@ -1830,6 +1832,92 @@ namespace MovieApp.DataLayer
             }
 
             if (zeroCapacityEvents.Any() || lowBalanceUsers.Any())
+            {
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task SeedScreeningsAndRoomsAsync()
+        {
+            if (await _context.Screenings.AnyAsync())
+            {
+                return;
+            }
+
+            var firstMovie = await _context.Movies.FirstOrDefaultAsync();
+            var firstUser = await _context.Users.FirstOrDefaultAsync();
+            if (firstMovie is null || firstUser is null)
+            {
+                return;
+            }
+
+            var cinemaEvent = new Event
+            {
+                Id = 0,
+                Title = "Demo Screening Event",
+                EventDateTime = DateTime.UtcNow.AddDays(7),
+                LocationReference = "Hall A",
+                TicketPrice = 12.50m,
+                MaxCapacity = 100,
+                CreatorUserId = firstUser.Id,
+            };
+            _context.Events.Add(cinemaEvent);
+            await _context.SaveChangesAsync();
+
+            var room = new Room
+            {
+                EventId = cinemaEvent.Id,
+                Name = "Hall A",
+                Rows = 5,
+                Columns = 8,
+            };
+            _context.Rooms.Add(room);
+            await _context.SaveChangesAsync();
+
+            var screening = new Screening
+            {
+                Id = 0,
+                EventId = cinemaEvent.Id,
+                MovieId = firstMovie.Id,
+                RoomId = room.Id,
+                ScreeningTime = cinemaEvent.EventDateTime,
+            };
+            _context.Screenings.Add(screening);
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task SeedAdditionalRoomsAsync()
+        {
+            var demoEvent = await _context.Events.FirstOrDefaultAsync(e => e.Title == "Demo Screening Event");
+            if (demoEvent is null)
+            {
+                return;
+            }
+
+            var desiredRooms = new[]
+            {
+                new Room { EventId = demoEvent.Id, Name = "Hall B (IMAX)", Rows = 8, Columns = 10 },
+                new Room { EventId = demoEvent.Id, Name = "Hall C (Premium)", Rows = 4, Columns = 6 },
+                new Room { EventId = demoEvent.Id, Name = "Hall D (Small)", Rows = 3, Columns = 5 },
+                new Room { EventId = demoEvent.Id, Name = "Hall E (Standard)", Rows = 6, Columns = 9 },
+            };
+
+            bool addedAny = false;
+            foreach (var desired in desiredRooms)
+            {
+                bool exists = await _context.Rooms.AnyAsync(r => r.EventId == desired.EventId && r.Name == desired.Name);
+                if (!exists)
+                {
+                    if (desired.Rows * desired.Columns > demoEvent.MaxCapacity)
+                    {
+                        demoEvent.MaxCapacity = desired.Rows * desired.Columns;
+                    }
+                    _context.Rooms.Add(desired);
+                    addedAny = true;
+                }
+            }
+
+            if (addedAny)
             {
                 await _context.SaveChangesAsync();
             }

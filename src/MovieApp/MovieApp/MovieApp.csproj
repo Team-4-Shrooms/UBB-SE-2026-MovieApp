@@ -193,6 +193,7 @@
         <None Remove="Features\ReelsUpload\Views\ReelsUploadPage.xaml" />
         <None Remove="Features\TrailerScraping\Views\TrailerScrapingPage.xaml" />
         <None Remove="Features\Wallet\Views\WalletPage.xaml" />
+        <None Remove="Features\BattlesBet\Views\BattlePage.xaml" />
         <None Remove="Features\Ambassadors\Views\AmbassadorPage.xaml" />
     </ItemGroup>
     <ItemGroup>
@@ -248,6 +249,9 @@
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Features\MovieSwipe\Views\MovieSwipePage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Features\BattlesBet\Views\BattlePage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Features\Ambassadors\Views\AmbassadorPage.xaml">
