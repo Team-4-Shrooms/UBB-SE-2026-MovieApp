@@ -29,6 +29,9 @@ var config = builder.Configuration;
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        // Disable ASP.NET Core's default claim-type remapping so that "sub" stays
+        // as "sub" rather than being renamed to ClaimTypes.NameIdentifier.
+        options.MapInboundClaims = false;
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
@@ -141,6 +144,12 @@ builder.Services.AddScoped<IPriceWatcherRepository>(serviceProvider => servicePr
 builder.Services.AddScoped<AmbassadorRepository>();
 builder.Services.AddScoped<IAmbassadorRepository>(serviceProvider => serviceProvider.GetRequiredService<AmbassadorRepository>());
 
+builder.Services.AddScoped<UserSlotMachineStateRepository>();
+builder.Services.AddScoped<IUserSlotMachineStateRepository>(serviceProvider => serviceProvider.GetRequiredService<UserSlotMachineStateRepository>());
+
+builder.Services.AddScoped<UserMovieDiscountRepository>();
+builder.Services.AddScoped<IUserMovieDiscountRepository>(serviceProvider => serviceProvider.GetRequiredService<UserMovieDiscountRepository>());
+
 // Core services
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IEquipmentService, EquipmentService>();
@@ -174,6 +183,7 @@ builder.Services.AddScoped<IReferralCodeGenerator, ReferralCodeGenerator>();
 builder.Services.AddScoped<IAmbassadorService, AmbassadorService>();
 
 builder.Services.AddScoped<IPriceWatcherService, PriceWatcherService>();
+builder.Services.AddScoped<ISlotMachineService, SlotMachineService>();
 
 // External review providers (P2)
 builder.Services.Configure<ExternalReviewsOptions>(

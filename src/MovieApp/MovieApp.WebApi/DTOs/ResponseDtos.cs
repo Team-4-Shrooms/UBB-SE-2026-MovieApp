@@ -283,7 +283,7 @@ public sealed class SlotMachineResultDto
     public GenreDto Genre { get; set; } = new GenreDto();
     public ActorDto Actor { get; set; } = new ActorDto();
     public DirectorDto Director { get; set; } = new DirectorDto();
-    public List<EventDto> MatchingEvents { get; set; } = new List<EventDto>();
+    public List<MovieEventDto> MatchingEvents { get; set; } = new List<MovieEventDto>();
     public HashSet<int> JackpotEventIds { get; set; } = new HashSet<int>();
     public MovieReferenceDto? JackpotMovie { get; set; }
     public bool JackpotDiscountApplied { get; set; }

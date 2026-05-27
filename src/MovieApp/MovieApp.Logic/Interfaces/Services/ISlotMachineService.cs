@@ -95,7 +95,7 @@ public interface ISlotMachineService
     /// <param name="actorIdentifier">The unique identifier of the actor.</param>
     /// <param name="directorIdentifier">The unique identifier of the director.</param>
     /// <returns>A list of events matching all criteria.</returns>
-    Task<IReadOnlyList<Event>> GetMatchingEventsAsync(int genreIdentifier, int actorIdentifier, int directorIdentifier);
+    Task<IReadOnlyList<MovieEvent>> GetMatchingEventsAsync(int genreIdentifier, int actorIdentifier, int directorIdentifier);
 
     /// <summary>
     /// Finds a specific movie that matches the jackpot criteria for the given reel identifiers.
