@@ -2,7 +2,6 @@ using MovieApp.Logic.Models;
 
 namespace MovieApp.Web.Models
 {
-
     public class SlotMachineIndexViewModel
     {
         public int AvailableSpins { get; set; }
@@ -11,6 +10,6 @@ namespace MovieApp.Web.Models
         public int LoginStreak { get; set; }
         public SlotMachineResult? LastResult { get; set; }
         public string? StatusMessage { get; set; }
-        public bool CanSpin => this.AvailableSpins > 0;
+        public bool CanSpin => AvailableSpins > 0;
     }
 }

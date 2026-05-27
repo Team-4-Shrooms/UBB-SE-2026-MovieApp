@@ -2,29 +2,27 @@ using Microsoft.AspNetCore.Mvc;
 using MovieApp.Logic.Interfaces.Services;
 using MovieApp.Web.Models;
 
-
 namespace MovieApp.Web.Controllers
 {
     public class SlotMachineController : Controller
     {
-        private readonly ISlotMachineService slotMachineService;
-        private readonly ICurrentUserService currentUserService;
+        private readonly ISlotMachineService _slotMachineService;
+        private readonly ICurrentUserService _currentUserService;
 
         public SlotMachineController(
             ISlotMachineService slotMachineService,
             ICurrentUserService currentUserService)
         {
-            this.slotMachineService = slotMachineService;
-            this.currentUserService = currentUserService;
+            _slotMachineService = slotMachineService;
+            _currentUserService = currentUserService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            //await this.currentUserService.InitializeAsync();
-            var userId = this.currentUserService.UserId;
+            var userId = _currentUserService.UserId;
 
-            var viewModel = await this.BuildViewModelAsync(userId);
+            var viewModel = await BuildViewModelAsync(userId);
             viewModel.StatusMessage = TempData["StatusMessage"] as string;
             return View(viewModel);
         }
@@ -33,10 +31,9 @@ namespace MovieApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Spin()
         {
-            //await this.currentUserService.InitializeAsync();
-            var userId = this.currentUserService.UserId;
+            var userId = _currentUserService.UserId;
 
-            var viewModel = await this.BuildViewModelAsync(userId);
+            var viewModel = await BuildViewModelAsync(userId);
 
             if (!viewModel.CanSpin)
             {
@@ -46,10 +43,10 @@ namespace MovieApp.Web.Controllers
 
             try
             {
-                var result = await this.slotMachineService.SpinAsync(userId);
+                var result = await _slotMachineService.SpinAsync(userId);
 
                 // Re-fetch state so the displayed spin counter reflects the post-spin total.
-                viewModel = await this.BuildViewModelAsync(userId);
+                viewModel = await BuildViewModelAsync(userId);
                 viewModel.LastResult = result;
 
                 viewModel.StatusMessage = result.JackpotDiscountApplied
@@ -69,8 +66,8 @@ namespace MovieApp.Web.Controllers
 
         private async Task<SlotMachineIndexViewModel> BuildViewModelAsync(int userId)
         {
-            var state = await this.slotMachineService.GetUserSpinStateAsync(userId);
-            var available = await this.slotMachineService.GetAvailableSpinsAsync(userId);
+            var state = await _slotMachineService.GetUserSpinStateAsync(userId);
+            var available = await _slotMachineService.GetAvailableSpinsAsync(userId);
 
             return new SlotMachineIndexViewModel
             {

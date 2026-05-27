@@ -67,9 +67,9 @@
 @if (!string.IsNullOrEmpty(Model.StatusMessage))
 {
 	var alertClass = Model.LastResult?.JackpotDiscountApplied == true ? "alert-success" : "alert-info";
-		<div class="alert @alertClass text-center py-3 box-shadow fw-semibold mb-4">
+	<div class="alert @alertClass text-center py-3 box-shadow fw-semibold mb-4">
 		@Model.StatusMessage
-		</div>
+	</div>
 }
 
 @* -- Slots Reels Grid ------------------------------------------------------ *@
@@ -120,42 +120,39 @@
 	@* -- Jackpot Banner Mode -- *@
 	if (Model.LastResult.JackpotDiscountApplied && Model.LastResult.JackpotMovie is not null)
 	{
-				<div class="card mb-4 border-warning box-shadow bg-light">
-					<div class="card-body text-center py-4">
-						<div class="jackpot-badge box-shadow mb-3">JACKPOT</div>
-						<h3 class="fw-bold mb-2">@Model.LastResult.JackpotMovie.Title</h3>
-						<p class="lead text-muted mb-0">
-							You won a <span class="badge bg-danger fs-5">@Model.LastResult.DiscountPercentage%</span> discount on this movie choice!
-						</p>
-					</div>
-				</div>
+		<div class="card mb-4 border-warning box-shadow bg-light">
+			<div class="card-body text-center py-4">
+				<div class="jackpot-badge box-shadow mb-3">JACKPOT</div>
+				<h3 class="fw-bold mb-2">@Model.LastResult.JackpotMovie.Title</h3>
+				<p class="lead text-muted mb-0">
+					You won a <span class="badge bg-danger fs-5">@Model.LastResult.DiscountPercentage%</span> discount on this movie choice!
+				</p>
+			</div>
+		</div>
 	}
 
 	@* -- Core Event Matching Layout Matrix -- *@
 	if (Model.LastResult.MatchingEvents.Any())
 	{
-				<h4 class="fw-bold mb-3">Matching Screenings</h4>
-				<div class="card box-shadow rounded-3 overflow-hidden mb-4">
-					<div class="list-group list-group-flush">
+		<h4 class="fw-bold mb-3">Matching Screenings</h4>
+		<div class="card box-shadow rounded-3 overflow-hidden mb-4">
+			<div class="list-group list-group-flush">
 				@foreach (var ev in Model.LastResult.MatchingEvents)
 				{
 					var isJackpotEvent = Model.LastResult.JackpotEventIds.Contains(ev.Id);
-								<div class="list-group-item d-flex justify-content-between align-items-center py-3 @(isJackpotEvent ? "bg-warning-subtle list-group-item-warning" : "")">
-									<div>
-										<div class="fw-bold fs-5 text-dark">@ev.Title</div>
-										<div class="small text-muted"><i class="bi bi-clock me-1"></i> @ev.Date.ToString("MMM dd, yyyy HH:mm")</div>
-									</div>
+					<div class="list-group-item d-flex justify-content-between align-items-center py-3 @(isJackpotEvent ? "bg-warning-subtle list-group-item-warning" : "")">
+						<div>
+							<div class="fw-bold fs-5 text-dark">@ev.Title</div>
+							<div class="small text-muted"><i class="bi bi-clock me-1"></i> @ev.Date.ToString("MMM dd, yyyy HH:mm")</div>
+						</div>
 						@if (isJackpotEvent)
 						{
-											<span class="badge bg-warning text-dark px-3 py-2 fw-bold box-shadow">Jackpot Target</span>
+							<span class="badge bg-warning text-dark px-3 py-2 fw-bold box-shadow">Jackpot Target</span>
 						}
-								</div>
-				}
 					</div>
-				</div>
-	}
-	else if (!Model.LastResult.JackpotDiscountApplied)
-	{
+				}
+			</div>
+		</div>
 	}
 }
 
