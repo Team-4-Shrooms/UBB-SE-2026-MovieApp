@@ -5,6 +5,7 @@
     var hasTicket = (bool)ViewBag.HasTicket;
     var soldTickets = 0; // Assumption
     var isSoldOut = (Model.Capacity - soldTickets) <= 0;
+    var isWatching = ViewBag.IsWatching is bool b && b;
 }
 
 <div class="container mt-5">
@@ -108,6 +109,29 @@
                                 <input type="hidden" name="eventId" value="@Model.Id" />
                                 <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill py-3 shadow-lg purchase-btn">
                                     <i class="bi bi-ticket-detailed-fill me-2"></i> Buy Ticket Now
+                                </button>
+                            </form>
+                        }
+                    </div>
+
+                    <div class="mt-3">
+                        @if (isWatching)
+                        {
+                            <form asp-controller="PriceWatcher" asp-action="Unwatch" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="watchId" value="@Model.Id" />
+                                <button type="submit" class="btn btn-outline-warning btn-lg w-100 rounded-pill py-3">
+                                    <i class="bi bi-bell-slash me-2"></i> Unwatch Price
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form asp-controller="PriceWatcher" asp-action="Watch" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="eventId" value="@Model.Id" />
+                                <button type="submit" class="btn btn-outline-info btn-lg w-100 rounded-pill py-3">
+                                    <i class="bi bi-bell me-2"></i> Watch Price
                                 </button>
                             </form>
                         }

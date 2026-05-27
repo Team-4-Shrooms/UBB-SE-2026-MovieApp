@@ -8,6 +8,7 @@ using MovieApp.DataLayer.Interfaces;
 using MovieApp.DataLayer.Interfaces.Repositories;
 using MovieApp.DataLayer.Repositories;
 using MovieApp.Logic.Interfaces.Services;
+using MovieApp.Logic.Services;
 using MovieApp.Proxy;
 using MovieApp.Proxy.Services;
 using MovieApp.Auth;
@@ -16,7 +17,13 @@ using MovieApp.Features.Marketplace.ViewModels;
 using MovieApp.Features.Notification.ViewModels;
 using MovieApp.Features.SlotMachine.ViewModels;
 using MovieApp.Features.Marathon.ViewModels;
+using MovieApp.Features.Referrals.ViewModels;
 using MovieApp.Features.Wallet.ViewModels;
+using MovieApp.Features.BattlesBet.ViewModels;
+using MovieApp.Features.Screenings.ViewModels;
+using MovieApp.Features.Ambassadors.ViewModels;
+using MovieApp.Features.Badges.ViewModels;
+using MovieApp.Features.Leaderboard.ViewModels;
 
 namespace MovieApp
 {
@@ -63,12 +70,15 @@ namespace MovieApp
             services.AddTransient<ITransactionRepository, TransactionRepository>();
             services.AddTransient<IProfileRepository, ProfileRepository>();
             services.AddTransient<IMovieTournamentRepository, MovieTournamentRepository>();
+            services.AddTransient<ITriviaRepository, TriviaRepository>();
+            services.AddTransient<ITriviaRewardRepository, TriviaRewardRepository>();
 
             // Auth — login to WebApi and get JWT token.
             // Task.Run avoids deadlocking the WinUI UI thread's sync context.
             var authProvider = new WinUiAuthTokenProvider();
             Task.Run(() => authProvider.InitializeAsync()).GetAwaiter().GetResult();
             services.AddSingleton<IAuthTokenProvider>(authProvider);
+            services.AddSingleton<ICurrentUserService>(authProvider);
 
             // HTTP client + ApiClient
             var httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:4544/") };
@@ -94,7 +104,7 @@ namespace MovieApp
             services.AddTransient<IReelService, ReelProxyService>();
             services.AddTransient<INotificationService, NotificationProxyService>();
             services.AddTransient<ISlotMachineService, SlotMachineProxyService>();
-            //services.AddTransient<IScreeningService, ScreeningProxyService>();
+            services.AddTransient<IScreeningService, ScreeningProxyService>();
             services.AddTransient<IBookingService, BookingProxyService>();
             services.AddTransient<IReferralLogService, ReferralProxyService>();
             services.AddTransient<IReferralValidator, ReferralProxyService>();
@@ -102,6 +112,11 @@ namespace MovieApp
             services.AddTransient<ICommentService, CommentProxyService>();
             services.AddTransient<IAmbassadorService, AmbassadorProxyService>();
             services.AddTransient<IMarathonService, MarathonProxyService>();
+            services.AddTransient<IBadgeService, BadgeProxyService>();
+            services.AddTransient<IUserStatsService, UserStatsProxyService>();
+            services.AddTransient<ITriviaService, TriviaService>();
+            services.AddTransient<ITriviaService, TriviaProxyService>();
+            services.AddTransient<IPriceWatcherService, PriceWatcherProxyService>();
             services.AddTransient<IExternalReviewService, ExternalReviewProxyService>();
 
             // Reels Upload
@@ -158,7 +173,25 @@ namespace MovieApp
             services.AddTransient<SlotMachineViewModel>();
 
             // Ambassadors
-            services.AddTransient<MovieApp.Features.Ambassadors.ViewModels.AmbassadorViewModel>();
+            services.AddTransient<AmbassadorViewModel>();
+
+            // Badges and Leaderboard
+            services.AddTransient<BadgeViewModel>();
+            services.AddTransient<LeaderboardViewModel>();
+
+            // Screenings
+            services.AddTransient<ScreeningViewModel>();
+
+            // Movie detail comments
+            services.AddTransient<MovieApp.Features.MovieDetail.ViewModels.MovieDetailViewModel>();
+
+            // Battles
+            services.AddTransient<BattleViewModel>();
+            // Price Watchers
+            services.AddTransient<MovieApp.Features.PriceWatcher.ViewModels.PriceWatcherViewModel>();
+
+            // Referrals
+            services.AddTransient<ReferralViewModel>();
 
             var provider = services.BuildServiceProvider();
             Services = provider;

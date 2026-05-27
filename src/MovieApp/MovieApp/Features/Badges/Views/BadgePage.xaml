@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="MovieApp.Features.Badges.Views.BadgePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MovieApp.Features.Badges.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:MovieApp.DataLayer.Models"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <ScrollViewer Padding="24">
+        <StackPanel Spacing="20">
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="My Badges"
+                           Style="{ThemeResource TitleTextBlockStyle}" />
+                <TextBlock Text="Achievements you have earned across the platform."
+                           FontSize="14" Opacity="0.6" />
+            </StackPanel>
+
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="16">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Your Stats"
+                               Style="{ThemeResource SubtitleTextBlockStyle}" />
+                    <Grid ColumnSpacing="24">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Spacing="2">
+                            <TextBlock Text="Total points"
+                                       FontSize="12"
+                                       Opacity="0.6" />
+                            <TextBlock Text="{x:Bind ViewModel.Stats.TotalPoints, Mode=OneWay, FallbackValue=0}"
+                                       FontSize="24"
+                                       FontWeight="SemiBold" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="2">
+                            <TextBlock Text="Weekly score"
+                                       FontSize="12"
+                                       Opacity="0.6" />
+                            <TextBlock Text="{x:Bind ViewModel.Stats.WeeklyScore, Mode=OneWay, FallbackValue=0}"
+                                       FontSize="24"
+                                       FontWeight="SemiBold" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <StackPanel Spacing="8">
+                <TextBlock Text="Earned Badges"
+                           Style="{ThemeResource SubtitleTextBlockStyle}" />
+
+                <ItemsRepeater ItemsSource="{x:Bind ViewModel.Badges, Mode=OneWay}">
+                    <ItemsRepeater.Layout>
+                        <UniformGridLayout MinItemWidth="220"
+                                           MinItemHeight="120"
+                                           MinRowSpacing="12"
+                                           MinColumnSpacing="12" />
+                    </ItemsRepeater.Layout>
+                    <ItemsRepeater.ItemTemplate>
+                        <DataTemplate x:DataType="models:UserBadge">
+                            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="10"
+                                    Padding="16">
+                                <StackPanel Spacing="6">
+                                    <FontIcon Glyph="&#xE735;"
+                                              FontSize="22"
+                                              HorizontalAlignment="Left" />
+                                    <TextBlock Text="{x:Bind Badge.Name, FallbackValue=''}"
+                                               FontWeight="SemiBold"
+                                               FontSize="15"
+                                               TextWrapping="WrapWholeWords" />
+                                    <TextBlock Text="{x:Bind Badge.Description, FallbackValue=''}"
+                                               FontSize="12"
+                                               Opacity="0.6"
+                                               TextWrapping="WrapWholeWords" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                </ItemsRepeater>
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>

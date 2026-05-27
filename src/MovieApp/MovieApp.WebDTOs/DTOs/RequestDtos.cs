@@ -255,53 +255,66 @@ public sealed class BookSeatsRequestBody
     public List<SeatRequest> Seats { get; set; } = new();
 }
 
-public sealed class CreateAmbassadorProfileRequestBody
+public sealed class CancelBookingRequestBody
 {
     public int UserId { get; set; }
     public string Code { get; set; } = string.Empty;
-}
-
-public sealed class AddReferralLogRequestBody
-{
-    public int AmbassadorId { get; set; }
-    public int FriendId { get; set; }
-    public int EventId { get; set; }
-}
-
-public sealed class ApplyRewardRequestBody
-{
-    public int AmbassadorId { get; set; }
-}
-
-public class PlaceBetRequest
-{
-    public int MovieId { get; set; }
-    public int Amount { get; set; }
-}
-
-public class PlaceBattleRequest
-{
-    public int FirstMovieId { get; set; }
-    public int SecondMovieId { get; set; }
-}
-
-public sealed class AddCommentRequest
-{
-    public int UserId { get; set; }
-    public string Content { get; set; } = string.Empty;
-}
-
-public sealed class ReplyCommentRequest
-{
-    public int UserId { get; set; }
-    public string Content { get; set; } = string.Empty;
-}
-
-
-
-public class ProcessReferralRequestBody
-{
     public string ReferralCode { get; set; } = string.Empty;
-    public int FriendId { get; set; }
-    public int EventId { get; set; }
 }
+
+public sealed class CreateScreeningRequestBody
+{
+    public int EventId { get; set; }
+    public int MovieId { get; set; }
+    public int RoomId { get; set; }
+    public System.DateTime ScreeningTime { get; set; }
+    public decimal TicketPrice { get; set; }
+}
+    public sealed class CreateAmbassadorProfileRequestBody
+    {
+        public int UserId { get; set; }
+        public string Code { get; set; } = string.Empty;
+    }
+
+    public sealed class AddReferralLogRequestBody
+    {
+        public int AmbassadorId { get; set; }
+        public int FriendId { get; set; }
+        public int EventId { get; set; }
+    }
+
+    public sealed class ApplyRewardRequestBody
+    {
+        public int AmbassadorId { get; set; }
+    }
+
+    public class PlaceBetRequest
+    {
+        public int MovieId { get; set; }
+        public int Amount { get; set; }
+    }
+
+    public class PlaceBattleRequest
+    {
+        public int FirstMovieId { get; set; }
+        public int SecondMovieId { get; set; }
+    }
+
+    public sealed class AddCommentRequest
+    {
+        public int UserId { get; set; }
+        public string Content { get; set; } = string.Empty;
+    }
+
+    public sealed class ReplyCommentRequest
+    {
+        public int UserId { get; set; }
+        public string Content { get; set; } = string.Empty;
+    }
+
+    public class ProcessReferralRequestBody
+    {
+        public string ReferralCode { get; set; } = string.Empty;
+        public int FriendId { get; set; }
+        public int EventId { get; set; }
+    }
