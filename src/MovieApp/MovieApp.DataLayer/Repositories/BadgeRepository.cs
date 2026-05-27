@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using MovieApp.DataLayer.Interfaces;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,34 +10,63 @@ namespace MovieApp.DataLayer.Repositories
 {
     public sealed class BadgeRepository : IBadgeRepository
     {
-        public Task<List<Badge>> GetAllAsync(CancellationToken cancellationToken = default)
+        private readonly IMovieAppDbContext _context;
+
+        public BadgeRepository(IMovieAppDbContext context)
         {
-            return Task.FromResult(new List<Badge>());
+            _context = context;
         }
 
-        public Task<Badge?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<List<Badge>> GetAllAsync(CancellationToken ct = default)
         {
-            return Task.FromResult<Badge?>(null);
+            return await _context.Badges
+                .AsNoTracking()
+                .ToListAsync(ct);
         }
 
-        public Task<int> InsertAsync(Badge badge, CancellationToken cancellationToken = default)
+        public async Task<Badge?> GetByIdAsync(int id, CancellationToken ct = default)
         {
-            return Task.FromResult(0);
+            return await _context.Badges
+                .AsNoTracking()
+                .FirstOrDefaultAsync(badge => badge.BadgeId == id, ct);
         }
 
-        public Task<bool> UpdateAsync(Badge badge, CancellationToken cancellationToken = default)
+        public async Task<int> InsertAsync(Badge badge, CancellationToken ct = default)
         {
-            return Task.FromResult(false);
+            await _context.Badges.AddAsync(badge, ct);
+            await _context.SaveChangesAsync(ct);
+            return badge.BadgeId;
         }
 
-        public Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<bool> UpdateAsync(Badge badge, CancellationToken ct = default)
         {
-            return Task.FromResult(false);
+            _context.Badges.Update(badge);
+            int rows = await _context.SaveChangesAsync(ct);
+            return rows > 0;
         }
 
-        public Task<List<Badge>> GetBadgesForUserAsync(int userId, CancellationToken cancellationToken = default)
+        public async Task<bool> DeleteAsync(int id, CancellationToken ct = default)
         {
-            return Task.FromResult(new List<Badge>());
+            Badge? badge = await _context.Badges
+                .FirstOrDefaultAsync(b => b.BadgeId == id, ct);
+            if (badge is null)
+            {
+                return false;
+            }
+
+            _context.Badges.Remove(badge);
+            int rows = await _context.SaveChangesAsync(ct);
+            return rows > 0;
+        }
+
+        public async Task<List<Badge>> GetBadgesForUserAsync(int userId, CancellationToken ct = default)
+        {
+            return await _context.UserBadges
+                .AsNoTracking()
+                .Include(ub => ub.Badge)
+                .Where(ub => ub.User != null && ub.User.Id == userId && ub.Badge != null)
+                .Select(ub => ub.Badge!)
+                .ToListAsync(ct);
         }
     }
 }

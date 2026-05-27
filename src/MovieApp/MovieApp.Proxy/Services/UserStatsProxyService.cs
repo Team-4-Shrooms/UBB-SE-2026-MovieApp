@@ -19,5 +19,32 @@ namespace MovieApp.Proxy.Services
         {
             return await _apiClient.GetAsync<UserStats?>($"{_baseEndpoint}/{userId}", cancellationToken);
         }
+
+        public async Task<List<UserStats>> GetAllAsync(CancellationToken ct = default)
+        {
+            return await _apiClient.GetAsync<List<UserStats>>(_baseEndpoint, ct) ?? new List<UserStats>();
+        }
+
+        public async Task<int> InsertAsync(UserStats userStats, CancellationToken ct = default)
+        {
+            return await _apiClient.PostAsync<UserStats, int>(_baseEndpoint, userStats, ct);
+        }
+
+        public async Task<bool> UpdateAsync(UserStats userStats, CancellationToken ct = default)
+        {
+            await _apiClient.PutAsync($"{_baseEndpoint}/{userStats.UserStatsId}", userStats, ct);
+            return true;
+        }
+
+        public async Task<bool> DeleteAsync(int id, CancellationToken ct = default)
+        {
+            await _apiClient.DeleteAsync($"{_baseEndpoint}/{id}", ct);
+            return true;
+        }
+
+        public async Task<IList<UserStats>> GetLeaderboardAsync(CancellationToken ct = default)
+        {
+            return await _apiClient.GetAsync<List<UserStats>>($"{_baseEndpoint}/leaderboard", ct) ?? new List<UserStats>();
+        }
     }
 }

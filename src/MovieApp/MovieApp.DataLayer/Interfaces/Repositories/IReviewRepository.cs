@@ -12,6 +12,12 @@ namespace MovieApp.DataLayer.Interfaces.Repositories
         Task<Dictionary<int, int>> GetReviewCountsAsync(IEnumerable<int> movieIds);
         Task AddReviewAsync(MovieReview review);
         Task<int> SaveChangesAsync();
+
+        /// <summary>Returns the number of reviews written by a specific user.</summary>
+        Task<int> GetReviewCountByUserIdAsync(int userId, CancellationToken ct = default);
+
+        /// <summary>Returns all reviews written by a specific user, with Movie and Genres loaded.</summary>
+        Task<List<Review>> GetReviewsByUserIdAsync(int userId, CancellationToken ct = default);
     }
 }
 

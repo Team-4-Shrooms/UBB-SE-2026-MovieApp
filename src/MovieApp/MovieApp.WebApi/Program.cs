@@ -134,6 +134,9 @@ builder.Services.AddScoped<IBetRepository>(serviceProvider => serviceProvider.Ge
 builder.Services.AddScoped<BadgeRepository>();
 builder.Services.AddScoped<IBadgeRepository>(serviceProvider => serviceProvider.GetRequiredService<BadgeRepository>());
 
+builder.Services.AddScoped<UserBadgeRepository>();
+builder.Services.AddScoped<IUserBadgeRepository>(serviceProvider => serviceProvider.GetRequiredService<UserBadgeRepository>());
+
 builder.Services.AddScoped<UserStatsRepository>();
 builder.Services.AddScoped<IUserStatsRepository>(serviceProvider => serviceProvider.GetRequiredService<UserStatsRepository>());
 
@@ -182,11 +185,11 @@ builder.Services.AddScoped<IAudioLibraryService, AudioLibraryService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IScrapeJobService, ScrapeJobService>();
-builder.Services.AddScoped<IReelService, ReelService>();
 builder.Services.AddScoped<IBattleService, BattleService>();
 builder.Services.AddScoped<IPointService, PointService>();
 builder.Services.AddScoped<IBadgeService, BadgeService>();
 builder.Services.AddScoped<IUserStatsService, UserStatsService>();
+builder.Services.AddScoped<IReelService, ReelService>();
 builder.Services.AddScoped<IMarathonService, MarathonService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<ITriviaService, TriviaService>();

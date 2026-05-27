@@ -15,9 +15,38 @@ namespace MovieApp.Logic.Services
             _userStatsRepository = userStatsRepository;
         }
 
-        public Task<UserStats?> GetByUserIdAsync(int userId, CancellationToken cancellationToken = default)
+        public async Task<UserStats?> GetByUserIdAsync(int userId, CancellationToken ct = default)
         {
-            return _userStatsRepository.GetByUserIdAsync(userId, cancellationToken);
+            return await _userStatsRepository.GetByUserIdAsync(userId, ct);
+        }
+
+        public async Task<List<UserStats>> GetAllAsync(CancellationToken ct = default)
+        {
+            return await _userStatsRepository.GetAllAsync(ct);
+        }
+
+        public async Task<int> InsertAsync(UserStats userStats, CancellationToken ct = default)
+        {
+            return await _userStatsRepository.InsertAsync(userStats, ct);
+        }
+
+        public async Task<bool> UpdateAsync(UserStats userStats, CancellationToken ct = default)
+        {
+            return await _userStatsRepository.UpdateAsync(userStats, ct);
+        }
+
+        public async Task<bool> DeleteAsync(int id, CancellationToken ct = default)
+        {
+            return await _userStatsRepository.DeleteAsync(id, ct);
+        }
+
+        /// <summary>
+        /// Returns all user stats ordered by TotalPoints descending.
+        /// Uses a single OrderByDescending — no N+1 queries.
+        /// </summary>
+        public async Task<IList<UserStats>> GetLeaderboardAsync(CancellationToken ct = default)
+        {
+            return await _userStatsRepository.GetLeaderboardAsync(ct);
         }
     }
 }
