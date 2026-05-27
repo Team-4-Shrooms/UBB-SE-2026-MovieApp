@@ -64,6 +64,7 @@ builder.Services.AddTransient<IReferralCodeGenerator, ReferralProxyService>();
 builder.Services.AddTransient<ICommentService, CommentProxyService>();
 builder.Services.AddTransient<IAmbassadorService, AmbassadorProxyService>();
 builder.Services.AddTransient<IMarathonService, MarathonProxyService>();
+builder.Services.AddTransient<IUserService, UserProxyService>();
 builder.Services.AddTransient<IBadgeService, BadgeProxyService>();
 builder.Services.AddTransient<IUserStatsService, UserStatsProxyService>();
 builder.Services.AddTransient<ITriviaService, TriviaProxyService>();

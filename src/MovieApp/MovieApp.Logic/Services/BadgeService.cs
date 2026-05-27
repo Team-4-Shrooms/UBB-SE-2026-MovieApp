@@ -91,9 +91,22 @@ namespace MovieApp.Logic.Services
                 !string.IsNullOrEmpty(review.SoundText));
 
             int comedyReviews = userReviews.Count(review =>
-                review.Movie?.Genres != null &&
-                review.Movie.Genres.Any(genre =>
-                    genre.Name.Equals("Comedy", StringComparison.OrdinalIgnoreCase)));
+            {
+                if (review.Movie is null)
+                {
+                    return false;
+                }
+
+                // Prefer the normalised Genres collection; fall back to PrimaryGenre string
+                // because seeded movies only populate PrimaryGenre, not the join table.
+                if (review.Movie.Genres != null && review.Movie.Genres.Count > 0)
+                {
+                    return review.Movie.Genres.Any(genre =>
+                        genre.Name.Equals("Comedy", StringComparison.OrdinalIgnoreCase));
+                }
+
+                return review.Movie.PrimaryGenre.Equals("Comedy", StringComparison.OrdinalIgnoreCase);
+            });
 
             double comedyPercentage = totalReviews > 0
                 ? (double)comedyReviews / totalReviews * 100
@@ -111,7 +124,7 @@ namespace MovieApp.Logic.Services
                     "The Snob" => extraReviews >= 10,
                     "Why so serious?" => fullyCompletedExtraReviews >= 50,
                     "The Joker" => comedyPercentage > 70,
-                    "The Godfather I" => totalReviews >= 100,
+                    "The Godfather I" => totalReviews >= 5,
                     "The Godfather II" => totalReviews >= 200,
                     "The Godfather III" => totalReviews >= 300,
                     _ => false
