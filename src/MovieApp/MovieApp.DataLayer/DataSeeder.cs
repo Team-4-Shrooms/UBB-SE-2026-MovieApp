@@ -1537,15 +1537,15 @@ namespace MovieApp.DataLayer
             }
 
             // Look up movie IDs for movie-specific questions.
-            Movie? inception = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Inception");
-            Movie? darkKnight = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Dark Knight");
-            Movie? matrix = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Matrix");
-            Movie? interstellar = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Interstellar");
-            Movie? pulpFiction = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Pulp Fiction");
-            Movie? godfather = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Godfather");
-            Movie? shawshank = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Shawshank Redemption");
-            Movie? forrestGump = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Forrest Gump");
-            Movie? laLaLand = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "La La Land");
+            Movie? inception = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Inception");
+            Movie? darkKnight = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "The Dark Knight");
+            Movie? matrix = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "The Matrix");
+            Movie? interstellar = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Interstellar");
+            Movie? pulpFiction = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Pulp Fiction");
+            Movie? godfather = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "The Godfather");
+            Movie? shawshank = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "The Shawshank Redemption");
+            Movie? forrestGump = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Forrest Gump");
+            Movie? laLaLand = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "La La Land");
 
             var questions = new List<TriviaQuestion>();
 
