@@ -38,8 +38,6 @@ public sealed class SwipeIntegrationTests
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
-    // QA task refers to this as "GET /api/swipe/recommendations";
-    // the actual endpoint is GET /api/recommendations/users/{userId}/recommended-reels/count={n}.
     [Fact]
     public async Task GetRecommendedReels_SeededUser_ReturnsNonEmptyList()
     {
@@ -51,7 +49,6 @@ public sealed class SwipeIntegrationTests
         Assert.NotEmpty(recommendations);
     }
 
-    // Regression: like swipe changes score by exactly LikeDelta — new model fields must not corrupt it.
     [Fact]
     public async Task PostSwipe_LikeAction_PreferenceScoreIncreasedByExactlyLikeDelta()
     {
@@ -69,7 +66,6 @@ public sealed class SwipeIntegrationTests
         Assert.Equal(initialScore + (decimal)SwipeService.LikeDelta, scoresAfter[ProxyRepoSeedIds.SeededMovieId]);
     }
 
-    // Regression: skip swipe changes score by exactly SkipDelta — new model fields must not corrupt it.
     [Fact]
     public async Task PostSwipe_SkipAction_PreferenceScoreDecreasedByExactlySkipDelta()
     {
