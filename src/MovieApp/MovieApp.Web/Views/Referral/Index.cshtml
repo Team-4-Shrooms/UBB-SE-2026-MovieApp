@@ -1,0 +1,93 @@
+@model MovieApp.Web.Models.ReferralIndexViewModel
+
+@{
+    ViewData["Title"] = "Referral Dashboard";
+}
+
+<div class="container mt-4">
+    <h2>My Referral Dashboard</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Your Referral Code</h5>
+                    @if (!string.IsNullOrEmpty(Model.ReferralCode))
+                    {
+                        <p class="display-6 text-primary">@Model.ReferralCode</p>
+                        <p class="text-muted">Share this code with your friends!</p>
+                    }
+                    else
+                    {
+                        <p>You don't have a referral code yet.</p>
+                        <form asp-action="GenerateCode" method="post">
+                            <button type="submit" class="btn btn-primary">Generate My Code</button>
+                        </form>
+                    }
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Reward Balance</h5>
+                    <p class="display-6 text-success">@Model.RewardBalance <span class="fs-5 text-muted">points</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Apply a Friend's Code</h5>
+                    <form asp-action="ApplyCode" method="post">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" name="codeToApply" placeholder="Enter referral code" required>
+                            <button class="btn btn-outline-secondary" type="submit">Apply</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-2">
+        <div class="card-body">
+            <h5 class="card-title">Referral History</h5>
+            @if (Model.History != null && Model.History.Any())
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Friend</th>
+                            <th>Event Title</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.History)
+                        {
+                            <tr>
+                                <td>@item.FormattedDate</td>
+                                <td>@item.FriendName</td> 
+                                <td>@item.EventTitle</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-muted">No referrals yet.</p>
+            }
+        </div>
+    </div>
+</div>
