@@ -3,6 +3,7 @@ using MovieApp.DataLayer.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using System.Linq;
 
 namespace MovieApp.DataLayer
 {
@@ -46,6 +47,8 @@ namespace MovieApp.DataLayer
             await SeedAdditionalRoomsAsync();
             await FixExistingDataAsync();
             await SeedTriviaQuestionsAsync();
+            await SeedMarathonsAsync();
+            await SeedMarathonProgressionsAsync();
         }
 
         /// <summary>
@@ -1921,6 +1924,272 @@ namespace MovieApp.DataLayer
             {
                 await _context.SaveChangesAsync();
             }
+        }
+
+        private async Task SeedMarathonsAsync()
+        {
+            if (await _context.Marathons.AnyAsync())
+            {
+                return;
+            }
+
+            DateTime now = DateTime.UtcNow;
+            string currentWeek = $"{now.Year}-W{System.Globalization.ISOWeek.GetWeekOfYear(now):D2}";
+
+            \ Movie? inception = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Inception");
+            Movie? matrix = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Matrix");
+            Movie? bladeRunner = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Blade Runner 2049");
+            Movie? her = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Her");
+            Movie? interstellar = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Interstellar");
+
+            Movie? darkKnight = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Dark Knight");
+            Movie? gladiator = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Gladiator");
+            Movie? madMax = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Mad Max: Fury Road");
+            Movie? johnWick = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "John Wick");
+
+            Movie? parasite = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Parasite");
+            Movie? shutter = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Shutter Island");
+            Movie? memento = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Memento");
+
+            Movie? toyStory = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Toy Story");
+            Movie? findingNemo = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Finding Nemo");
+            Movie? up = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Up");
+            Movie? lionKing = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Lion King");
+
+            Movie? godfather = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Godfather");
+            Movie? pulpFiction = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Pulp Fiction");
+            Movie? django = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Django Unchained");
+
+            var scifiMarathon = new Marathon
+            {
+                Title = "Sci-Fi Minds",
+                Description = "Explore the boundaries of reality, AI, and space through cinema's best science fiction.",
+                Theme = "Science Fiction",
+                PosterUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/vr6ouTojPp0zlSpJvCbODPp19nd.jpg",
+                IsActive = true,
+                WeekScoping = currentWeek,
+                Movies = new List<Movie>(
+                    new[] { inception, matrix, bladeRunner, her, interstellar }
+                    .OfType<Movie>()),
+            };
+
+            var actionMarathon = new Marathon
+            {
+                Title = "Pure Adrenaline",
+                Description = "Back-to-back action masterpieces that redefined the genre.",
+                Theme = "Action",
+                PosterUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/a1UL3FTJDgQikYIebnMDhTPFVfm.jpg",
+                IsActive = true,
+                WeekScoping = currentWeek,
+                Movies = new List<Movie>(
+                    new[] { darkKnight, gladiator, madMax, johnWick }
+                    .OfType<Movie>()),
+            };
+
+            var thrillerMarathon = new Marathon
+            {
+                Title = "Mind Benders",
+                Description = "Psychological thrillers that will keep you second-guessing until the credits roll.",
+                Theme = "Thriller",
+                PosterUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
+                IsActive = true,
+                WeekScoping = currentWeek,
+                Movies = new List<Movie>(
+                    new[] { parasite, shutter, memento }
+                    .OfType<Movie>()),
+            };
+
+            var animationMarathon = new Marathon
+            {
+                Title = "Forever Young",
+                Description = "Pixar and Disney classics that prove animation is for everyone.",
+                Theme = "Animation",
+                PosterUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/RyAWIbSmt4xC859hyQ43wUumM9.jpg",
+                IsActive = true,
+                WeekScoping = currentWeek,
+                Movies = new List<Movie>(
+                    new[] { toyStory, findingNemo, up, lionKing }
+                    .OfType<Movie>()),
+            };
+
+            var crimeMarathon = new Marathon
+            {
+                Title = "Crime & Punishment",
+                Description = "The finest crime dramas — morally complex, stylishly executed.",
+                Theme = "Crime",
+                PosterUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/z4lzwl3Gff5IOWKGiYY7gUFYXUb.jpg",
+                IsActive = true,
+                WeekScoping = currentWeek,
+                Movies = new List<Movie>(
+                    new[] { godfather, pulpFiction, django }
+                    .OfType<Movie>()),
+            };
+
+            _context.Marathons.AddRange(
+                scifiMarathon,
+                actionMarathon,
+                thrillerMarathon,
+                animationMarathon,
+                crimeMarathon);
+
+            await _context.SaveChangesAsync();
+
+            var eliteScifi = new Marathon
+            {
+                Title = "Sci-Fi Elite",
+                Description = "Only for those who have proven their Sci-Fi knowledge. Harder questions, deeper cuts.",
+                Theme = "Science Fiction — Elite",
+                PosterUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/9pz5bPDufSrJd8yTNjp0apTAVf8.jpg",
+                IsActive = true,
+                WeekScoping = currentWeek,
+                PrerequisiteMarathonId = scifiMarathon.Id,
+                Movies = new List<Movie>(
+                    new[] { inception, interstellar, bladeRunner }
+                    .OfType<Movie>()),
+            };
+
+            var eliteAction = new Marathon
+            {
+                Title = "Action Elite",
+                Description = "A curated action gauntlet reserved for verified adrenaline junkies.",
+                Theme = "Action — Elite",
+                PosterUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/89BIhHMvGAoxQkniNFB8ENrfzxk.jpg",
+                IsActive = true,
+                WeekScoping = currentWeek,
+                PrerequisiteMarathonId = actionMarathon.Id,
+                Movies = new List<Movie>(
+                    new[] { darkKnight, madMax, johnWick }
+                    .OfType<Movie>()),
+            };
+
+            _context.Marathons.AddRange(eliteScifi, eliteAction);
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task SeedMarathonProgressionsAsync()
+        {
+            if (await _context.MarathonProgressions.AnyAsync())
+            {
+                return;
+            }
+
+            List<User> users = await _context.Users.OrderBy(u => u.Id).ToListAsync();
+            List<Marathon> marathons = await _context.Marathons.ToListAsync();
+
+            if (users.Count < 3 || marathons.Count == 0)
+            {
+                return;
+            }
+
+            User user1 = users.First(u => u.Username == "User1");
+            User alice = users.First(u => u.Username == "Alice");
+            User bob = users.First(u => u.Username == "Bob");
+
+            Marathon? scifi = marathons.FirstOrDefault(m => m.Title == "Sci-Fi Minds");
+            Marathon? action = marathons.FirstOrDefault(m => m.Title == "Pure Adrenaline");
+            Marathon? thriller = marathons.FirstOrDefault(m => m.Title == "Mind Benders");
+            Marathon? elite = marathons.FirstOrDefault(m => m.Title == "Sci-Fi Elite");
+
+            var progressions = new List<MarathonProgress>();
+
+            if (scifi != null)
+            {
+                int scifiMovieCount = scifi.Movies?.Count ?? 5;
+
+                progressions.Add(new MarathonProgress
+                {
+                    UserId = user1.Id,
+                    MarathonId = scifi.Id,
+                    JoinedAt = DateTime.UtcNow.AddDays(-6),
+                    CompletedMoviesCount = scifiMovieCount,
+                    TriviaAccuracy = 100.0,
+                    FinishedAt = DateTime.UtcNow.AddDays(-1),
+                });
+
+                progressions.Add(new MarathonProgress
+                {
+                    UserId = alice.Id,
+                    MarathonId = scifi.Id,
+                    JoinedAt = DateTime.UtcNow.AddDays(-4),
+                    CompletedMoviesCount = 2,
+                    TriviaAccuracy = 83.5,
+                    FinishedAt = null,
+                });
+
+                progressions.Add(new MarathonProgress
+                {
+                    UserId = bob.Id,
+                    MarathonId = scifi.Id,
+                    JoinedAt = DateTime.UtcNow.AddDays(-1),
+                    CompletedMoviesCount = 0,
+                    TriviaAccuracy = 0,
+                    FinishedAt = null,
+                });
+            }
+
+            if (action != null)
+            {
+                int actionMovieCount = action.Movies?.Count ?? 4;
+
+                progressions.Add(new MarathonProgress
+                {
+                    UserId = alice.Id,
+                    MarathonId = action.Id,
+                    JoinedAt = DateTime.UtcNow.AddDays(-5),
+                    CompletedMoviesCount = actionMovieCount,
+                    TriviaAccuracy = 91.7,
+                    FinishedAt = DateTime.UtcNow.AddDays(-2),
+                });
+
+                progressions.Add(new MarathonProgress
+                {
+                    UserId = user1.Id,
+                    MarathonId = action.Id,
+                    JoinedAt = DateTime.UtcNow.AddDays(-3),
+                    CompletedMoviesCount = 2,
+                    TriviaAccuracy = 66.7,
+                    FinishedAt = null,
+                });
+            }
+
+            if (thriller != null)
+            {
+                progressions.Add(new MarathonProgress
+                {
+                    UserId = bob.Id,
+                    MarathonId = thriller.Id,
+                    JoinedAt = DateTime.UtcNow.AddDays(-2),
+                    CompletedMoviesCount = 1,
+                    TriviaAccuracy = 75.0,
+                    FinishedAt = null,
+                });
+
+                progressions.Add(new MarathonProgress
+                {
+                    UserId = alice.Id,
+                    MarathonId = thriller.Id,
+                    JoinedAt = DateTime.UtcNow.AddDays(-1),
+                    CompletedMoviesCount = 0,
+                    TriviaAccuracy = 0,
+                    FinishedAt = null,
+                });
+            }
+
+            if (elite != null)
+            {
+                progressions.Add(new MarathonProgress
+                {
+                    UserId = user1.Id,
+                    MarathonId = elite.Id,
+                    JoinedAt = DateTime.UtcNow.AddDays(-1),
+                    CompletedMoviesCount = 1,
+                    TriviaAccuracy = 100.0,
+                    FinishedAt = null,
+                });
+            }
+
+            _context.MarathonProgressions.AddRange(progressions);
+            await _context.SaveChangesAsync();
         }
     }
 }
