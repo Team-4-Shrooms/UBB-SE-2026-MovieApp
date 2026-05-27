@@ -140,10 +140,17 @@ builder.Services.AddScoped<ICommentRepository>(serviceProvider => serviceProvide
 builder.Services.AddScoped<PriceWatcherRepository>();
 builder.Services.AddScoped<IPriceWatcherRepository>(serviceProvider => serviceProvider.GetRequiredService<PriceWatcherRepository>());
 
+builder.Services.AddScoped<TriviaRepository>();
+builder.Services.AddScoped<ITriviaRepository>(serviceProvider => serviceProvider.GetRequiredService<TriviaRepository>());
+
+builder.Services.AddScoped<TriviaRewardRepository>();
+builder.Services.AddScoped<ITriviaRewardRepository>(serviceProvider => serviceProvider.GetRequiredService<TriviaRewardRepository>());
+
 builder.Services.AddScoped<AmbassadorRepository>();
 builder.Services.AddScoped<IAmbassadorRepository>(serviceProvider => serviceProvider.GetRequiredService<AmbassadorRepository>());
 
 // Core services
+builder.Services.AddScoped<ITriviaService, TriviaService>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IEquipmentService, EquipmentService>();
 builder.Services.AddScoped<IEventService, EventService>();

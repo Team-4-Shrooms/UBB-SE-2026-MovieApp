@@ -65,6 +65,8 @@ builder.Services.AddTransient<IMarathonService, MarathonProxyService>();
 builder.Services.AddTransient<IBadgeService, BadgeProxyService>();
 builder.Services.AddTransient<IUserStatsService, UserStatsProxyService>();
 builder.Services.AddTransient<ITriviaService, TriviaProxyService>();
+builder.Services.AddTransient<ITriviaRepository, TriviaRepositoryProxy>();
+builder.Services.AddTransient<ITriviaRewardRepository, TriviaRewardRepositoryProxy>();
 builder.Services.AddTransient<IPriceWatcherService, PriceWatcherProxyService>();
 
 
