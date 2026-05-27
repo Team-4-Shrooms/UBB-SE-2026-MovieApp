@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
 namespace MovieApp.DataLayer.Models;
 /// <summary>
 /// Stores user spin-related data such as daily spins, bonuses, and login tracking.
@@ -10,7 +13,9 @@ public sealed class UserSpinData
     /// <summary>
     /// Gets the unique identifier for the user.
     /// </summary
-    required public int UserId { get; init; }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    required public int UserId { get; set; }
 
     /// <summary>
     /// Gets or sets the number of free daily spins remaining.

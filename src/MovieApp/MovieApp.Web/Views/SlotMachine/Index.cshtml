@@ -1,0 +1,168 @@
+@model SlotMachineIndexViewModel
+@{
+	ViewData["Title"] = "Slot Machine";
+}
+
+<style>
+	.reel {
+		background: #111;
+		color: #f1c40f;
+		border-radius: .75rem;
+		padding: 1.5rem 1rem;
+		text-align: center;
+		font-family: "Georgia", serif;
+		min-height: 6rem;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		box-shadow: inset 0 0 12px rgba(0,0,0,.6);
+	}
+
+	.reel-label {
+		font-size: .75rem;
+		text-transform: uppercase;
+		letter-spacing: .15rem;
+		color: #aaa;
+	}
+
+	.reel-value {
+		font-size: 1.5rem;
+		font-weight: bold;
+		margin-top: .35rem;
+		animation: pulse .8s ease-out;
+	}
+
+	@@keyframes pulse {
+		0%   { transform: scale(.85); opacity: 0; }
+		60%  { transform: scale(1.08); opacity: 1; }
+		100% { transform: scale(1); }
+	}
+
+	.jackpot-badge {
+		background: linear-gradient(90deg, #f7b733, #fc4a1a);
+		color: white;
+		padding: .5rem 1rem;
+		border-radius: 999px;
+		font-weight: bold;
+		display: inline-block;
+	}
+</style>
+
+@* -- Header Layout --------------------------------------------------------- *@
+<div class="d-flex justify-content-between align-items-center mb-4">
+	<div>
+		<h2 class="fw-bold mb-1">Slot Machine</h2>
+		<p class="text-muted mb-0">Spin the reels for a chance to win movie discounts.</p>
+	</div>
+	<div class="text-end">
+		<span class="badge bg-primary fs-6 p-2 mb-1 box-shadow">@Model.AvailableSpins spin(s) available</span>
+		<div class="small text-muted fw-bold">
+			Daily: @Model.DailySpinsRemaining | Bonus: @Model.BonusSpins | Streak: @Model.LoginStreak Days
+		</div>
+	</div>
+</div>
+
+@* -- Status Messages (Aligned with Catalog Tints) -------------------------- *@
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+	var alertClass = Model.LastResult?.JackpotDiscountApplied == true ? "alert-success" : "alert-info";
+	<div class="alert @alertClass text-center py-3 box-shadow fw-semibold mb-4">
+		@Model.StatusMessage
+	</div>
+}
+
+@* -- Slots Reels Grid ------------------------------------------------------ *@
+<div class="row g-3 mb-4">
+	<div class="col-md-4">
+		<div class="card h-100 box-shadow p-2 bg-dark rounded-3">
+			<div class="reel">
+				<span class="reel-label">Genre</span>
+				<span class="reel-value text-truncate w-100 px-2">
+					@(Model.LastResult?.Genre?.Name ?? "-")
+				</span>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<div class="card h-100 box-shadow p-2 bg-dark rounded-3">
+			<div class="reel">
+				<span class="reel-label">Actor</span>
+				<span class="reel-value text-truncate w-100 px-2">
+					@(Model.LastResult?.Actor?.Name ?? "-")
+				</span>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<div class="card h-100 box-shadow p-2 bg-dark rounded-3">
+			<div class="reel">
+				<span class="reel-label">Director</span>
+				<span class="reel-value text-truncate w-100 px-2">
+					@(Model.LastResult?.Director?.Name ?? "-")
+				</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+@* -- Spin Actions ---------------------------------------------------------- *@
+<form asp-action="Spin" method="post" class="text-center mb-4">
+	@Html.AntiForgeryToken()
+	<button type="submit" class="btn btn-lg btn-warning px-5 fw-bold text-dark box-shadow" @(Model.CanSpin ? "" : "disabled")>
+		@(Model.CanSpin ? "Spin!" : "No spins remaining")
+	</button>
+</form>
+
+@* -- Evaluation Post-Spin Results ----------------------------------------- *@
+@if (Model.LastResult is not null)
+{
+	@* -- Jackpot Banner Mode -- *@
+	if (Model.LastResult.JackpotDiscountApplied && Model.LastResult.JackpotMovie is not null)
+	{
+		<div class="card mb-4 border-warning box-shadow bg-light">
+			<div class="card-body text-center py-4">
+				<div class="jackpot-badge box-shadow mb-3">JACKPOT</div>
+				<h3 class="fw-bold mb-2">@Model.LastResult.JackpotMovie.Title</h3>
+				<p class="lead text-muted mb-0">
+					You won a <span class="badge bg-danger fs-5">@Model.LastResult.DiscountPercentage%</span> discount on this movie choice!
+				</p>
+			</div>
+		</div>
+	}
+
+	@* -- Core Event Matching Layout Matrix -- *@
+	if (Model.LastResult.MatchingEvents.Any())
+	{
+		<h4 class="fw-bold mb-3">Matching Screenings</h4>
+		<div class="card box-shadow rounded-3 overflow-hidden mb-4">
+			<div class="list-group list-group-flush">
+				@foreach (var ev in Model.LastResult.MatchingEvents)
+				{
+					var isJackpotEvent = Model.LastResult.JackpotEventIds.Contains(ev.Id);
+					<div class="list-group-item d-flex justify-content-between align-items-center py-3 @(isJackpotEvent ? "bg-warning-subtle list-group-item-warning" : "")">
+						<div>
+							<div class="fw-bold fs-5 text-dark">@ev.Title</div>
+							<div class="small text-muted"><i class="bi bi-clock me-1"></i> @ev.Date.ToString("MMM dd, yyyy HH:mm")</div>
+						</div>
+						@if (isJackpotEvent)
+						{
+							<span class="badge bg-warning text-dark px-3 py-2 fw-bold box-shadow">Jackpot Target</span>
+						}
+					</div>
+				}
+			</div>
+		</div>
+	}
+}
+
+@section Scripts {
+		<script>
+			// Forces reset of reel state animations on each layout reload cycle
+			document.querySelectorAll('.reel-value').forEach(el => {
+				el.style.animation = 'none';
+				void el.offsetWidth;
+				el.style.animation = '';
+			});
+		</script>
+}

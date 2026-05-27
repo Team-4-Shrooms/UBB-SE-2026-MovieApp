@@ -228,6 +228,20 @@ namespace MovieApp.WebApi.Data
                 .HasForeignKey<UserStats>(userStats => userStats.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // UserSpinData
+            modelBuilder.Entity<UserSpinData>()
+                .HasKey(userSpinData => userSpinData.UserId);
+
+            modelBuilder.Entity<UserSpinData>()
+                .Property(userSpinData => userSpinData.UserId)
+                .ValueGeneratedNever();
+
+            modelBuilder.Entity<UserSpinData>()
+                .HasOne<User>()
+                .WithOne()
+                .HasForeignKey<UserSpinData>(usd => usd.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             // MarathonProgress
             modelBuilder.Entity<MarathonProgress>()
                 .HasOne(marathonProgress => marathonProgress.User)

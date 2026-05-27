@@ -55,6 +55,10 @@ namespace MovieApp.Proxy
                 AttachToken();
                 response = await send(cancellationToken);
             }
+            if (!response.IsSuccessStatusCode)
+            {
+                string errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
+            }
 
             response.EnsureSuccessStatusCode();
             return response;
@@ -82,6 +86,11 @@ namespace MovieApp.Proxy
 
             if (response.StatusCode == HttpStatusCode.NotFound)
                 return default;
+
+            if (!response.IsSuccessStatusCode)
+            {
+                string errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
+            }
 
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<T>(DeserializeOptions, cancellationToken);
