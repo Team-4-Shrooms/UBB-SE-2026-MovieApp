@@ -1936,7 +1936,7 @@ namespace MovieApp.DataLayer
             DateTime now = DateTime.UtcNow;
             string currentWeek = $"{now.Year}-W{System.Globalization.ISOWeek.GetWeekOfYear(now):D2}";
 
-            \ Movie? inception = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Inception");
+            Movie? inception = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Inception");
             Movie? matrix = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Matrix");
             Movie? bladeRunner = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Blade Runner 2049");
             Movie? her = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Her");
