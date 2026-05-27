@@ -115,8 +115,7 @@ namespace MovieApp.Logic.Features.ReelsEditing
         {
             Console.WriteLine($"Processing videoPath: {videoPath}");
 
-            bool sourceWasRemoteUrl = IsHttpUrl(videoPath) &&
-                !videoPath.Contains(_urlBase, StringComparison.OrdinalIgnoreCase);
+            bool sourceWasRemoteUrl = IsHttpUrl(videoPath) && !videoPath.Contains(_urlBase, StringComparison.OrdinalIgnoreCase);
             string tempInputPath;
 
             if (sourceWasRemoteUrl)
@@ -134,8 +133,7 @@ namespace MovieApp.Logic.Features.ReelsEditing
 
                 if (!File.Exists(tempInputPath))
                 {
-                    throw new FileNotFoundException(
-                        $"Video file not found on disk. Resolved path: {tempInputPath}", tempInputPath);
+                    throw new FileNotFoundException($"Video file not found on disk. Resolved path: {tempInputPath}", tempInputPath);
                 }
             }
 

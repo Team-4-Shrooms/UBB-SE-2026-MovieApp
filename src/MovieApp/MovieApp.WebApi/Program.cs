@@ -208,9 +208,9 @@ builder.Services.AddSingleton<ICacheService, LocalFileCacheService>();
 builder.Services.AddHttpClient<OmdbReviewProvider>();
 builder.Services.AddHttpClient<NytReviewProvider>();
 builder.Services.AddHttpClient<GuardianReviewProvider>();
-builder.Services.AddScoped<IExternalReviewProvider>(sp => sp.GetRequiredService<OmdbReviewProvider>());
-builder.Services.AddScoped<IExternalReviewProvider>(sp => sp.GetRequiredService<NytReviewProvider>());
-builder.Services.AddScoped<IExternalReviewProvider>(sp => sp.GetRequiredService<GuardianReviewProvider>());
+builder.Services.AddScoped<IExternalReviewProvider>(serviceProvider => serviceProvider.GetRequiredService<OmdbReviewProvider>());
+builder.Services.AddScoped<IExternalReviewProvider>(serviceProvider => serviceProvider.GetRequiredService<NytReviewProvider>());
+builder.Services.AddScoped<IExternalReviewProvider>(serviceProvider => serviceProvider.GetRequiredService<GuardianReviewProvider>());
 builder.Services.AddScoped<IExternalReviewService, ExternalReviewService>();
 
 // Feature services
@@ -227,10 +227,10 @@ builder.Services.AddScoped<IVideoStorageService>(serviceProvider =>
         serviceProvider.GetRequiredService<IReelRepository>(),
         videoUploadDir,
         "/uploads/videos"));
-builder.Services.AddScoped<IVideoProcessingService>(sp =>
+builder.Services.AddScoped<IVideoProcessingService>(serviceProvider =>
     new VideoProcessingService(
-        sp.GetRequiredService<IAudioLibraryRepository>(),
-        sp.GetRequiredService<IVideoStorageService>(),
+        serviceProvider.GetRequiredService<IAudioLibraryRepository>(),
+        serviceProvider.GetRequiredService<IVideoStorageService>(),
         videoUploadDir,
         "/uploads/videos"));
 builder.Services.AddScoped<IVideoIngestionService, VideoIngestionService>();
@@ -240,8 +240,8 @@ builder.Services.AddSingleton<ITournamentLogicService, TournamentLogicService>()
 builder.Services.AddSingleton<IVideoDownloadService, VideoDownloadService>();
 builder.Services.AddTransient<IYouTubeScraperService>(_ =>
     new YouTubeScraperService(config["YouTube:ApiKey"] ?? string.Empty));
-builder.Services.AddTransient<IWebScraperService>(sp =>
-    (IWebScraperService)sp.GetRequiredService<IYouTubeScraperService>());
+builder.Services.AddTransient<IWebScraperService>(serviceProvider =>
+    (IWebScraperService)serviceProvider.GetRequiredService<IYouTubeScraperService>());
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

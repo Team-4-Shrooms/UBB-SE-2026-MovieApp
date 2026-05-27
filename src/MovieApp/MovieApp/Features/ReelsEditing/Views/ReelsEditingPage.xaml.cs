@@ -171,7 +171,9 @@ namespace MovieApp.Features.ReelsEditing.Views
                 this.DetachVideoPlayerEvents();
 
                 if (string.IsNullOrEmpty(videoUrl))
+                {
                     return;
+                }
 
                 Uri? uri = null;
 
