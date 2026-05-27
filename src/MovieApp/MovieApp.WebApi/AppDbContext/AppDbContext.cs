@@ -101,6 +101,12 @@ namespace MovieApp.WebApi.Data
 
             modelBuilder.Entity<MarathonProgress>()
                 .HasKey(marathonProgress => new { marathonProgress.UserId, marathonProgress.MarathonId });
+            modelBuilder.Entity<MarathonProgress>()
+                .Property(marathonProgress => marathonProgress.UserId)
+                .ValueGeneratedNever();
+            modelBuilder.Entity<MarathonProgress>()
+                .Property(marathonProgress => marathonProgress.MarathonId)
+                .ValueGeneratedNever();
 
             modelBuilder.Entity<PriceWatcher>()
                 .HasKey(priceWatcher => priceWatcher.EventId);
