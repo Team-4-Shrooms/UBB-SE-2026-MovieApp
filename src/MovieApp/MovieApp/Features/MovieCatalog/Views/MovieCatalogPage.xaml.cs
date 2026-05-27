@@ -27,7 +27,7 @@ namespace MovieApp.Features.MovieCatalog.Views
         public decimal Rating => Movie.Rating;
         public int ReviewCount { get; }
 
-        public string RatingAndReviewCountText => $"Ratings ({ReviewCount}): {Rating:0.0} / 10";
+        public string RatingAndReviewCountText => $"Ratings ({ReviewCount}): {Rating:0.#} / 5";
 
         public bool IsOnSale => Movie.HasActiveSale;
 
