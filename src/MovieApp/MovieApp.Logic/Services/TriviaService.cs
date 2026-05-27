@@ -55,8 +55,7 @@ namespace MovieApp.Logic.Services
             int id,
             CancellationToken cancellationToken = default)
         {
-            var all = await _triviaRepository.GetAllAsync(cancellationToken);
-            return all.FirstOrDefault(question => question.Id == id);
+            return await _triviaRepository.GetByIdAsync(id, cancellationToken);
         }
 
         /// <inheritdoc />

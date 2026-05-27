@@ -1,9 +1,10 @@
 using MovieApp.DataLayer.Models;
 
-namespace MovieApp.DataLayer.Interfaces.Repositories;
+namespace MovieApp.Logic.Interfaces.Services;
 
-public interface IExternalReviewProviderRepository
+public interface IExternalReviewProvider
 {
+    bool IsConfigured { get; }
+
     Task<CriticReview?> GetReviewAsync(string movieTitle, int releaseYear, CancellationToken ct = default);
 }
-

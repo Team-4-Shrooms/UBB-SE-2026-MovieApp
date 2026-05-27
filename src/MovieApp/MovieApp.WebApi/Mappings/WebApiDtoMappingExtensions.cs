@@ -556,4 +556,37 @@ public static class WebApiDtoMappingExtensions
             DiscountPercentage = result.DiscountPercentage,
         };
     }
+
+    public static BadgeDto ToDto(this Badge badge)
+    {
+        return new BadgeDto
+        {
+            BadgeId = badge.BadgeId,
+            Name = badge.Name ?? string.Empty,
+            Description = badge.Description ?? string.Empty,
+            CriteriaValue = badge.CriteriaValue,
+        };
+    }
+
+    public static UserBadgeDto ToDto(this UserBadge userBadge)
+    {
+        return new UserBadgeDto
+        {
+            UserBadgeId = userBadge.UserBadgeId,
+            User = userBadge.User?.ToReferenceDto(),
+            Badge = userBadge.Badge?.ToDto(),
+        };
+    }
+
+    public static UserStatsDto ToDto(this UserStats stats)
+    {
+        return new UserStatsDto
+        {
+            UserStatsId = stats.UserStatsId,
+            TotalPoints = stats.TotalPoints,
+            WeeklyScore = stats.WeeklyScore,
+            UserId = stats.UserId,
+            User = stats.User?.ToReferenceDto(),
+        };
+    }
 }

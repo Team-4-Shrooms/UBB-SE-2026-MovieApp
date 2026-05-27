@@ -1,64 +1,44 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MovieApp.DataLayer.Interfaces;
 using MovieApp.DataLayer.Interfaces.Repositories;
 using MovieApp.DataLayer.Models;
 
-namespace MovieApp.DataLayer.Repositories
+namespace MovieApp.DataLayer.Repositories;
+
+public sealed class PriceWatcherRepository : IPriceWatcherRepository
 {
-    public sealed class PriceWatcherRepository : IPriceWatcherRepository
+    private readonly IMovieAppDbContext _context;
+
+    public PriceWatcherRepository(IMovieAppDbContext context)
     {
-        private readonly IMovieAppDbContext _context;
+        _context = context;
+    }
 
-        public PriceWatcherRepository(IMovieAppDbContext context)
+    public async Task<List<PriceWatcher>> GetAllWatchedEventsAsync()
+        => await _context.PriceWatchers.ToListAsync();
+
+    public async Task<PriceWatcher?> GetWatchAsync(int eventIdentifier)
+        => await _context.PriceWatchers.FindAsync(eventIdentifier);
+
+    public async Task<bool> IsWatchingAsync(int eventIdentifier)
+        => await _context.PriceWatchers.AnyAsync(pw => pw.EventId == eventIdentifier);
+
+    public async Task<bool> AddWatchAsync(PriceWatcher watchedEvent)
+    {
+        _context.PriceWatchers.Add(watchedEvent);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task RemoveWatchAsync(int eventIdentifier)
+    {
+        var watch = await _context.PriceWatchers.FindAsync(eventIdentifier);
+        if (watch is not null)
         {
-            _context = context;
-        }
-
-        public async Task<List<PriceWatcher>> GetAllWatchedEventsAsync()
-        {
-            return await _context.PriceWatchers
-                .AsNoTracking()
-                .ToListAsync();
-        }
-
-        public async Task<PriceWatcher?> GetWatchAsync(int eventIdentifier)
-        {
-            return await _context.PriceWatchers
-                .FirstOrDefaultAsync(priceWatcher => priceWatcher.EventId == eventIdentifier);
-        }
-
-        public async Task<bool> IsWatchingAsync(int eventIdentifier)
-        {
-            return await _context.PriceWatchers
-                .AnyAsync(priceWatcher => priceWatcher.EventId == eventIdentifier);
-        }
-
-        public async Task<bool> AddWatchAsync(PriceWatcher watchedEvent)
-        {
-            bool alreadyWatching = await IsWatchingAsync(watchedEvent.EventId);
-            if (alreadyWatching)
-            {
-                return false;
-            }
-
-            _context.PriceWatchers.Add(watchedEvent);
+            _context.PriceWatchers.Remove(watch);
             await _context.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task RemoveWatchAsync(int eventIdentifier)
-        {
-            var priceWatcher = await _context.PriceWatchers
-                .FirstOrDefaultAsync(priceWatcher => priceWatcher.EventId == eventIdentifier);
-
-            if (priceWatcher is not null)
-            {
-                _context.PriceWatchers.Remove(priceWatcher);
-                await _context.SaveChangesAsync();
-            }
         }
     }
 }

@@ -1,6 +1,3 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MovieApp.DataLayer.Interfaces;
 using MovieApp.DataLayer.Interfaces.Repositories;
@@ -23,28 +20,27 @@ namespace MovieApp.DataLayer.Repositories
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<TriviaReward?> GetUnredeemedByUserAsync(
-            int userIdentifier,
-            CancellationToken cancellationToken = default)
+        public async Task<TriviaReward?> GetUnredeemedByUserAsync(int userIdentifier, CancellationToken cancellationToken = default)
         {
             return await _context.TriviaRewards
-                .Where(reward => reward.UserId == userIdentifier && !reward.IsRedeemed)
-                .OrderBy(reward => reward.CreatedAt)
+                .AsNoTracking()
+                .Where(r => r.UserId == userIdentifier && !r.IsRedeemed)
+                .OrderBy(r => r.CreatedAt)
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
-        public async Task MarkAsRedeemedAsync(
-            int rewardIdentifier,
-            CancellationToken cancellationToken = default)
+        public async Task MarkAsRedeemedAsync(int rewardIdentifier, CancellationToken cancellationToken = default)
         {
-            var reward = await _context.TriviaRewards
-                .FirstOrDefaultAsync(reward => reward.Id == rewardIdentifier, cancellationToken);
+            TriviaReward? reward = await _context.TriviaRewards
+                .FirstOrDefaultAsync(r => r.Id == rewardIdentifier, cancellationToken);
 
-            if (reward is not null)
+            if (reward is null)
             {
-                reward.Redeem();
-                await _context.SaveChangesAsync(cancellationToken);
+                return;
             }
+
+            reward.Redeem();
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

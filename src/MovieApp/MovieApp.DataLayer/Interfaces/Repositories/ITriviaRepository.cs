@@ -16,6 +16,21 @@ public interface ITriviaRepository
     Task<IEnumerable<TriviaQuestion>> GetAllAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Retrieves a single trivia question at random.
+    /// </summary>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A randomly selected trivia question, or null if the store is empty.</returns>
+    Task<TriviaQuestion?> GetRandomAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves a single trivia question by its identifier.
+    /// </summary>
+    /// <param name="id">The question identifier.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>The matching trivia question, or null if not found.</returns>
+    Task<TriviaQuestion?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Retrieves trivia questions belonging to a specific category.
     /// </summary>
     /// <param name="categoryName">The name of the trivia category.</param>
