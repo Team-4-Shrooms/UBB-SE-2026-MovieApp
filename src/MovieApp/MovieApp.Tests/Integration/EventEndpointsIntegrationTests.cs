@@ -76,7 +76,7 @@ namespace MovieApp.Tests.Integration
         [Fact]
         public async Task GetEventsForMovie_SeededDatabase_ReturnsOkStatusCode()
         {
-            HttpResponseMessage response = await _httpClient.GetAsync("/api/events/movie/1");
+            HttpResponseMessage response = await _httpClient.GetAsync("/api/events?movieId=1");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }

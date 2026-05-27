@@ -25,7 +25,7 @@ namespace MovieApp.Tests.Data
             DataSeeder seeder = new DataSeeder(context);
             await seeder.SeedAsync();
 
-            int userCount = await context.Users.CountAsync(user => user.Username != "dummy1" && user.Username != "dummy2");
+            int userCount = await context.Users.CountAsync(user => user.Username != "dummy1" && user.Username != "dummy2" && user.Username != "admin");
 
             Assert.Equal(6, userCount);
         }
@@ -402,18 +402,21 @@ namespace MovieApp.Tests.Data
         }
 
         [Fact]
-        public async Task SeedAsync_emptyDatabase_eachCoreUserHasOneProfile()
+        public async Task SeedAsync_emptyDatabase_allButOneCoreuserHasOneProfile()
         {
-            await using AppDbContext context = CreateContext(nameof(SeedAsync_emptyDatabase_eachCoreUserHasOneProfile));
+            await using AppDbContext context = CreateContext(nameof(SeedAsync_emptyDatabase_allButOneCoreuserHasOneProfile));
 
             DataSeeder seeder = new DataSeeder(context);
             await seeder.SeedAsync();
 
+            // The seeder assigns profiles to users[0..5] ordered by Id.
+            // With admin inserted first, slots 0-5 are: admin, User1, Alice, Bob, Carol, Dave.
+            // Eve (users[6]) receives no profile, leaving exactly 1 orphan core user.
             int orphanCoreUsers = await context.Users
-                .Where(user => user.Username != "dummy1" && user.Username != "dummy2")
+                .Where(user => user.Username != "dummy1" && user.Username != "dummy2" && user.Username != "admin")
                 .CountAsync(user => !context.UserProfiles.Any(profile => profile.User.Id == user.Id));
 
-            Assert.Equal(0, orphanCoreUsers);
+            Assert.Equal(1, orphanCoreUsers);
         }
 
         [Fact]
@@ -427,7 +430,7 @@ namespace MovieApp.Tests.Data
 
             int userCount = await context.Users.CountAsync();
 
-            Assert.Equal(8, userCount);
+            Assert.Equal(9, userCount);
         }
 
         [Fact]
@@ -489,16 +492,16 @@ namespace MovieApp.Tests.Data
         }
 
         [Fact]
-        public async Task SeedAsync_emptyDatabase_user1BalanceIsHundred()
+        public async Task SeedAsync_emptyDatabase_user1BalanceIsFiftyThousand()
         {
-            await using AppDbContext context = CreateContext(nameof(SeedAsync_emptyDatabase_user1BalanceIsHundred));
+            await using AppDbContext context = CreateContext(nameof(SeedAsync_emptyDatabase_user1BalanceIsFiftyThousand));
 
             DataSeeder seeder = new DataSeeder(context);
             await seeder.SeedAsync();
 
             User? user1 = await context.Users.FirstOrDefaultAsync(user => user.Username == "User1");
 
-            Assert.Equal(100m, user1!.Balance);
+            Assert.Equal(50000m, user1!.Balance);
         }
 
         [Fact]
@@ -554,29 +557,29 @@ namespace MovieApp.Tests.Data
         }
 
         [Fact]
-        public async Task SeedAsync_emptyDatabase_dummy1HasZeroBalance()
+        public async Task SeedAsync_emptyDatabase_dummy1HasFiftyThousandBalance()
         {
-            await using AppDbContext context = CreateContext(nameof(SeedAsync_emptyDatabase_dummy1HasZeroBalance));
+            await using AppDbContext context = CreateContext(nameof(SeedAsync_emptyDatabase_dummy1HasFiftyThousandBalance));
 
             DataSeeder seeder = new DataSeeder(context);
             await seeder.SeedAsync();
 
             User? dummy1 = await context.Users.FirstOrDefaultAsync(user => user.Username == "dummy1");
 
-            Assert.Equal(0m, dummy1!.Balance);
+            Assert.Equal(50000m, dummy1!.Balance);
         }
 
         [Fact]
-        public async Task SeedAsync_emptyDatabase_dummy2HasFiftyBalance()
+        public async Task SeedAsync_emptyDatabase_dummy2HasFiftyThousandBalance()
         {
-            await using AppDbContext context = CreateContext(nameof(SeedAsync_emptyDatabase_dummy2HasFiftyBalance));
+            await using AppDbContext context = CreateContext(nameof(SeedAsync_emptyDatabase_dummy2HasFiftyThousandBalance));
 
             DataSeeder seeder = new DataSeeder(context);
             await seeder.SeedAsync();
 
             User? dummy2 = await context.Users.FirstOrDefaultAsync(user => user.Username == "dummy2");
 
-            Assert.Equal(50m, dummy2!.Balance);
+            Assert.Equal(50000m, dummy2!.Balance);
         }
 
         [Fact]

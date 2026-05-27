@@ -25,30 +25,34 @@ namespace MovieApp.Tests.Integration
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
+        // The endpoint returns Dictionary<int, decimal> (movieId -> bestDiscountPercent),
+        // not a list of ActiveSaleDto.
+
         [Fact]
         public async Task GetCurrentSales_SeededDatabase_ReturnsNonEmptyList()
         {
-            List<ActiveSaleDto>? currentSales = await _httpClient.GetFromJsonAsync<List<ActiveSaleDto>>("/api/active-sales/current");
+            Dictionary<int, decimal>? currentSales = await _httpClient.GetFromJsonAsync<Dictionary<int, decimal>>("/api/active-sales/current");
 
+            Assert.NotNull(currentSales);
             Assert.NotEmpty(currentSales!);
         }
 
         [Fact]
         public async Task GetCurrentSales_SeededDatabase_AllSalesHaveMovieReference()
         {
-            List<ActiveSaleDto>? currentSales = await _httpClient.GetFromJsonAsync<List<ActiveSaleDto>>("/api/active-sales/current");
+            Dictionary<int, decimal>? currentSales = await _httpClient.GetFromJsonAsync<Dictionary<int, decimal>>("/api/active-sales/current");
 
-            bool allHaveMovieReference = currentSales!.All(sale => sale.Movie is not null);
+            bool allHaveValidMovieId = currentSales!.All(entry => entry.Key > 0);
 
-            Assert.True(allHaveMovieReference);
+            Assert.True(allHaveValidMovieId);
         }
 
         [Fact]
         public async Task GetCurrentSales_SeededDatabase_AllSalesHavePositiveDiscount()
         {
-            List<ActiveSaleDto>? currentSales = await _httpClient.GetFromJsonAsync<List<ActiveSaleDto>>("/api/active-sales/current");
+            Dictionary<int, decimal>? currentSales = await _httpClient.GetFromJsonAsync<Dictionary<int, decimal>>("/api/active-sales/current");
 
-            bool allHavePositiveDiscount = currentSales!.All(sale => sale.DiscountPercentage > 0);
+            bool allHavePositiveDiscount = currentSales!.All(entry => entry.Value > 0);
 
             Assert.True(allHavePositiveDiscount);
         }

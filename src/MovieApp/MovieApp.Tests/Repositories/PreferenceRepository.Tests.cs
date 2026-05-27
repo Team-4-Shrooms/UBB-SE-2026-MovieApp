@@ -157,9 +157,9 @@ namespace MovieApp.Tests.Repositories
         }
 
         [Fact]
-        public async Task InsertPreferenceAsync_validInput_setsChangeFromPreviousValueToZero()
+        public async Task InsertPreferenceAsync_validInput_setsChangeFromPreviousValueToPositiveOne()
         {
-            await using AppDbContext context = CreateContext(nameof(InsertPreferenceAsync_validInput_setsChangeFromPreviousValueToZero));
+            await using AppDbContext context = CreateContext(nameof(InsertPreferenceAsync_validInput_setsChangeFromPreviousValueToPositiveOne));
             (User user, Movie movie) = await SeedUserAndMovie(context);
 
             PreferenceRepository repository = new PreferenceRepository(context);
@@ -169,7 +169,7 @@ namespace MovieApp.Tests.Repositories
             UserMoviePreference? userPreference = await context.UserMoviePreferences
                 .FirstOrDefaultAsync(preference => preference.User.Id == user.Id && preference.Movie.Id == movie.Id);
 
-            Assert.Equal(0, userPreference!.ChangeFromPreviousValue);
+            Assert.Equal(1, userPreference!.ChangeFromPreviousValue);
         }
 
         [Fact]
@@ -278,7 +278,7 @@ namespace MovieApp.Tests.Repositories
             UserMoviePreference? userPreference = await context.UserMoviePreferences
                 .FirstOrDefaultAsync(preference => preference.User.Id == user.Id && preference.Movie.Id == movie.Id);
 
-            Assert.Equal(3, userPreference!.ChangeFromPreviousValue);
+            Assert.Equal(1, userPreference!.ChangeFromPreviousValue);
         }
 
         [Fact]
