@@ -69,7 +69,7 @@ namespace MovieApp.Proxy.Services
 
         public async Task<int> DetermineWinnerAsync(int battleId, CancellationToken cancellationToken = default)
         {
-            int response = await _apiClient.PostAsync<object, int>($"api/battles/{battleId}/determine-winner", new { });
+            int response = await _apiClient.GetAsync<int>($"api/battles/{battleId}/determine-winner");
             return response;
         }
 
@@ -90,7 +90,7 @@ namespace MovieApp.Proxy.Services
 
         public async Task ForceSettleBattleAsync(int battleId, CancellationToken cancellationToken = default)
         {
-            await _apiClient.PostAsync($"api/battles/{battleId}/force-settle", new { });
+            await _apiClient.PostAsync($"api/battles/{battleId}/settle", new { });
         }
 
         public async Task ResetAllBattlesForDemoAsync(CancellationToken cancellationToken = default)

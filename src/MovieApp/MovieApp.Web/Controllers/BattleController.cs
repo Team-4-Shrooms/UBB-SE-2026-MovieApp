@@ -1,5 +1,6 @@
 namespace MovieApp.Web.Controllers
 {
+    using System.Diagnostics;
     using Microsoft.AspNetCore.Mvc;
     using MovieApp.DataLayer.Models;
     using MovieApp.Logic.Features.Battles;
@@ -29,15 +30,15 @@ namespace MovieApp.Web.Controllers
 
             int currentUserId = this._currentUserService.UserId;
 
-            //Task<UserStats> userStatsTask =
-            //    this._pointService.GetUserStatsAsync(currentUserId);
+            Task<UserStats> userStatsTask =
+                this._pointService.GetUserStatsAsync(currentUserId);
 
             Task<Battle?> battleTask =
                 this._battleService.GetCurrentBattleForUserAsync(currentUserId);
 
-            //await Task.WhenAll(userStatsTask, battleTask);
+            await Task.WhenAll(userStatsTask, battleTask);
 
-            //UserStats userStats = await userStatsTask;
+            UserStats userStats = await userStatsTask;
             Battle? battle = await battleTask;
 
             BattleBet? userBet = battle == null
@@ -54,12 +55,13 @@ namespace MovieApp.Web.Controllers
                     .DetermineWinnerAsync(battle.BattleId);
             }
 
+            Debug.WriteLine("------------------"+ userStats.TotalPoints+ "--------------------------");
+
             BattleViewModel viewModel = new BattleViewModel
             {
                 Battle = battle,
                 UserBet = userBet,
-                CurrentUserPoints =0,
-                //userStats.TotalPoints,
+                CurrentUserPoints = userStats.TotalPoints,
                 WinnerMovieId = winnerMovieId,
                 StatusMessage = TempData["StatusMessage"] as string
             };

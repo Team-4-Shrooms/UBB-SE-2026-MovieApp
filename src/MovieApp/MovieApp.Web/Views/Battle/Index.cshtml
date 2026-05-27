@@ -13,79 +13,80 @@
 
 @if (Model.StatusMessage != null)
 {
-		<div class="alert alert-info alert-dismissible fade show" role="alert">
+	<div class="alert alert-info alert-dismissible fade show" role="alert">
 		@Model.StatusMessage
-			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-		</div>
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
 }
 
 <div class="row g-4">
 	<div class="col-lg-8">
 		@if (Model.Battle == null)
 		{
-				<div class="card box-shadow border-0 py-5">
-					<div class="card-body text-center text-warning">
-						<i class="bi bi-exclamation-triangle fs-1"></i>
-						<h5 class="mt-3 mb-0 fw-semibold">No active battle available at the moment.</h5>
-						<p class="text-muted small">Use the Demo Actions panel to start a new simulation.</p>
-					</div>
+			<div class="card box-shadow border-0 py-5">
+				<div class="card-body text-center text-warning">
+					<i class="bi bi-exclamation-triangle fs-1"></i>
+					<h5 class="mt-3 mb-0 fw-semibold">No active battle available at the moment.</h5>
+					<p class="text-muted small">Use the Demo Actions panel to start a new simulation.</p>
 				</div>
+			</div>
 		}
 		else
 		{
-				<div class="card box-shadow border-0 mb-4">
-					<div class="card-body p-4">
-						<div class="d-flex justify-content-between align-items-center mb-4">
-							<h5 class="fw-bold m-0 text-secondary">
-								Battle #@Model.Battle.BattleId
-							</h5>
-							<span class="badge bg-dark px-3 py-2 rounded-pill">
+			<div class="card box-shadow border-0 mb-4">
+				<div class="card-body p-4">
+					<div class="d-flex justify-content-between align-items-center mb-4">
+						<h5 class="fw-bold m-0 text-secondary">
+							Battle #@Model.Battle.BattleId
+						</h5>
+						<span class="badge bg-dark px-3 py-2 rounded-pill">
 							@Model.Battle.Status
-							</span>
-						</div>
+						</span>
+					</div>
 
-						<div class="row g-3">
-							<div class="col-md-6">
-								<div class="card h-100 border border-light position-relative">
-									<div class="card-body d-flex flex-column justify-content-between p-4">
-										<div>
-											<h4 class="fw-bold text-truncate mb-3">@Model.Battle.FirstMovie?.Title</h4>
-											<div class="text-muted small mb-1">Total Bets</div>
-											<div class="fs-5 fw-semibold mb-2">@Model.FirstMovieBetCount</div>
-										</div>
-										<div class="border-top pt-3 mt-2 d-flex justify-content-between align-items-center">
-											<span class="fw-bold text-primary">@Model.FirstMoviePointTotal pts</span>
+					<div class="row g-3">
+						<div class="col-md-6">
+							<div class="card h-100 border border-light position-relative">
+								<div class="card-body d-flex flex-column justify-content-between p-4">
+									<div>
+										<h4 class="fw-bold text-truncate mb-3">@Model.Battle.FirstMovie?.Title</h4>
+										<div class="text-muted small mb-1">Total Bets</div>
+										<div class="fs-5 fw-semibold mb-2">@Model.FirstMovieBetCount</div>
+									</div>
+									<div class="border-top pt-3 mt-2 d-flex justify-content-between align-items-center">
+										<span class="fw-bold text-primary">@Model.FirstMoviePointTotal pts</span>
 										@if (Model.WinnerMovieId == Model.Battle.FirstMovie?.Id)
 										{
-													<span class="badge bg-success">Winner</span>
+											<span class="badge bg-success">Winner</span>
 										}
-										</div>
 									</div>
 								</div>
 							</div>
+						</div>
 
-							<div class="col-md-6">
-								<div class="card h-100 border border-light position-relative">
-									<div class="card-body d-flex flex-column justify-content-between p-4">
-										<div>
-											<h4 class="fw-bold text-truncate mb-3">@Model.Battle.SecondMovie?.Title</h4>
-											<div class="text-muted small mb-1">Total Bets</div>
-											<div class="fs-5 fw-semibold mb-2">@Model.SecondMovieBetCount</div>
-										</div>
-										<div class="border-top pt-3 mt-2 d-flex justify-content-between align-items-center">
-											<span class="fw-bold text-primary">@Model.SecondMoviePointTotal pts</span>
+						<div class="col-md-6">
+							<div class="card h-100 border border-light position-relative">
+								<div class="card-body d-flex flex-column justify-content-between p-4">
+									<div>
+										<h4 class="fw-bold text-truncate mb-3">@Model.Battle.SecondMovie?.Title</h4>
+										<div class="text-muted small mb-1">Total Bets</div>
+										<div class="fs-5 fw-semibold mb-2">@Model.SecondMovieBetCount</div>
+									</div>
+									<div class="border-top pt-3 mt-2 d-flex justify-content-between align-items-center">
+										<span class="fw-bold text-primary">@Model.SecondMoviePointTotal pts</span>
 										@if (Model.WinnerMovieId == Model.Battle.SecondMovie?.Id)
 										{
-													<span class="badge bg-success">Winner</span>
+											<span class="badge bg-success">Winner</span>
 										}
-										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-
+			</div>
+			@if (Model.Battle.Status == "Active")
+			{
 				<div class="card box-shadow border-0">
 					<div class="card-body p-4">
 						<h5 class="fw-bold mb-3">Place Your Bet</h5>
@@ -113,6 +114,13 @@
 						</form>
 					</div>
 				</div>
+				}
+			else
+			{
+			<div class="alert alert-warning text-center mt-3">
+				<i class="bi bi-lock-fill"></i> <strong>Battle Finished.</strong> Betting is now closed.
+			</div>
+			}
 		}
 	</div>
 
@@ -154,11 +162,18 @@
 
 				@if (Model.Battle != null)
 				{
-						<form asp-action="ForceSettle" method="post" class="mb-2">
-						@Html.AntiForgeryToken()
-							<input type="hidden" name="battleId" value="@Model.Battle.BattleId" />
-							<button type="submit" class="btn btn-warning w-100 text-white fw-semibold">Force Settle Engine</button>
-						</form>
+					@if (Model.Battle.Status == "Active")
+					{
+				<form asp-action="ForceSettle" method="post" class="mb-2">
+							@Html.AntiForgeryToken()
+					<input type="hidden" name="battleId" value="@Model.Battle.BattleId" />
+					<button type="submit" class="btn btn-warning w-100 text-white fw-semibold">Force Settle Engine</button>
+				</form>
+					}
+					else
+					{
+				<button type="button" class="btn btn-secondary w-100 fw-semibold" disabled>Battle Settled</button>
+					}
 				}
 
 				<form asp-action="ResetDemo" method="post">
