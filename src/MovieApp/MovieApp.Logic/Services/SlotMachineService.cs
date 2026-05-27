@@ -246,7 +246,7 @@ namespace MovieApp.Logic.Services
                 return new List<MovieEvent>();
             }
 
-            HashSet<int> movieIds = movies.Select(m => m.Id).ToHashSet();
+            HashSet<int> movieIds = movies.Select(movie => movie.Id).ToHashSet();
 
             List<MovieEvent> allMovieEvents = await _eventRepository.GetAllEventsAsync();
 
