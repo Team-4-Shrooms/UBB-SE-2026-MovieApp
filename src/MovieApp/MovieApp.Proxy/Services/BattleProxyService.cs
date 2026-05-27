@@ -45,12 +45,20 @@ namespace MovieApp.Proxy.Services
 
         public async Task<BattleBet> PlaceBetAsync(int userId, int battleId, int movieId, int amount, CancellationToken cancellationToken = default)
         {
-            PlaceBetRequest request = new PlaceBetRequest { MovieId = movieId, Amount = amount };
-            BattleBet? response = await _apiClient.PostAsync<PlaceBetRequest, BattleBet>($"api/battles/{battleId}/bet", request);
+            var requestPayload = new
+            {
+                UserId = userId,
+                BattleId = battleId,
+                MovieId = movieId,
+                Amount = amount
+            };
+            BattleBet? response = await _apiClient.PostAsync<object, BattleBet>("api/battles/bet", requestPayload);
+
             if (response == null)
             {
-                throw new Exception("Failed to place bet.");
+                throw new Exception("The API returned an empty response layout while saving your bet.");
             }
+
             return response;
         }
 
@@ -77,7 +85,7 @@ namespace MovieApp.Proxy.Services
 
         public async Task<Battle?> GetCurrentBattleForUserAsync(int userId, CancellationToken cancellationToken = default)
         {
-            return await _apiClient.GetAsync<Battle>($"api/battles/current?userId={userId}");
+            return await _apiClient.GetAsync<Battle>($"api/battles/user/{userId}/current");
         }
 
         public async Task ForceSettleBattleAsync(int battleId, CancellationToken cancellationToken = default)
@@ -87,7 +95,7 @@ namespace MovieApp.Proxy.Services
 
         public async Task ResetAllBattlesForDemoAsync(CancellationToken cancellationToken = default)
         {
-            await _apiClient.PostAsync("api/battles/reset-demo", new { });
+            await _apiClient.PostAsync("api/battles/reset", new { });
         }
 
         public async Task<Battle> CreateDemoBattleAsync(CancellationToken cancellationToken = default)

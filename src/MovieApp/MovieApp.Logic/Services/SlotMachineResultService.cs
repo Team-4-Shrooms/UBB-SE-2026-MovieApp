@@ -37,7 +37,7 @@ namespace MovieApp.Logic.Services
             Genre genre,
             Actor actor,
             Director director,
-            List<Event> matchingEvents,
+            List<MovieEvent> matchingEvents,
             Movie? jackpotMovie)
         {
             SlotMachineResult result = new SlotMachineResult

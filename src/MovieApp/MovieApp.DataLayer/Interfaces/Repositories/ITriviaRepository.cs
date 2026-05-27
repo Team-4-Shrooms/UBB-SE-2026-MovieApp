@@ -12,7 +12,7 @@ public interface ITriviaRepository
     /// Retrieves all trivia questions.
     /// </summary>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>All trivia questions in the store.</returns>
+    /// <returns>A collection of all trivia questions.</returns>
     Task<IEnumerable<TriviaQuestion>> GetAllAsync(CancellationToken cancellationToken = default);
 
     /// <summary>

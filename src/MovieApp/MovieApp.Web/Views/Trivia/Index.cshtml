@@ -1,0 +1,113 @@
+@model MovieApp.Web.ViewModels.Trivia.TriviaIndexViewModel
+@{
+    ViewData["Title"] = "Trivia";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h2 class="mb-0">🎬 Movie Trivia</h2>
+            <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Next question ›</a>
+        </div>
+
+        @* ── Category filter ───────────────────────────────────────────── *@
+        @if (Model.AvailableCategories.Any())
+        {
+            <div class="mb-4 d-flex flex-wrap gap-2">
+                <a asp-action="Index"
+                   class="btn btn-sm @(string.IsNullOrEmpty(Model.Category) ? "btn-dark" : "btn-outline-dark")">
+                    All
+                </a>
+                @foreach (string cat in Model.AvailableCategories)
+                {
+                    <a asp-action="Index" asp-route-category="@cat"
+                       class="btn btn-sm @(Model.Category == cat ? "btn-dark" : "btn-outline-dark")">
+                        @cat
+                    </a>
+                }
+            </div>
+        }
+
+        @* ── Previous answer result banner ─────────────────────────────── *@
+        @if (Model.LastAnswerCorrect.HasValue)
+        {
+            if (Model.LastAnswerCorrect.Value)
+            {
+                <div class="alert alert-success d-flex align-items-center gap-2" role="alert">
+                    <span class="fs-4">✅</span>
+                    <div>
+                        <strong>Correct!</strong> You answered <strong>@Model.LastSelectedOption</strong>.
+                        @if (Model.RewardId.HasValue)
+                        {
+                            <span>A reward has been added to your account (reward #@Model.RewardId).</span>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-danger d-flex align-items-center gap-2" role="alert">
+                    <span class="fs-4">❌</span>
+                    <div>
+                        <strong>Wrong!</strong> You answered <strong>@Model.LastSelectedOption</strong>. Better luck next time.
+                    </div>
+                </div>
+            }
+        }
+
+        @* ── Question card ─────────────────────────────────────────────── *@
+        @if (Model.Question is null)
+        {
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center py-5 text-muted">
+                    <p class="mb-0">No questions available@(string.IsNullOrEmpty(Model.Category) ? "." : $" for category \"{Model.Category}\".")</p>
+                    @if (!string.IsNullOrEmpty(Model.Category))
+                    {
+                        <a asp-action="Index" class="btn btn-outline-secondary mt-3">Try all categories</a>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                    <span class="badge bg-secondary">@Model.Question.Category</span>
+                    @if (Model.Question.MovieId.HasValue)
+                    {
+                        <small class="text-light opacity-75">Movie-specific</small>
+                    }
+                </div>
+                <div class="card-body">
+                    <p class="card-text fs-5 fw-semibold mb-4">@Model.Question.QuestionText</p>
+
+                    <form asp-action="Answer" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="QuestionId" value="@Model.Question.Id" />
+                        <input type="hidden" name="Category" value="@Model.Category" />
+
+                        <div class="d-grid gap-2">
+                            @foreach (var option in new[]
+                            {
+                                ('A', Model.Question.OptionA),
+                                ('B', Model.Question.OptionB),
+                                ('C', Model.Question.OptionC),
+                                ('D', Model.Question.OptionD),
+                            })
+                            {
+                                <button type="submit"
+                                        name="SelectedOption"
+                                        value="@option.Item1"
+                                        class="btn btn-outline-primary text-start px-4 py-2">
+                                    <span class="fw-bold me-2">@option.Item1.</span>@option.Item2
+                                </button>
+                            }
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>

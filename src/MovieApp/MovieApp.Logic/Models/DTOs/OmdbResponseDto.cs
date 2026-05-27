@@ -4,6 +4,9 @@ namespace MovieApp.Logic.Models.DTOs;
 
 public sealed class OmdbResponseDto
 {
+    [JsonPropertyName("imdbID")]
+    public string ImdbId { get; set; } = string.Empty;
+
     [JsonPropertyName("Ratings")]
     public List<OmdbRatingDto> Ratings { get; set; } = new();
 }

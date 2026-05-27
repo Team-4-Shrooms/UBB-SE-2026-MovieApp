@@ -95,9 +95,18 @@ namespace MovieApp.WebApi.Data
 
             modelBuilder.Entity<UserSpinData>()
                 .HasKey(userSpinData => userSpinData.UserId);
+            modelBuilder.Entity<UserSpinData>()
+                .Property(userSpinData => userSpinData.UserId)
+                .ValueGeneratedNever();
 
             modelBuilder.Entity<MarathonProgress>()
                 .HasKey(marathonProgress => new { marathonProgress.UserId, marathonProgress.MarathonId });
+            modelBuilder.Entity<MarathonProgress>()
+                .Property(marathonProgress => marathonProgress.UserId)
+                .ValueGeneratedNever();
+            modelBuilder.Entity<MarathonProgress>()
+                .Property(marathonProgress => marathonProgress.MarathonId)
+                .ValueGeneratedNever();
 
             modelBuilder.Entity<PriceWatcher>()
                 .HasKey(priceWatcher => priceWatcher.EventId);

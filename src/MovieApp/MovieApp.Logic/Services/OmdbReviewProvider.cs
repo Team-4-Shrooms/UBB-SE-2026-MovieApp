@@ -57,7 +57,9 @@ public sealed class OmdbReviewProvider : IExternalReviewProvider
                 Score = ParseScore(firstRating.Value),
                 Headline = $"{movieTitle} — OMDb rating",
                 Snippet = BuildLongerSnippet(firstRating.Source, firstRating.Value, movieTitle, releaseYear),
-                Url = $"https://www.omdbapi.com/?t={Uri.EscapeDataString(movieTitle)}",
+                Url = !string.IsNullOrWhiteSpace(dto?.ImdbId)
+                    ? $"https://www.imdb.com/title/{dto.ImdbId}/"
+                    : $"https://www.imdb.com/find/?q={Uri.EscapeDataString(movieTitle)}",
             };
         }
         catch (Exception)
@@ -84,7 +86,7 @@ public sealed class OmdbReviewProvider : IExternalReviewProvider
 
         if (trimmed.EndsWith('%') && double.TryParse(trimmed.TrimEnd('%'), NumberStyles.Number, CultureInfo.InvariantCulture, out var percent))
         {
-            return Math.Round(Math.Clamp(percent / 20.0, 0, 5), 1);
+            return Math.Round(Math.Clamp(percent / 10.0, 0, 10), 1);
         }
 
         if (trimmed.Contains('/'))
@@ -94,7 +96,7 @@ public sealed class OmdbReviewProvider : IExternalReviewProvider
                 double.TryParse(parts[0], NumberStyles.Number, CultureInfo.InvariantCulture, out var num) &&
                 double.TryParse(parts[1], NumberStyles.Number, CultureInfo.InvariantCulture, out var den) && den > 0)
             {
-                return Math.Round(Math.Clamp((num / den) * 5.0, 0, 5), 1);
+                return Math.Round(Math.Clamp((num / den) * 10.0, 0, 10), 1);
             }
         }
 
