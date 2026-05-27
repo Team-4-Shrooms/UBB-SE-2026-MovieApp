@@ -64,9 +64,9 @@ namespace MovieApp.Logic.Services
                 state.BonusSpins--;
             }
 
-            List<Genre> distinctGenres = (await _movieRepository.GetGenresAsync()).DistinctBy(g => g.Id).ToList();
-            List<Actor> distinctActors = (await _movieRepository.GetActorsAsync()).DistinctBy(a => a.Id).ToList();
-            List<Director> distinctDirectors = (await _movieRepository.GetDirectorsAsync()).DistinctBy(d => d.Id).ToList();
+            List<Genre> distinctGenres = (await _movieRepository.GetGenresAsync()).DistinctBy(genre => genre.Id).ToList();
+            List<Actor> distinctActors = (await _movieRepository.GetActorsAsync()).DistinctBy(actor => actor.Id).ToList();
+            List<Director> distinctDirectors = (await _movieRepository.GetDirectorsAsync()).DistinctBy(director => director.Id).ToList();
 
             if (distinctGenres.Count == 0 || distinctActors.Count == 0 || distinctDirectors.Count == 0)
             {
@@ -85,8 +85,8 @@ namespace MovieApp.Logic.Services
 
             HashSet<int> jackpotEventIds = jackpotMovie is not null
                 ? matchingEvents
-                    .Where(e => e.Movie?.Id == jackpotMovie.Id)
-                    .Select(e => e.Id)
+                    .Where(movieEvent => movieEvent.Movie?.Id == jackpotMovie.Id)
+                    .Select(movieEvent => movieEvent.Id)
                     .ToHashSet()
                 : new HashSet<int>();
 
@@ -251,8 +251,8 @@ namespace MovieApp.Logic.Services
             List<MovieEvent> allMovieEvents = await _eventRepository.GetAllEventsAsync();
 
             return allMovieEvents
-                .Where(e => e.Movie != null && movieIds.Contains(e.Movie.Id) && e.Date > DateTime.UtcNow)
-                .DistinctBy(e => e.Id)
+                .Where(movieEvent => movieEvent.Movie != null && movieIds.Contains(movieEvent.Movie.Id) && movieEvent.Date > DateTime.UtcNow)
+                .DistinctBy(movieEvent => movieEvent.Id)
                 .ToList();
         }
 

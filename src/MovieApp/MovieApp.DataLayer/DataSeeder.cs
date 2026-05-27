@@ -1895,9 +1895,9 @@ namespace MovieApp.DataLayer
             }
 
             var movies = await _context.Movies
-                .Include(m => m.Genres)
-                .Include(m => m.Actors)
-                .Include(m => m.Directors)
+                .Include(movie => movie.Genres)
+                .Include(movie => movie.Actors)
+                .Include(movie => movie.Directors)
                 .ToListAsync();
 
             if (movies.Count == 0)
