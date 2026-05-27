@@ -26,21 +26,7 @@ public sealed class CommentsController : ControllerBase
     [HttpGet("movies/{id}/comments")]
     public async Task<IActionResult> GetCommentsForMovie(int id)
     {
-        List<Comment> comments = await _commentService.GetCommentsForMovieAsync(id);
-
-        ILookup<int?, Comment> commentLookup = comments.ToLookup(comment => comment.ParentCommentId);
-
-        List<Comment> rootComments = comments
-            .Where(comment => comment.ParentCommentId == null)
-            .OrderByDescending(comment => comment.CreatedAt)
-            .ToList();
-
-        foreach (Comment comment in comments)
-        {
-            comment.Replies = commentLookup[comment.CommentId]
-                .OrderBy(comment => comment.CreatedAt)
-                .ToList();
-        }
+        List<Comment> rootComments = await _commentService.GetCommentsForMovieAsync(id);
 
         List<CommentResponseDto> response = rootComments.Select(MapToDto).ToList();
         return Ok(response);

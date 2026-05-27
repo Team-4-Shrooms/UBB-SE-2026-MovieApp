@@ -18,13 +18,32 @@ namespace MovieApp.Logic.Services
         {
             var allComments = await _commentRepo.GetAllAsync(cancellationToken);
 
-            // Filter to the requested movie and return only top-level comments.
-            // Replies are already eagerly loaded via Include(), so the nested
-            // thread structure is preserved without additional queries.
-            return allComments
-                .Where(comment => comment.MovieId == movieId && comment.ParentCommentId == null)
-                .OrderByDescending(comment => comment.CreatedAt)
+            var movieComments = allComments.Where(c => c.MovieId == movieId).ToList();
+
+            var childrenByParent = movieComments
+                .Where(c => c.ParentCommentId != null)
+                .GroupBy(c => c.ParentCommentId!.Value)
+                .ToDictionary(g => g.Key, g => g.OrderBy(c => c.CreatedAt).ToList());
+
+            void AssignReplies(Comment comment)
+            {
+                comment.Replies = childrenByParent.TryGetValue(comment.CommentId, out var children)
+                    ? (ICollection<Comment>)children
+                    : new List<Comment>();
+
+                foreach (var child in comment.Replies)
+                    AssignReplies(child);
+            }
+
+            var rootComments = movieComments
+                .Where(c => c.ParentCommentId == null)
+                .OrderByDescending(c => c.CreatedAt)
                 .ToList();
+
+            foreach (var root in rootComments)
+                AssignReplies(root);
+
+            return rootComments;
         }
 
         /// <inheritdoc />

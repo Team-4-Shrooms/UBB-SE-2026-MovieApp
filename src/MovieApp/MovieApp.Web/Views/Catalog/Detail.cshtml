@@ -251,3 +251,55 @@
         }
     </div>
 </div>
+
+<div class="row mt-5">
+    <div class="col-12 mb-5">
+        <h4 class="fw-bold mb-3">Comments</h4>
+
+        @if (TempData["CommentSuccess"] != null)
+        {
+            <div class="alert alert-success">@TempData["CommentSuccess"]</div>
+        }
+        @if (TempData["CommentError"] != null)
+        {
+            <div class="alert alert-danger">@TempData["CommentError"]</div>
+        }
+
+        <div class="card box-shadow mb-4">
+            <div class="card-body bg-light">
+                @if (Model.IsLoggedIn)
+                {
+                    <form asp-action="AddComment" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="MovieId" value="@Model.Movie.Id" />
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Leave a Comment</label>
+                            <textarea name="Content" class="form-control" rows="3" placeholder="Share your thoughts..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Post Comment</button>
+                    </form>
+                }
+                else
+                {
+                    <p class="mb-0 text-muted">You must be logged in to post a comment.</p>
+                }
+            </div>
+        </div>
+
+        @if (!Model.Comments.Any())
+        {
+            <div class="alert alert-secondary">
+                No comments yet. Be the first to start the discussion!
+            </div>
+        }
+        else
+        {
+            <div class="list-group border-0">
+                @foreach (var comment in Model.Comments)
+                {
+                    <partial name="_CommentNode" model="comment" view-data='new ViewDataDictionary(ViewData) { { "depth", 0 } }' />
+                }
+            </div>
+        }
+    </div>
+</div>

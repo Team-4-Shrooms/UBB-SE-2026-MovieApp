@@ -14,6 +14,7 @@ public sealed class CatalogController : Controller
     private readonly IActiveSalesService _activeSalesService;
     private readonly ICurrentUserService _currentUserService;
     private readonly IMemoryCache _cache;
+    private readonly ICommentService _commentService;
 
     public CatalogController(
         IMovieService movieService,
@@ -21,7 +22,8 @@ public sealed class CatalogController : Controller
         IExternalReviewService externalReviewService,
         IActiveSalesService activeSalesService,
         ICurrentUserService currentUserService,
-        IMemoryCache cache)
+        IMemoryCache cache,
+        ICommentService commentService)
     {
         _movieService = movieService;
         _reviewService = reviewService;
@@ -29,6 +31,7 @@ public sealed class CatalogController : Controller
         _activeSalesService = activeSalesService;
         _currentUserService = currentUserService;
         _cache = cache;
+        _commentService = commentService;
     }
 
     [HttpGet]
@@ -134,6 +137,8 @@ public sealed class CatalogController : Controller
             externalReviews = new List<CriticReview>();
         }
 
+        var comments = await _commentService.GetCommentsForMovieAsync(id);
+
         var viewModel = new CatalogDetailViewModel
         {
             Movie = movie,
@@ -143,6 +148,7 @@ public sealed class CatalogController : Controller
             UserOwnsMovie = userOwnsMovie,
             IsLoggedIn = userId > 0,
             ExternalReviews = externalReviews,
+            Comments = comments,
         };
 
         return View(viewModel);
@@ -205,5 +211,65 @@ public sealed class CatalogController : Controller
         await _reviewService.PostReviewAsync(form.MovieId, _currentUserService.UserId, form.StarRating, form.Comment);
 
         return RedirectToAction(nameof(Detail), new { id = form.MovieId });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddComment(AddCommentInputModel model)
+    {
+        var userId = _currentUserService.UserId;
+        if (userId <= 0)
+        {
+            TempData["CommentError"] = "You must be logged in to comment.";
+            return RedirectToAction(nameof(Detail), new { id = model.MovieId });
+        }
+
+        if (!ModelState.IsValid)
+        {
+            TempData["CommentError"] = "Invalid comment data.";
+            return RedirectToAction(nameof(Detail), new { id = model.MovieId });
+        }
+
+        try
+        {
+            await _commentService.AddCommentAsync(userId, model.MovieId, model.Content);
+            TempData["CommentSuccess"] = "Your comment was added successfully.";
+        }
+        catch (Exception ex)
+        {
+            TempData["CommentError"] = ex.Message;
+        }
+
+        return RedirectToAction(nameof(Detail), new { id = model.MovieId });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddReply(AddReplyInputModel model)
+    {
+        var userId = _currentUserService.UserId;
+        if (userId <= 0)
+        {
+            TempData["CommentError"] = "You must be logged in to reply.";
+            return RedirectToAction(nameof(Detail), new { id = model.MovieId });
+        }
+
+        if (!ModelState.IsValid)
+        {
+            TempData["CommentError"] = "Invalid reply data.";
+            return RedirectToAction(nameof(Detail), new { id = model.MovieId });
+        }
+
+        try
+        {
+            await _commentService.AddReplyAsync(userId, model.ParentCommentId, model.Content);
+            TempData["CommentSuccess"] = "Your reply was added successfully.";
+        }
+        catch (Exception ex)
+        {
+            TempData["CommentError"] = ex.Message;
+        }
+
+        return RedirectToAction(nameof(Detail), new { id = model.MovieId });
     }
 }

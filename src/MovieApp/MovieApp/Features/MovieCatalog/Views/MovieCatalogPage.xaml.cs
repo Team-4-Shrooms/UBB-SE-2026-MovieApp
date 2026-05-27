@@ -176,8 +176,10 @@ namespace MovieApp.Features.MovieCatalog.Views
             _reviewCountByMovieId = await _reviewRepo.GetReviewCountsAsync(movieIds);
  
             var onSaleIds = currentSales.Select(sale => sale.Movie.Id).ToHashSet();
-            _sourceMovies = allMovies.Where(movie => onSaleIds.Contains(movie.Id)).ToList();
- 
+            _sourceMovies = _showOnlySales
+                ? allMovies.Where(movie => onSaleIds.Contains(movie.Id)).ToList()
+                : allMovies;
+
             if (currentSales.Any())
             {
                 var latestSale = currentSales.OrderByDescending(sale => sale.EndTime).First();
@@ -190,9 +192,13 @@ namespace MovieApp.Features.MovieCatalog.Views
                 }
                 ApplyCatalogDeactivation(true);
             }
-            else
+            else if (_showOnlySales)
             {
                 ApplyCatalogDeactivation(false);
+            }
+            else
+            {
+                ApplyCatalogDeactivation(true);
             }
         }
 
