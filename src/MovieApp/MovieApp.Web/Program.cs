@@ -5,6 +5,7 @@ using MovieApp.Logic.Features.ReelsEditing;
 using MovieApp.Logic.Features.ReelsFeed;
 using MovieApp.Logic.Features.ReelsUpload;
 using MovieApp.Logic.Features.TrailerScraping;
+using MovieApp.DataLayer.Interfaces.Repositories;
 using MovieApp.Logic.Interfaces.Services;
 using MovieApp.Proxy;
 using MovieApp.Proxy.Services;
@@ -61,6 +62,8 @@ builder.Services.AddTransient<IReferralCodeGenerator, ReferralProxyService>();
 builder.Services.AddTransient<ICommentService, CommentProxyService>();
 builder.Services.AddTransient<IAmbassadorService, AmbassadorProxyService>();
 builder.Services.AddTransient<IMarathonService, MarathonProxyService>();
+builder.Services.AddTransient<ITriviaService, TriviaProxyService>();
+builder.Services.AddTransient<IPriceWatcherService, PriceWatcherProxyService>();
 
 
 // Cache and session

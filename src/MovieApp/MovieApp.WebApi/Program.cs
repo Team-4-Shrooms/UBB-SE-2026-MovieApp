@@ -113,6 +113,12 @@ builder.Services.AddScoped<ITriviaRepository>(serviceProvider => serviceProvider
 builder.Services.AddScoped<TriviaRewardRepository>();
 builder.Services.AddScoped<ITriviaRewardRepository>(serviceProvider => serviceProvider.GetRequiredService<TriviaRewardRepository>());
 
+builder.Services.AddScoped<CommentRepository>();
+builder.Services.AddScoped<ICommentRepository>(serviceProvider => serviceProvider.GetRequiredService<CommentRepository>());
+
+builder.Services.AddScoped<PriceWatcherRepository>();
+builder.Services.AddScoped<IPriceWatcherRepository>(serviceProvider => serviceProvider.GetRequiredService<PriceWatcherRepository>());
+
 // Core services
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IEquipmentService, EquipmentService>();
@@ -130,6 +136,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IScrapeJobService, ScrapeJobService>();
 builder.Services.AddScoped<IReelService, ReelService>();
 builder.Services.AddScoped<ITriviaService, TriviaService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IPriceWatcherService, PriceWatcherService>();
 
 // Feature services
 builder.Services.AddScoped<IMovieCardFeedService, MovieCardFeedService>();

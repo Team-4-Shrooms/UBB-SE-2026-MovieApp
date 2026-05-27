@@ -52,11 +52,26 @@ public interface IAmbassadorService
     /// </summary>
     Task RedeemRewardAsync(int userId, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Looks up an ambassador's user ID based on their unique referral code.
+    /// Returns the user ID if found, or null if the code does not exist.
+    /// </summary>
     Task<int?> ResolveCodeToUserIdAsync(string referralCode, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Checks if a referral log already exists for a specific ambassador, friend, and event combination
+    /// to prevent duplicate referrals for the same event.
+    /// </summary>
     Task<bool> ReferralLogExistsAsync(int ambassadorId, int friendId, int eventId, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Records a new referral interaction in the database when a friend joins an event
+    /// using an ambassador's referral code.
+    /// </summary>
     Task LogReferralByAmbassadorIdAsync(int ambassadorId, int friendId, int eventId, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Decreases the user's available reward balance after they have redeemed a referral reward.
+    /// </summary>
     Task DecrementRewardBalanceAsync(int userId, CancellationToken cancellationToken = default);
 }
