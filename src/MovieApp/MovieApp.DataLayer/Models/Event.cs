@@ -1,4 +1,4 @@
-xusing System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MovieApp.DataLayer.Models;
 public sealed class Event
