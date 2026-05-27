@@ -1,3 +1,4 @@
+using MovieApp.Logic.Features.Battles;
 using MovieApp.Logic.Features.MovieSwipe;
 using MovieApp.Logic.Features.MovieTournament;
 using MovieApp.Logic.Features.PersonalityMatch;
@@ -65,7 +66,10 @@ builder.Services.AddTransient<IMarathonService, MarathonProxyService>();
 builder.Services.AddTransient<IBadgeService, BadgeProxyService>();
 builder.Services.AddTransient<IUserStatsService, UserStatsProxyService>();
 builder.Services.AddTransient<ITriviaService, TriviaProxyService>();
+builder.Services.AddTransient<ITriviaRepository, TriviaRepositoryProxy>();
+builder.Services.AddTransient<ITriviaRewardRepository, TriviaRewardRepositoryProxy>();
 builder.Services.AddTransient<IPriceWatcherService, PriceWatcherProxyService>();
+builder.Services.AddTransient<IPointService, PointProxyService>();
 
 
 

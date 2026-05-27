@@ -40,14 +40,14 @@ namespace MovieApp.DataLayer.Repositories
         {
             return await _context.TriviaQuestions
                 .AsNoTracking()
-                .FirstOrDefaultAsync(q => q.Id == id, cancellationToken);
+                .FirstOrDefaultAsync(question => question.Id == id, cancellationToken);
         }
 
         public async Task<IEnumerable<TriviaQuestion>> GetByCategoryAsync(string categoryName, CancellationToken cancellationToken = default)
         {
             return await _context.TriviaQuestions
                 .AsNoTracking()
-                .Where(q => q.Category == categoryName)
+                .Where(question => question.Category == categoryName)
                 .ToListAsync(cancellationToken);
         }
 
@@ -55,7 +55,7 @@ namespace MovieApp.DataLayer.Repositories
         {
             return await _context.TriviaQuestions
                 .AsNoTracking()
-                .Where(q => q.MovieId == movieIdentifier)
+                .Where(question => question.MovieId == movieIdentifier)
                 .Take(questionCount)
                 .ToListAsync(cancellationToken);
         }

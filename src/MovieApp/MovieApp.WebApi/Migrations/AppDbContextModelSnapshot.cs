@@ -1338,10 +1338,8 @@ namespace MovieApp.WebApi.Migrations
             modelBuilder.Entity("MovieApp.DataLayer.Models.UserSpinData", b =>
                 {
                     b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
+                        .ValueGeneratedNever()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<int>("BonusSpins")
                         .HasColumnType("int");

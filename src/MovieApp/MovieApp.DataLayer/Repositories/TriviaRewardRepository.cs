@@ -24,15 +24,15 @@ namespace MovieApp.DataLayer.Repositories
         {
             return await _context.TriviaRewards
                 .AsNoTracking()
-                .Where(r => r.UserId == userIdentifier && !r.IsRedeemed)
-                .OrderBy(r => r.CreatedAt)
+                .Where(triviaReward => triviaReward.UserId == userIdentifier && !triviaReward.IsRedeemed)
+                .OrderBy(triviaReward => triviaReward.CreatedAt)
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
         public async Task MarkAsRedeemedAsync(int rewardIdentifier, CancellationToken cancellationToken = default)
         {
             TriviaReward? reward = await _context.TriviaRewards
-                .FirstOrDefaultAsync(r => r.Id == rewardIdentifier, cancellationToken);
+                .FirstOrDefaultAsync(triviaReward => triviaReward.Id == rewardIdentifier, cancellationToken);
 
             if (reward is null)
             {

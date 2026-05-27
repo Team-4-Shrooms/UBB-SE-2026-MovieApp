@@ -22,6 +22,7 @@ using MovieApp.Features.Wallet.Views;
 using MovieApp.Features.BattlesBet.Views;
 using MovieApp.Features.BattlesBet.ViewModels;
 using MovieApp.Features.Ambassadors.Views;
+using MovieApp.Features.TriviaWheel.Views;
 using MovieApp.Features.Referrals.Views;
 using MovieApp.Features.PriceWatcher.Views;
 using MovieApp.Features.Screenings.Views;
@@ -62,6 +63,7 @@ namespace MovieApp
             ["Marathon"] = typeof(MarathonPage),
             ["BattlesBet"] = typeof(BattlePage),
             ["Ambassadors"] = typeof(AmbassadorPage),
+            ["TriviaWheel"] = typeof(TriviaWheelPage),
             ["Referrals"] = typeof(ReferralPage),
             ["PriceWatcher"] = typeof(PriceWatcherPage),
             ["Screenings"] = typeof(ScreeningPage),
