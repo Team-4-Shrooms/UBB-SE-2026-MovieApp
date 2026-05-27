@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using MovieApp.DataLayer.Models;
 using MovieApp.Logic.Interfaces.Services;
 using MovieApp.Web.Models;
 
@@ -9,6 +10,7 @@ public sealed class CatalogController : Controller
 {
     private readonly IMovieService _movieService;
     private readonly IReviewService _reviewService;
+    private readonly IExternalReviewService _externalReviewService;
     private readonly IActiveSalesService _activeSalesService;
     private readonly ICurrentUserService _currentUserService;
     private readonly IMemoryCache _cache;
@@ -16,12 +18,14 @@ public sealed class CatalogController : Controller
     public CatalogController(
         IMovieService movieService,
         IReviewService reviewService,
+        IExternalReviewService externalReviewService,
         IActiveSalesService activeSalesService,
         ICurrentUserService currentUserService,
         IMemoryCache cache)
     {
         _movieService = movieService;
         _reviewService = reviewService;
+        _externalReviewService = externalReviewService;
         _activeSalesService = activeSalesService;
         _currentUserService = currentUserService;
         _cache = cache;
@@ -120,6 +124,16 @@ public sealed class CatalogController : Controller
         var userId = _currentUserService.UserId;
         var userOwnsMovie = userId > 0 && await _movieService.UserOwnsMovieAsync(userId, id);
 
+        List<CriticReview> externalReviews;
+        try
+        {
+            externalReviews = await _externalReviewService.GetExternalReviewsAsync(movie.Title, movie.ReleaseYear);
+        }
+        catch
+        {
+            externalReviews = new List<CriticReview>();
+        }
+
         var viewModel = new CatalogDetailViewModel
         {
             Movie = movie,
@@ -128,6 +142,7 @@ public sealed class CatalogController : Controller
             Form = new AddReviewForm { MovieId = id },
             UserOwnsMovie = userOwnsMovie,
             IsLoggedIn = userId > 0,
+            ExternalReviews = externalReviews,
         };
 
         return View(viewModel);

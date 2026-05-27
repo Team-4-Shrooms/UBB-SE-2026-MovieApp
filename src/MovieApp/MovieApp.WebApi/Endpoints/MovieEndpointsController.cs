@@ -77,4 +77,17 @@ public sealed class MovieEndpointsController : ControllerBase
 
         return Ok(reviews);
     }
+
+    [HttpGet("external-reviews/by-title")]
+    public async Task<IActionResult> GetExternalReviewsByTitle([FromQuery] string title, [FromQuery] int year, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            return Ok(new List<DataLayer.Models.CriticReview>());
+        }
+
+        var reviews = await _externalReviewService.GetExternalReviewsAsync(title, year, cancellationToken);
+
+        return Ok(reviews);
+    }
 }

@@ -40,6 +40,7 @@ builder.Services.AddTransient<IEquipmentService, EquipmentProxyService>();
 builder.Services.AddTransient<IEventService, EventProxyService>();
 builder.Services.AddTransient<IInventoryService, InventoryProxyService>();
 builder.Services.AddTransient<IReviewService, ReviewProxyService>();
+builder.Services.AddTransient<IExternalReviewService, ExternalReviewProxyService>();
 builder.Services.AddTransient<IActiveSalesService, ActiveSalesProxyService>();
 builder.Services.AddTransient<IProfileService, ProfileProxyService>();
 builder.Services.AddTransient<IPersonalityMatchService, PersonalityMatchProxyService>();

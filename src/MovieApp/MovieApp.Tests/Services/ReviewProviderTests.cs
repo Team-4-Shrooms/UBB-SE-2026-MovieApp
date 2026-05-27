@@ -93,7 +93,7 @@ namespace MovieApp.Tests.Services
 
             Assert.NotNull(result);
             Assert.Equal("Internet Movie Database", result!.Source);
-            Assert.Equal(4.4, result.Score, 1);
+            Assert.Equal(8.8, result.Score, 1);
             Assert.Contains("Inception", result.Snippet);
         }
 

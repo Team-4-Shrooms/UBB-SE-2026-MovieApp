@@ -15,5 +15,7 @@ namespace MovieApp.Web.Models
         public bool UserOwnsMovie { get; set; }
 
         public bool IsLoggedIn { get; set; }
+
+        public List<CriticReview> ExternalReviews { get; set; } = new List<CriticReview>();
     }
 }
