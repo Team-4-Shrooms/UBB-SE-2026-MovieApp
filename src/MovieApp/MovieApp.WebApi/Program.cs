@@ -125,6 +125,9 @@ builder.Services.AddScoped<IVideoStorageRepository>(serviceProvider => servicePr
 builder.Services.AddScoped<BadgeRepository>();
 builder.Services.AddScoped<IBadgeRepository>(serviceProvider => serviceProvider.GetRequiredService<BadgeRepository>());
 
+builder.Services.AddScoped<UserBadgeRepository>();
+builder.Services.AddScoped<IUserBadgeRepository>(serviceProvider => serviceProvider.GetRequiredService<UserBadgeRepository>());
+
 builder.Services.AddScoped<UserStatsRepository>();
 builder.Services.AddScoped<IUserStatsRepository>(serviceProvider => serviceProvider.GetRequiredService<UserStatsRepository>());
 builder.Services.AddScoped<TriviaRepository>();
@@ -161,8 +164,6 @@ builder.Services.AddScoped<IScrapeJobService, ScrapeJobService>();
 builder.Services.AddScoped<IBadgeService, BadgeService>();
 builder.Services.AddScoped<IUserStatsService, UserStatsService>();
 builder.Services.AddScoped<IReelService, ReelService>();
-builder.Services.AddScoped<IBadgeService, BadgeService>();
-builder.Services.AddScoped<IUserStatsService, UserStatsService>();
 builder.Services.AddScoped<IMarathonService, MarathonService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<ITriviaService, TriviaService>();

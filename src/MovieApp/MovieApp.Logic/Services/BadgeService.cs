@@ -18,17 +18,20 @@ namespace MovieApp.Logic.Services
         private readonly IUserBadgeRepository _userBadgeRepository;
         private readonly IReviewRepository _reviewRepository;
         private readonly IMovieRepository _movieRepository;
+        private readonly IUserStatsRepository _userStatsRepository;
 
         public BadgeService(
             IBadgeRepository badgeRepository,
             IUserBadgeRepository userBadgeRepository,
             IReviewRepository reviewRepository,
-            IMovieRepository movieRepository)
+            IMovieRepository movieRepository,
+            IUserStatsRepository userStatsRepository)
         {
             _badgeRepository = badgeRepository;
             _userBadgeRepository = userBadgeRepository;
             _reviewRepository = reviewRepository;
             _movieRepository = movieRepository;
+            _userStatsRepository = userStatsRepository;
         }
 
         public async Task<List<UserBadge>> GetUserBadgesAsync(int userId, CancellationToken ct = default)
@@ -39,6 +42,11 @@ namespace MovieApp.Logic.Services
         public async Task<List<Badge>> GetAllBadgesAsync(CancellationToken ct = default)
         {
             return await _badgeRepository.GetAllAsync(ct);
+        }
+
+        public async Task<IList<UserStats>> GetLeaderboardAsync(CancellationToken ct = default)
+        {
+            return await _userStatsRepository.GetLeaderboardAsync(ct);
         }
 
         /// <summary>
