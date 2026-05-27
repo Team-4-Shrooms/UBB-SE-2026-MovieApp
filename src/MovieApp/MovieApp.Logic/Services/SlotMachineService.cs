@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -65,41 +64,13 @@ namespace MovieApp.Logic.Services
                 state.BonusSpins--;
             }
 
-            IReadOnlyList<ReelCombination> validCombinations =
-                await _movieRepository.GetValidReelCombinationsAsync();
+            List<Genre> distinctGenres = (await _movieRepository.GetGenresAsync()).DistinctBy(genre => genre.Id).ToList();
+            List<Actor> distinctActors = (await _movieRepository.GetActorsAsync()).DistinctBy(actor => actor.Id).ToList();
+            List<Director> distinctDirectors = (await _movieRepository.GetDirectorsAsync()).DistinctBy(director => director.Id).ToList();
 
-            List<Genre> distinctGenres;
-            List<Actor> distinctActors;
-            List<Director> distinctDirectors;
-
-            if (validCombinations.Count == NoSpinsAvailable)
+            if (distinctGenres.Count == 0 || distinctActors.Count == 0 || distinctDirectors.Count == 0)
             {
-                distinctGenres = (await _movieRepository.GetGenresAsync()).ToList();
-                distinctActors = (await _movieRepository.GetActorsAsync()).ToList();
-                distinctDirectors = (await _movieRepository.GetDirectorsAsync()).ToList();
-
-                if (distinctGenres.Count == 0 || distinctActors.Count == 0 || distinctDirectors.Count == 0)
-                {
-                    throw new InvalidOperationException("-------" + distinctGenres.Count + "------" + distinctActors.Count + "---------------" + distinctDirectors.Count + "-----------" +
-                        "No movies with active screenings available");
-                }
-            }
-            else
-            {
-                distinctGenres = validCombinations
-                    .Select(c => c.Genre)
-                    .DistinctBy(g => g.Id)
-                    .ToList();
-
-                distinctActors = validCombinations
-                    .Select(c => c.Actor)
-                    .DistinctBy(a => a.Id)
-                    .ToList();
-
-                distinctDirectors = validCombinations
-                    .Select(c => c.Director)
-                    .DistinctBy(d => d.Id)
-                    .ToList();
+                throw new InvalidOperationException("No movies with active screenings available");
             }
 
             Genre selectedGenre = distinctGenres[_random.Next(distinctGenres.Count)];
@@ -112,18 +83,12 @@ namespace MovieApp.Logic.Services
             Movie? jackpotMovie =
                 await FindJackpotMovieAsync(selectedGenre.Id, selectedActor.Id, selectedDirector.Id);
 
-            HashSet<int> jackpotEventIds = new();
-
-            if (jackpotMovie is not null)
-            {
-                IReadOnlyList<int> eventIds =
-                    await _movieRepository.FindScreeningEventIdsForMovieAsync(jackpotMovie.Id);
-
-                foreach (int id in eventIds)
-                {
-                    jackpotEventIds.Add(id);
-                }
-            }
+            HashSet<int> jackpotEventIds = jackpotMovie is not null
+                ? matchingEvents
+                    .Where(movieEvent => movieEvent.Movie?.Id == jackpotMovie.Id)
+                    .Select(movieEvent => movieEvent.Id)
+                    .ToHashSet()
+                : new HashSet<int>();
 
             SlotMachineResult result = new()
             {
@@ -139,7 +104,7 @@ namespace MovieApp.Logic.Services
 
             if (jackpotMovie is not null)
             {
-                //await GrantJackpotDiscountAsync(userIdentifier, jackpotMovie.Id);
+                await GrantJackpotDiscountAsync(userIdentifier, jackpotMovie.Id);
                 result.JackpotDiscountApplied = true;
                 result.DiscountPercentage = DiscountPercentage;
             }
@@ -228,18 +193,33 @@ namespace MovieApp.Logic.Services
         public async Task<Genre> GetRandomGenreAsync(CancellationToken cancellationToken = default)
         {
             IReadOnlyList<Genre> genres = await _movieRepository.GetGenresAsync(cancellationToken);
+            if (genres.Count == 0)
+            {
+                return new Genre();
+            }
+
             return genres[_random.Next(genres.Count)];
         }
 
         public async Task<Actor> GetRandomActorAsync(CancellationToken cancellationToken = default)
         {
             IReadOnlyList<Actor> actors = await _movieRepository.GetActorsAsync(cancellationToken);
+            if (actors.Count == 0)
+            {
+                return new Actor();
+            }
+
             return actors[_random.Next(actors.Count)];
         }
 
         public async Task<Director> GetRandomDirectorAsync(CancellationToken cancellationToken = default)
         {
             IReadOnlyList<Director> directors = await _movieRepository.GetDirectorsAsync(cancellationToken);
+            if (directors.Count == 0)
+            {
+                return new Director();
+            }
+
             return directors[_random.Next(directors.Count)];
         }
 
@@ -261,21 +241,19 @@ namespace MovieApp.Logic.Services
                 await _movieRepository.FindMoviesByAnyCriteriaAsync(
                     genreIdentifier, actorIdentifier, directorIdentifier);
 
-            List<MovieEvent> result = new();
-
-            foreach (Movie movie in movies)
+            if (movies.Count == 0)
             {
-                IReadOnlyList<int> eventIds =
-                    await _movieRepository.FindScreeningEventIdsForMovieAsync(movie.Id);
-
-                IEnumerable<MovieEvent> allEvents = await _eventRepository.GetAllEventsAsync();
-
-                result.AddRange(allEvents.Where(e =>
-                    eventIds.Contains(e.Id) &&
-                    e.Date > DateTime.UtcNow));
+                return new List<MovieEvent>();
             }
 
-            return result.DistinctBy(e => e.Id).ToList();
+            HashSet<int> movieIds = movies.Select(movie => movie.Id).ToHashSet();
+
+            List<MovieEvent> allMovieEvents = await _eventRepository.GetAllEventsAsync();
+
+            return allMovieEvents
+                .Where(movieEvent => movieEvent.Movie != null && movieIds.Contains(movieEvent.Movie.Id) && movieEvent.Date > DateTime.UtcNow)
+                .DistinctBy(movieEvent => movieEvent.Id)
+                .ToList();
         }
 
         public async Task<Movie?> FindJackpotMovieAsync(
@@ -343,7 +321,6 @@ namespace MovieApp.Logic.Services
             };
 
             await _stateRepository.CreateAsync(state);
-
             return state;
         }
 

@@ -301,3 +301,27 @@ public sealed class CommentResponseDto
     public string AuthorUsername { get; set; } = string.Empty;
     public List<CommentResponseDto> Replies { get; set; } = new List<CommentResponseDto>();
 }
+
+public sealed class BadgeDto
+{
+    public int BadgeId { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public int CriteriaValue { get; set; }
+}
+
+public sealed class UserBadgeDto
+{
+    public int UserBadgeId { get; set; }
+    public UserReferenceDto? User { get; set; }
+    public BadgeDto? Badge { get; set; }
+}
+
+public sealed class UserStatsDto
+{
+    public int UserStatsId { get; set; }
+    public int TotalPoints { get; set; }
+    public int WeeklyScore { get; set; }
+    public int UserId { get; set; }
+    public UserReferenceDto? User { get; set; }
+}

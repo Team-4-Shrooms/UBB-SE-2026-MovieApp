@@ -239,14 +239,14 @@
                 <ListView ItemsSource="{x:Bind ViewModel.MatchingEvents, Mode=OneWay}"
                           SelectionMode="None">
                     <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="models:Event">
+                        <DataTemplate x:DataType="models:MovieEvent">
                             <StackPanel Spacing="4" Padding="0,6">
                                 <TextBlock Text="{x:Bind Title}"
                                            FontWeight="Bold"/>
-                                <TextBlock Text="{x:Bind EventDateTime}"
+                                <TextBlock Text="{x:Bind DisplayDate}"
                                            FontSize="12"
                                            Opacity="0.7"/>
-                                <TextBlock Text="{x:Bind TicketPrice}"
+                                <TextBlock Text="{x:Bind DisplayTicketPrice}"
                                            FontSize="12"/>
                             </StackPanel>
                         </DataTemplate>

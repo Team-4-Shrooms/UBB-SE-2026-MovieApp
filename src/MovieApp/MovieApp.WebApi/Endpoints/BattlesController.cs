@@ -14,54 +14,127 @@ namespace MovieApp.WebApi.Endpoints;
 [Authorize]
 public class BattlesController : ControllerBase
 {
-    private readonly IBattleService _battleService;
-    private readonly ICurrentUserService _currentUserService;
+    private readonly IBattleService battleService;
 
-    public BattlesController(IBattleService battleService, ICurrentUserService currentUserService)
+    public BattlesController(IBattleService battleService)
     {
-        _battleService = battleService;
-        _currentUserService = currentUserService;
+        this.battleService = battleService;
     }
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Battle>>> GetBattles(CancellationToken ct)
+    [HttpGet("active")]
+    public async Task<ActionResult<Battle>> GetActiveBattle()
     {
-        IEnumerable<Battle> battles = await _battleService.GetBattlesAsync(ct);
-        return Ok(battles);
-    }
-
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Battle>> GetBattleById(int id, CancellationToken ct)
-    {
-        Battle? battle = await _battleService.GetBattleByIdAsync(id, ct);
-        if (battle == null)
-        {
-            return NotFound();
-        }
-
+        var battle = await this.battleService.GetActiveBattleAsync();
+        if (battle == null) return NotFound();
         return Ok(battle);
     }
 
-    [HttpPost("{id}/bet")]
-    public async Task<ActionResult<BattleBet>> PlaceBet(int id, [FromBody] PlaceBetRequest request, CancellationToken ct)
+    [HttpGet("user/{userId}/current")]
+    public async Task<ActionResult<Battle>> GetCurrentBattleForUser(int userId)
     {
-        if (request == null || request.Amount <= 0)
-        {
-            return BadRequest("Invalid bet request.");
-        }
+        var battle = await this.battleService.GetCurrentBattleForUserAsync(userId);
+        if (battle == null) return NotFound();
+        return Ok(battle);
+    }
 
-        int userId = _currentUserService.UserId;
-        if (userId <= 0)
+    [HttpPost("bet")]
+    public async Task<ActionResult<BattleBet>> PlaceBet([FromBody] PlaceBetRequest request)
+    {
+        try
         {
-            return Unauthorized();
+            var bet = await this.battleService.PlaceBetAsync(
+                request.UserId,
+                request.BattleId,
+                request.MovieId,
+                request.Amount);
+            return Ok(bet);
         }
-
-        BattleBet bet = await _battleService.PlaceBetAsync(userId, id, request.MovieId, request.Amount, ct);
-        if (bet == null)
+        catch (Exception ex)
         {
-            return BadRequest("Could not place bet.");
+            return BadRequest(ex.Message);
         }
+    }
 
+    [HttpGet("user/{userId}/bet/{battleId}")]
+    public async Task<ActionResult<BattleBet>> GetUserBet(int userId, int battleId)
+    {
+        var bet = await this.battleService.GetBetAsync(userId, battleId);
+        if (bet == null) return NotFound();
         return Ok(bet);
+    }
+
+    [HttpGet("{battleId}/winner")]
+    public async Task<ActionResult<int>> DetermineWinner(int battleId)
+    {
+        try
+        {
+            return Ok(await this.battleService.DetermineWinnerAsync(battleId));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<Battle>> CreateBattle([FromBody] CreateBattleRequest request)
+    {
+        try
+        {
+            return Ok(await this.battleService.CreateBattleAsync(request.FirstMovieId, request.SecondMovieId));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPost("{battleId}/settle")]
+    public async Task<IActionResult> ForceSettleBattle(int battleId)
+    {
+        await this.battleService.ForceSettleBattleAsync(battleId);
+        return NoContent();
+    }
+
+    [HttpPost("settle-expired")]
+    public async Task<IActionResult> SettleExpiredBattles()
+    {
+        await this.battleService.SettleExpiredBattlesAsync();
+        return NoContent();
+    }
+
+    [HttpPost("demo")]
+    public async Task<ActionResult<Battle>> CreateDemo()
+    {
+        try
+        {
+            return Ok(await this.battleService.CreateDemoBattleAsync());
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPost("reset")]
+    public async Task<IActionResult> ResetDemo()
+    {
+        await this.battleService.ResetAllBattlesForDemoAsync();
+        var newBattle = await this.battleService.CreateDemoBattleAsync();
+        return Ok(newBattle);
+    }
+
+    public class PlaceBetRequest
+    {
+        public int UserId { get; set; }
+        public int BattleId { get; set; }
+        public int MovieId { get; set; }
+        public int Amount { get; set; }
+    }
+
+    public class CreateBattleRequest
+    {
+        public int FirstMovieId { get; set; }
+        public int SecondMovieId { get; set; }
     }
 }

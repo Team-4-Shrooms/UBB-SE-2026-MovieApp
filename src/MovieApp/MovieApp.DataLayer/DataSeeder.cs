@@ -42,8 +42,11 @@ namespace MovieApp.DataLayer
             await SeedMovieEventsAsync();
             await SeedMovieReviewsAsync();
             await SeedEquipmentAsync();
+            await SeedScreeningsAndRoomsAsync();
+            await SeedAdditionalRoomsAsync();
             await FixExistingDataAsync();
             await SeedTriviaQuestionsAsync();
+            await SeedSlotMachineDataAsync();
         }
 
         /// <summary>
@@ -1517,21 +1520,33 @@ namespace MovieApp.DataLayer
         }
         private async Task SeedTriviaQuestionsAsync()
         {
-            if (await _context.TriviaQuestions.AnyAsync())
+            // Skip if already seeded with the correct genre-based categories.
+            bool hasCorrectData = await _context.TriviaQuestions
+                .AnyAsync(question => question.Category == "Action" || question.Category == "Sci-Fi");
+
+            if (hasCorrectData)
             {
                 return;
             }
 
+            // Remove any stale placeholder data (e.g. General/Science/History/Movies/Music).
+            var staleQuestions = await _context.TriviaQuestions.ToListAsync();
+            if (staleQuestions.Count > 0)
+            {
+                _context.TriviaQuestions.RemoveRange(staleQuestions);
+                await _context.SaveChangesAsync();
+            }
+
             // Look up movie IDs for movie-specific questions.
-            Movie? inception = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Inception");
-            Movie? darkKnight = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Dark Knight");
-            Movie? matrix = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Matrix");
-            Movie? interstellar = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Interstellar");
-            Movie? pulpFiction = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Pulp Fiction");
-            Movie? godfather = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Godfather");
-            Movie? shawshank = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Shawshank Redemption");
-            Movie? forrestGump = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Forrest Gump");
-            Movie? laLaLand = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "La La Land");
+            Movie? inception = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Inception");
+            Movie? darkKnight = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "The Dark Knight");
+            Movie? matrix = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "The Matrix");
+            Movie? interstellar = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Interstellar");
+            Movie? pulpFiction = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Pulp Fiction");
+            Movie? godfather = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "The Godfather");
+            Movie? shawshank = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "The Shawshank Redemption");
+            Movie? forrestGump = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Forrest Gump");
+            Movie? laLaLand = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "La La Land");
 
             var questions = new List<TriviaQuestion>();
 
@@ -1830,6 +1845,140 @@ namespace MovieApp.DataLayer
             }
 
             if (zeroCapacityEvents.Any() || lowBalanceUsers.Any())
+            {
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task SeedScreeningsAndRoomsAsync()
+        {
+            if (await _context.Screenings.AnyAsync())
+            {
+                return;
+            }
+
+            var firstMovie = await _context.Movies.FirstOrDefaultAsync();
+            var firstUser = await _context.Users.FirstOrDefaultAsync();
+            if (firstMovie is null || firstUser is null)
+            {
+                return;
+            }
+
+            var cinemaEvent = new Event
+            {
+                Id = 0,
+                Title = "Demo Screening Event",
+                EventDateTime = DateTime.UtcNow.AddDays(7),
+                LocationReference = "Hall A",
+                TicketPrice = 12.50m,
+                MaxCapacity = 100,
+                CreatorUserId = firstUser.Id,
+            };
+            _context.Events.Add(cinemaEvent);
+            await _context.SaveChangesAsync();
+
+            var room = new Room
+            {
+                EventId = cinemaEvent.Id,
+                Name = "Hall A",
+                Rows = 5,
+                Columns = 8,
+            };
+            _context.Rooms.Add(room);
+            await _context.SaveChangesAsync();
+
+            var screening = new Screening
+            {
+                Id = 0,
+                EventId = cinemaEvent.Id,
+                MovieId = firstMovie.Id,
+                RoomId = room.Id,
+                ScreeningTime = cinemaEvent.EventDateTime,
+            };
+            _context.Screenings.Add(screening);
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task SeedSlotMachineDataAsync()
+        {
+            if (await _context.Genres.AnyAsync())
+            {
+                return;
+            }
+
+            var movies = await _context.Movies
+                .Include(movie => movie.Genres)
+                .Include(movie => movie.Actors)
+                .Include(movie => movie.Directors)
+                .ToListAsync();
+
+            if (movies.Count == 0)
+            {
+                return;
+            }
+
+            // Genre/Actor/Director are owned by a single Movie (one-to-many with MovieId FK).
+            // Each movie gets its own Genre record (derived from PrimaryGenre), one Actor, and
+            // one Director by cycling through sample names.
+            string[] actorNames =
+            [
+                "Leonardo DiCaprio", "Tom Hanks", "Meryl Streep", "Morgan Freeman",
+                "Cate Blanchett", "Denzel Washington", "Natalie Portman", "Brad Pitt",
+            ];
+            string[] directorNames =
+            [
+                "Christopher Nolan", "Steven Spielberg", "Martin Scorsese",
+                "Quentin Tarantino", "Ridley Scott", "James Cameron",
+            ];
+
+            int index = 0;
+            foreach (Movie movie in movies)
+            {
+                if (!string.IsNullOrEmpty(movie.PrimaryGenre))
+                {
+                    movie.Genres.Add(new Genre { Name = movie.PrimaryGenre });
+                }
+
+                movie.Actors.Add(new Actor { Name = actorNames[index % actorNames.Length] });
+                movie.Directors.Add(new Director { Name = directorNames[index % directorNames.Length] });
+                index++;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task SeedAdditionalRoomsAsync()
+        {
+            var demoEvent = await _context.Events.FirstOrDefaultAsync(e => e.Title == "Demo Screening Event");
+            if (demoEvent is null)
+            {
+                return;
+            }
+
+            var desiredRooms = new[]
+            {
+                new Room { EventId = demoEvent.Id, Name = "Hall B (IMAX)", Rows = 8, Columns = 10 },
+                new Room { EventId = demoEvent.Id, Name = "Hall C (Premium)", Rows = 4, Columns = 6 },
+                new Room { EventId = demoEvent.Id, Name = "Hall D (Small)", Rows = 3, Columns = 5 },
+                new Room { EventId = demoEvent.Id, Name = "Hall E (Standard)", Rows = 6, Columns = 9 },
+            };
+
+            bool addedAny = false;
+            foreach (var desired in desiredRooms)
+            {
+                bool exists = await _context.Rooms.AnyAsync(r => r.EventId == desired.EventId && r.Name == desired.Name);
+                if (!exists)
+                {
+                    if (desired.Rows * desired.Columns > demoEvent.MaxCapacity)
+                    {
+                        demoEvent.MaxCapacity = desired.Rows * desired.Columns;
+                    }
+                    _context.Rooms.Add(desired);
+                    addedAny = true;
+                }
+            }
+
+            if (addedAny)
             {
                 await _context.SaveChangesAsync();
             }

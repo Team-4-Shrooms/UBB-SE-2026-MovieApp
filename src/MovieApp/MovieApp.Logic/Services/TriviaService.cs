@@ -1,64 +1,93 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using MovieApp.DataLayer.Interfaces.Repositories;
 using MovieApp.DataLayer.Models;
 using MovieApp.Logic.Interfaces.Services;
 
 namespace MovieApp.Logic.Services
 {
-    public sealed class TriviaService : ITriviaService
+    public class TriviaService : ITriviaService
     {
         private readonly ITriviaRepository _triviaRepository;
-        private readonly ITriviaRewardRepository _rewardRepository;
+        private readonly ITriviaRewardRepository _triviaRewardRepository;
 
-        public TriviaService(ITriviaRepository triviaRepository, ITriviaRewardRepository rewardRepository)
+        public TriviaService(
+            ITriviaRepository triviaRepository,
+            ITriviaRewardRepository triviaRewardRepository)
         {
             _triviaRepository = triviaRepository;
-            _rewardRepository = rewardRepository;
+            _triviaRewardRepository = triviaRewardRepository;
         }
 
-        public async Task<List<TriviaQuestion>> GetAllQuestionsAsync(CancellationToken ct = default)
+        /// <inheritdoc />
+        public async Task<List<TriviaQuestion>> GetAllQuestionsAsync(
+            CancellationToken cancellationToken = default)
         {
-            IEnumerable<TriviaQuestion> questions = await _triviaRepository.GetAllAsync(ct);
-            return new List<TriviaQuestion>(questions);
+            var questions = await _triviaRepository.GetAllAsync(cancellationToken);
+            return questions.ToList();
         }
 
-        public async Task<List<TriviaQuestion>> GetQuestionsByMovieIdAsync(int movieId, CancellationToken ct = default)
+        /// <inheritdoc />
+        public async Task<List<TriviaQuestion>> GetQuestionsByCategoryAsync(
+            string category,
+            CancellationToken cancellationToken = default)
         {
-            IEnumerable<TriviaQuestion> questions = await _triviaRepository.GetByMovieIdAsync(movieId, cancellationToken: ct);
-            return new List<TriviaQuestion>(questions);
+            var questions = await _triviaRepository.GetByCategoryAsync(category, cancellationToken);
+            return questions.ToList();
         }
 
-        public async Task<TriviaQuestion?> GetQuestionByIdAsync(int id, CancellationToken ct = default)
+        /// <inheritdoc />
+        public async Task<List<TriviaQuestion>> GetQuestionsByMovieIdAsync(
+            int movieId,
+            CancellationToken cancellationToken = default)
         {
-            return await _triviaRepository.GetByIdAsync(id, ct);
+            var questions = await _triviaRepository.GetByMovieIdAsync(
+                movieId,
+                cancellationToken: cancellationToken);
+            return questions.ToList();
         }
 
-        public async Task<List<TriviaReward>> GetRewardsByUserIdAsync(int userId, CancellationToken ct = default)
+        /// <inheritdoc />
+        public async Task<TriviaQuestion?> GetQuestionByIdAsync(
+            int id,
+            CancellationToken cancellationToken = default)
         {
-            TriviaReward? reward = await _rewardRepository.GetUnredeemedByUserAsync(userId, ct);
-            if (reward is null)
-            {
-                return new List<TriviaReward>();
-            }
-
-            return new List<TriviaReward> { reward };
+            return await _triviaRepository.GetByIdAsync(id, cancellationToken);
         }
 
-        public async Task<int> AwardRewardAsync(int userId, CancellationToken ct = default)
+        /// <inheritdoc />
+        public async Task<List<TriviaReward>> GetRewardsByUserIdAsync(
+            int userId,
+            CancellationToken cancellationToken = default)
         {
-            TriviaReward reward = new TriviaReward
+            var reward = await _triviaRewardRepository.GetUnredeemedByUserAsync(userId, cancellationToken);
+            return reward is null
+                ? new List<TriviaReward>()
+                : new List<TriviaReward> { reward };
+        }
+
+        /// <inheritdoc />
+        public async Task<int> AwardRewardAsync(int userId, CancellationToken cancellationToken = default)
+        {
+            var reward = new TriviaReward
             {
                 UserId = userId,
                 IsRedeemed = false,
                 CreatedAt = DateTime.UtcNow,
             };
-
-            await _rewardRepository.AddAsync(reward, ct);
+            await _triviaRewardRepository.AddAsync(reward, cancellationToken);
             return reward.Id;
         }
 
-        public async Task<bool> RedeemRewardAsync(int rewardId, CancellationToken ct = default)
+        /// <inheritdoc />
+        public async Task<bool> RedeemRewardAsync(
+            int rewardId,
+            CancellationToken cancellationToken = default)
         {
-            await _rewardRepository.MarkAsRedeemedAsync(rewardId, ct);
+            await _triviaRewardRepository.MarkAsRedeemedAsync(rewardId, cancellationToken);
             return true;
         }
     }

@@ -1,6 +1,7 @@
+using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MovieApp.DataLayer.Models;
 using MovieApp.Logic.Interfaces.Services;
 
 namespace MovieApp.WebApi.Endpoints;
@@ -27,6 +28,7 @@ public sealed class TriviaController : ControllerBase
         {
             return NotFound();
         }
+
         return Ok(questions[Random.Shared.Next(questions.Count)]);
     }
 
@@ -34,6 +36,13 @@ public sealed class TriviaController : ControllerBase
     public async Task<IActionResult> GetAllQuestions()
     {
         var questions = await _triviaService.GetAllQuestionsAsync();
+        return Ok(questions);
+    }
+
+    [HttpGet("questions/category/{category}")]
+    public async Task<IActionResult> GetQuestionsByCategory(string category)
+    {
+        var questions = await _triviaService.GetQuestionsByCategoryAsync(category);
         return Ok(questions);
     }
 
@@ -52,6 +61,7 @@ public sealed class TriviaController : ControllerBase
         {
             return NotFound();
         }
+
         return Ok(question);
     }
 
@@ -65,7 +75,9 @@ public sealed class TriviaController : ControllerBase
         }
 
         bool correct = question.CorrectOption == request.SelectedOption;
-        int? rewardId = correct ? await _triviaService.AwardRewardAsync(_currentUserService.UserId) : null;
+        int? rewardId = correct
+            ? await _triviaService.AwardRewardAsync(_currentUserService.UserId)
+            : null;
 
         return Ok(new TriviaAnswerResult(correct, rewardId));
     }

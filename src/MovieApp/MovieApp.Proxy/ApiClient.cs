@@ -58,9 +58,6 @@ namespace MovieApp.Proxy
             if (!response.IsSuccessStatusCode)
             {
                 string errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
-                System.Console.WriteLine("=========111111111111========== BACKEND 500 CRASH DETECTED ==========11111111111=========");
-                System.Console.WriteLine(errorContent);
-                System.Console.WriteLine("==================================================================");
             }
 
             response.EnsureSuccessStatusCode();
@@ -93,9 +90,6 @@ namespace MovieApp.Proxy
             if (!response.IsSuccessStatusCode)
             {
                 string errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
-                System.Console.WriteLine("========2222222222=========== BACKEND 500 CRASH DETECTED =======222222222============");
-                System.Console.WriteLine(errorContent);
-                System.Console.WriteLine("==================================================================");
             }
 
             response.EnsureSuccessStatusCode();

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="MovieApp.Features.TriviaWheel.Views.TriviaWheelPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Loaded="OnPageLoaded">
+
+    <ScrollViewer>
+        <Grid Padding="24" RowSpacing="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <TextBlock
+                Grid.Row="0"
+                Text="Trivia Wheel"
+                Style="{StaticResource TitleTextBlockStyle}"
+                Margin="0,0,0,8"/>
+
+            <!-- Main content: Wheel on left, trivia panel on right -->
+            <Grid Grid.Row="1" ColumnSpacing="24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.3*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- ── Left panel: Wheel ───────────────────────────── -->
+                <StackPanel Grid.Column="0" Spacing="16">
+
+                    <!-- Wheel canvas -->
+                    <Border Style="{StaticResource CardStyle}" Padding="24" HorizontalAlignment="Center">
+                        <StackPanel Spacing="16" HorizontalAlignment="Center">
+                            <Canvas
+                                x:Name="WheelCanvas"
+                                Width="280" Height="280">
+                                <Canvas.RenderTransform>
+                                    <RotateTransform
+                                        x:Name="WheelRotation"
+                                        CenterX="140" CenterY="140"/>
+                                </Canvas.RenderTransform>
+                            </Canvas>
+
+                            <Button
+                                x:Name="SpinButton"
+                                Content="Spin the Wheel"
+                                Click="SpinButton_Click"
+                                HorizontalAlignment="Center"
+                                Style="{ThemeResource AccentButtonStyle}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- No-spin banner (hidden until CanSpin = false and session not started) -->
+                    <Border
+                        x:Name="NoSpinBanner"
+                        Style="{StaticResource CardStyle}"
+                        Padding="16"
+                        Visibility="Collapsed">
+                        <TextBlock
+                            Text="You have already spun the wheel this session. Come back later!"
+                            Style="{StaticResource CardBodyTextStyle}"
+                            TextWrapping="Wrap"/>
+                    </Border>
+
+                    <!-- Instructions card -->
+                    <Border Style="{StaticResource CardStyle}" Padding="16">
+                        <StackPanel Spacing="8">
+                            <TextBlock
+                                Text="How to play"
+                                Style="{StaticResource CardHeaderTextStyle}"/>
+                            <TextBlock
+                                Text="1. Spin the wheel to land on a trivia category."
+                                Style="{StaticResource CardBodyTextStyle}"/>
+                            <TextBlock
+                                Text="2. Answer all questions in the category."
+                                Style="{StaticResource CardBodyTextStyle}"/>
+                            <TextBlock
+                                Text="3. Score at least half to earn a reward!"
+                                Style="{StaticResource CardBodyTextStyle}"/>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+
+                <!-- ── Right panel: trivia states ─────────────────── -->
+                <Grid Grid.Column="1">
+
+                    <!-- Idle panel -->
+                    <Border
+                        x:Name="IdlePanel"
+                        Style="{StaticResource CardStyle}"
+                        Padding="24"
+                        VerticalAlignment="Center">
+                        <StackPanel Spacing="12" HorizontalAlignment="Center">
+                            <FontIcon Glyph="&#xE9D9;" FontSize="48" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                            <TextBlock
+                                Text="Spin the wheel to start a trivia challenge!"
+                                Style="{StaticResource CardHeaderTextStyle}"
+                                TextAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Playing panel -->
+                    <Border
+                        x:Name="PlayingPanel"
+                        Style="{StaticResource CardStyle}"
+                        Padding="24"
+                        Visibility="Collapsed">
+                        <StackPanel Spacing="16">
+
+                            <TextBlock
+                                x:Name="QuestionProgressText"
+                                Style="{StaticResource CardBodyTextStyle}"
+                                Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+
+                            <TextBlock
+                                x:Name="QuestionText"
+                                Style="{StaticResource CardHeaderTextStyle}"
+                                TextWrapping="Wrap"/>
+
+                            <StackPanel x:Name="AnswerOptionsPanel" Spacing="8">
+                                <RadioButton x:Name="OptionA" GroupName="Answers" Tag="A"/>
+                                <RadioButton x:Name="OptionB" GroupName="Answers" Tag="B"/>
+                                <RadioButton x:Name="OptionC" GroupName="Answers" Tag="C"/>
+                                <RadioButton x:Name="OptionD" GroupName="Answers" Tag="D"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                <Button
+                                    x:Name="HintButton"
+                                    Content="Use Hint"
+                                    Click="HintButton_Click"/>
+                                <Button
+                                    x:Name="SubmitAnswerButton"
+                                    Content="Submit Answer"
+                                    Click="SubmitAnswer_Click"
+                                    Style="{ThemeResource AccentButtonStyle}"/>
+                            </StackPanel>
+
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Results panel -->
+                    <Border
+                        x:Name="ResultsPanel"
+                        Style="{StaticResource CardStyle}"
+                        Padding="24"
+                        Visibility="Collapsed"
+                        VerticalAlignment="Center">
+                        <StackPanel Spacing="16" HorizontalAlignment="Center">
+                            <FontIcon
+                                x:Name="ResultIcon"
+                                Glyph="&#xE930;"
+                                FontSize="48"
+                                Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                            <TextBlock
+                                x:Name="ResultTitle"
+                                Style="{StaticResource TitleTextBlockStyle}"
+                                TextAlignment="Center"/>
+                            <TextBlock
+                                x:Name="ScoreText"
+                                Style="{StaticResource CardHeaderTextStyle}"
+                                TextAlignment="Center"/>
+                            <TextBlock
+                                x:Name="ResultDescription"
+                                Style="{StaticResource CardBodyTextStyle}"
+                                TextAlignment="Center"
+                                TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+
+                </Grid>
+
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</Page>

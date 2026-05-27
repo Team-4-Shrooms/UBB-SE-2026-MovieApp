@@ -100,10 +100,7 @@ namespace MovieApp.WebApi.Migrations
             modelBuilder.Entity("MovieApp.DataLayer.Models.AmbassadorProfile", b =>
                 {
                     b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<string>("PermanentCode")
                         .IsRequired()
@@ -944,6 +941,32 @@ namespace MovieApp.WebApi.Migrations
                     b.ToTable("Rewards");
                 });
 
+            modelBuilder.Entity("MovieApp.DataLayer.Models.Room", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Columns")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Rows")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Rooms");
+                });
+
             modelBuilder.Entity("MovieApp.DataLayer.Models.ScrapeJob", b =>
                 {
                     b.Property<int>("Id")
@@ -1026,8 +1049,14 @@ namespace MovieApp.WebApi.Migrations
                     b.Property<int>("MovieId")
                         .HasColumnType("int");
 
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("ScreeningTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<decimal>("TicketPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -1331,6 +1360,7 @@ namespace MovieApp.WebApi.Migrations
             modelBuilder.Entity("MovieApp.DataLayer.Models.UserSpinData", b =>
                 {
                     b.Property<int>("UserId")
+                        .ValueGeneratedNever()
                         .HasColumnType("int");
 
                     b.Property<int>("BonusSpins")
