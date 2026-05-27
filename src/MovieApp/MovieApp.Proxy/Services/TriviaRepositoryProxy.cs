@@ -49,4 +49,10 @@ public sealed class TriviaRepositoryProxy : ITriviaRepository
             cancellationToken);
         return questions ?? new List<TriviaQuestion>();
     }
+
+    public Task<TriviaQuestion?> GetRandomAsync(CancellationToken cancellationToken = default)
+        => _apiClient.GetAsync<TriviaQuestion?>("api/trivia/question", cancellationToken);
+
+    public Task<TriviaQuestion?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        => _apiClient.GetAsync<TriviaQuestion?>($"api/trivia/questions/{id}", cancellationToken);
 }
