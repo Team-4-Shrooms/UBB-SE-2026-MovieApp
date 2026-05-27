@@ -1936,29 +1936,25 @@ namespace MovieApp.DataLayer
             DateTime now = DateTime.UtcNow;
             string currentWeek = $"{now.Year}-W{System.Globalization.ISOWeek.GetWeekOfYear(now):D2}";
 
-            Movie? inception = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Inception");
-            Movie? matrix = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Matrix");
-            Movie? bladeRunner = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Blade Runner 2049");
-            Movie? her = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Her");
-            Movie? interstellar = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Interstellar");
-
-            Movie? darkKnight = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Dark Knight");
-            Movie? gladiator = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Gladiator");
-            Movie? madMax = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Mad Max: Fury Road");
-            Movie? johnWick = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "John Wick");
-
-            Movie? parasite = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Parasite");
-            Movie? shutter = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Shutter Island");
-            Movie? memento = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Memento");
-
-            Movie? toyStory = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Toy Story");
-            Movie? findingNemo = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Finding Nemo");
-            Movie? up = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Up");
-            Movie? lionKing = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Lion King");
-
-            Movie? godfather = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Godfather");
-            Movie? pulpFiction = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Pulp Fiction");
-            Movie? django = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Django Unchained");
+            Movie? inception = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Inception");
+            Movie? matrix = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "The Matrix");
+            Movie? bladeRunner = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Blade Runner 2049");
+            Movie? her = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Her");
+            Movie? interstellar = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Interstellar");
+            Movie? darkKnight = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "The Dark Knight");
+            Movie? gladiator = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Gladiator");
+            Movie? madMax = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Mad Max: Fury Road");
+            Movie? johnWick = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "John Wick");
+            Movie? parasite = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Parasite");
+            Movie? shutter = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Shutter Island");
+            Movie? memento = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Memento");
+            Movie? toyStory = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Toy Story");
+            Movie? findingNemo = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Finding Nemo");
+            Movie? up = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Up");
+            Movie? lionKing = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "The Lion King");
+            Movie? godfather = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "The Godfather");
+            Movie? pulpFiction = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Pulp Fiction");
+            Movie? django = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Django Unchained");
 
             var scifiMarathon = new Marathon
             {
@@ -2073,7 +2069,7 @@ namespace MovieApp.DataLayer
                 return;
             }
 
-            List<User> users = await _context.Users.OrderBy(u => u.Id).ToListAsync();
+            List<User> users = await _context.Users.OrderBy(user => user.Id).ToListAsync();
             List<Marathon> marathons = await _context.Marathons.ToListAsync();
 
             if (users.Count < 3 || marathons.Count == 0)
@@ -2081,14 +2077,14 @@ namespace MovieApp.DataLayer
                 return;
             }
 
-            User user1 = users.First(u => u.Username == "User1");
-            User alice = users.First(u => u.Username == "Alice");
-            User bob = users.First(u => u.Username == "Bob");
+            User user1 = users.First(user => user.Username == "User1");
+            User alice = users.First(user => user.Username == "Alice");
+            User bob = users.First(user => user.Username == "Bob");
 
-            Marathon? scifi = marathons.FirstOrDefault(m => m.Title == "Sci-Fi Minds");
-            Marathon? action = marathons.FirstOrDefault(m => m.Title == "Pure Adrenaline");
-            Marathon? thriller = marathons.FirstOrDefault(m => m.Title == "Mind Benders");
-            Marathon? elite = marathons.FirstOrDefault(m => m.Title == "Sci-Fi Elite");
+            Marathon? scifi = marathons.FirstOrDefault(marathon => marathon.Title == "Sci-Fi Minds");
+            Marathon? action = marathons.FirstOrDefault(marathon => marathon.Title == "Pure Adrenaline");
+            Marathon? thriller = marathons.FirstOrDefault(marathon => marathon.Title == "Mind Benders");
+            Marathon? elite = marathons.FirstOrDefault(marathon => marathon.Title == "Sci-Fi Elite");
 
             var progressions = new List<MarathonProgress>();
 
