@@ -10,6 +10,7 @@ namespace MovieApp.Features.ReelsEditing.Views
     using Windows.Media.Playback;
     using CommunityToolkit.Mvvm.DependencyInjection;
     using MovieApp.DataLayer.Models;
+    using static System.Net.WebRequestMethods;
 
     /// <summary>
     /// The page responsible for the reels editing interface.
@@ -37,8 +38,8 @@ namespace MovieApp.Features.ReelsEditing.Views
             "<TextBlock Text=\"{Binding TrackName}\" Padding=\"8,4\"/>" +
             "</DataTemplate>";
 
-        private readonly MediaPlayer musicPreviewPlayer = new ();
-        private readonly DispatcherTimer videoProgressTimer = new ()
+        private readonly MediaPlayer musicPreviewPlayer = new();
+        private readonly DispatcherTimer videoProgressTimer = new()
         {
             Interval = TimeSpan.FromMilliseconds(VideoProgressIntervalMilliseconds),
         };
@@ -168,7 +169,27 @@ namespace MovieApp.Features.ReelsEditing.Views
             try
             {
                 this.DetachVideoPlayerEvents();
-                if (!string.IsNullOrEmpty(videoUrl) && Uri.TryCreate(videoUrl, UriKind.Absolute, out Uri uri))
+
+                if (string.IsNullOrEmpty(videoUrl))
+                {
+                    return;
+                }
+
+                Uri? uri = null;
+
+                // Already an absolute URI (http, https, file)
+                if (Uri.TryCreate(videoUrl, UriKind.Absolute, out Uri absoluteUri))
+                {
+                    uri = absoluteUri;
+                }
+                // Web-relative path like /uploads/videos/guid.mp4 — build full URL using WebApi base
+                else if (videoUrl.StartsWith("/"))
+                {
+                    string baseUrl = "http://localhost:4544".TrimEnd('/'); // e.g. "http://localhost:5001"
+                    Uri.TryCreate(baseUrl + videoUrl, UriKind.Absolute, out uri);
+                }
+
+                if (uri != null)
                 {
                     this.ReelPlayer.Source = MediaSource.CreateFromUri(uri);
                     this.AttachVideoPlayerEvents();

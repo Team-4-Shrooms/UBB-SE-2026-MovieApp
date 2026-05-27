@@ -92,10 +92,6 @@
                 </GridView>
             </ScrollViewer>
 
-            <TextBlock Grid.Row="4" Text="Owner: Beatrice"
-                       Style="{StaticResource CaptionTextBlockStyle}"
-                       Foreground="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
-                       Margin="0,8,0,0"/>
         </Grid>
 
         <!-- ════════════════════════════════════════════════════ -->
@@ -360,10 +356,6 @@
                                 Style="{StaticResource AccentButtonStyle}"/>
                         </StackPanel>
 
-                        <TextBlock Text="Owner: Beatrice"
-                                   Style="{StaticResource CaptionTextBlockStyle}"
-                                   Foreground="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
-                                   Margin="0,8,0,0"/>
                     </StackPanel>
                 </ScrollViewer>
             </Grid>
