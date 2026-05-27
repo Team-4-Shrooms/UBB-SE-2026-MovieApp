@@ -1,13 +1,10 @@
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using MovieApp.WebApi.DTOs;
-using MovieApp.WebDTOs.DTOs.RequestDTOs;
 
 namespace MovieApp.Tests.Integration
 {
-    /// <summary>
-    /// Integration tests for the Equipment WebAPI endpoints.
-    /// </summary>
     public sealed class EquipmentEndpointsIntegrationTests : IClassFixture<MovieAppWebApplicationFactory>
     {
         private readonly HttpClient _httpClient;
@@ -15,42 +12,78 @@ namespace MovieApp.Tests.Integration
         public EquipmentEndpointsIntegrationTests(MovieAppWebApplicationFactory factory)
         {
             _httpClient = factory.CreateClient();
+
+            // FIX: Uses "Test" to match the exact string registered in MovieAppWebApplicationFactory
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Test");
         }
 
         [Fact]
-        public async Task GetAvailableEquipment_SeededDatabase_ReturnsOkStatusCode()
+        public async Task GetAvailableEquipment_ReturnsHttp200WithValidMarketplaceListings()
         {
             HttpResponseMessage response = await _httpClient.GetAsync("/api/equipment/available");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            List<EquipmentDto>? availableEquipment =
+                await response.Content.ReadFromJsonAsync<List<EquipmentDto>>();
+
+            Assert.NotNull(availableEquipment);
+            Assert.NotEmpty(availableEquipment);
+
+            foreach (EquipmentDto equipment in availableEquipment)
+            {
+                Assert.True(equipment.Id > 0);
+                Assert.False(string.IsNullOrWhiteSpace(equipment.Title));
+                Assert.True(equipment.Price >= 0);
+                Assert.NotNull(equipment.Seller);
+            }
         }
 
         [Fact]
-        public async Task GetAvailableEquipment_SeededDatabase_ReturnsNonEmptyList()
+        public async Task PurchaseEquipment_ValidPurchase_UpdatesWalletInventoryAndMarketplace()
         {
-            List<EquipmentDto>? availableEquipment = await _httpClient.GetFromJsonAsync<List<EquipmentDto>>("/api/equipment/available");
+            int buyerId = 1;
 
-            Assert.NotEmpty(availableEquipment!);
-        }
+            decimal balanceBeforePurchase =
+                await _httpClient.GetFromJsonAsync<decimal>($"/api/users/{buyerId}/balance");
 
-        [Fact]
-        public async Task GetAvailableEquipment_SeededDatabase_AllItemsHaveSellerReference()
-        {
-            List<EquipmentDto>? availableEquipment = await _httpClient.GetFromJsonAsync<List<EquipmentDto>>("/api/equipment/available");
+            List<EquipmentDto>? availableBeforePurchase =
+                await _httpClient.GetFromJsonAsync<List<EquipmentDto>>("/api/equipment/available");
 
-            bool allHaveSellerReference = availableEquipment!.All(equipment => equipment.Seller is not null);
+            Assert.NotNull(availableBeforePurchase);
+            Assert.NotEmpty(availableBeforePurchase);
 
-            Assert.True(allHaveSellerReference);
-        }
+            EquipmentDto equipmentToPurchase = availableBeforePurchase.First();
 
-        [Fact]
-        public async Task GetAvailableEquipment_SeededDatabase_AllItemsHaveNonEmptyTitle()
-        {
-            List<EquipmentDto>? availableEquipment = await _httpClient.GetFromJsonAsync<List<EquipmentDto>>("/api/equipment/available");
+            HttpResponseMessage purchaseResponse = await _httpClient.PostAsJsonAsync(
+                $"/api/equipment/{equipmentToPurchase.Id}/purchase",
+                new
+                {
+                    BuyerId = buyerId,
+                    Price = equipmentToPurchase.Price,
+                    Address = "Integration Test Address"
+                });
 
-            bool allHaveNonEmptyTitle = availableEquipment!.All(equipment => !string.IsNullOrWhiteSpace(equipment.Title));
+            Assert.Equal(HttpStatusCode.OK, purchaseResponse.StatusCode);
 
-            Assert.True(allHaveNonEmptyTitle);
+            decimal balanceAfterPurchase =
+                await _httpClient.GetFromJsonAsync<decimal>($"/api/users/{buyerId}/balance");
+
+            Assert.Equal(balanceBeforePurchase - equipmentToPurchase.Price, balanceAfterPurchase);
+
+            List<EquipmentDto>? ownedEquipment =
+                await _httpClient.GetFromJsonAsync<List<EquipmentDto>>(
+                    $"/api/inventory/users/{buyerId}/equipment");
+
+            Assert.NotNull(ownedEquipment);
+            Assert.Contains(ownedEquipment, equipment => equipment.Id == equipmentToPurchase.Id);
+
+            List<EquipmentDto>? availableAfterPurchase =
+                await _httpClient.GetFromJsonAsync<List<EquipmentDto>>("/api/equipment/available");
+
+            Assert.NotNull(availableAfterPurchase);
+            Assert.DoesNotContain(availableAfterPurchase, equipment => equipment.Id == equipmentToPurchase.Id);
         }
     }
 }
