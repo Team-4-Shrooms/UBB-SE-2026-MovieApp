@@ -219,13 +219,18 @@ builder.Services.AddScoped<ISwipeService, SwipeService>();
 builder.Services.AddScoped<IPersonalityMatchingService, PersonalityMatchingService>();
 builder.Services.AddScoped<IReelInteractionService, ReelInteractionService>();
 builder.Services.AddScoped<IRecommendationService, RecommendationService>();
-builder.Services.AddScoped<IVideoProcessingService, VideoProcessingService>();
 string videoUploadDir = Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "uploads", "videos");
 Directory.CreateDirectory(videoUploadDir);
 builder.Services.AddScoped<IVideoStorageService>(serviceProvider =>
     new VideoStorageService(
         serviceProvider.GetRequiredService<IVideoStorageRepository>(),
         serviceProvider.GetRequiredService<IReelRepository>(),
+        videoUploadDir,
+        "/uploads/videos"));
+builder.Services.AddScoped<IVideoProcessingService>(sp =>
+    new VideoProcessingService(
+        sp.GetRequiredService<IAudioLibraryRepository>(),
+        sp.GetRequiredService<IVideoStorageService>(),
         videoUploadDir,
         "/uploads/videos"));
 builder.Services.AddScoped<IVideoIngestionService, VideoIngestionService>();
