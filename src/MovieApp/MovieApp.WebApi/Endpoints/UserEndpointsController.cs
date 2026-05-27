@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using MovieApp.WebDTOs.DTOs.RequestDTOs;
 using MovieApp.WebApi.Mappings;
 using MovieApp.Logic.Interfaces.Services;
+using MovieApp.DataLayer.Models;
+using MovieApp.Logic.Features.Battles;
 
 namespace MovieApp.WebApi.Endpoints;
 
@@ -12,6 +14,7 @@ namespace MovieApp.WebApi.Endpoints;
 public sealed class UserEndpointsController : ControllerBase
 {
     private readonly IUserService _userService;
+    private readonly IPointService _pointService;
 
     public UserEndpointsController(IUserService userService)
     {
