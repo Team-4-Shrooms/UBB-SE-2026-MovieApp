@@ -47,6 +47,7 @@ namespace MovieApp.DataLayer
             await SeedAdditionalRoomsAsync();
             await FixExistingDataAsync();
             await SeedTriviaQuestionsAsync();
+            await SeedBadgesAsync();
             await SeedMarathonsAsync();
             await SeedMarathonProgressionsAsync();
             await SeedSlotMachineDataAsync();
@@ -1987,13 +1988,64 @@ namespace MovieApp.DataLayer
             }
         }
 
+        /// <summary>
+        /// Seeds the six named badges required by BadgeService criteria evaluation.
+        /// Safe to call multiple times — skips if any badge already exists.
+        /// </summary>
+        private async Task SeedBadgesAsync()
+        {
+            if (await _context.Badges.AnyAsync())
+            {
+                return;
+            }
+
+            _context.Badges.AddRange(
+                new Badge
+                {
+                    Name = "The Snob",
+                    Description = "Write 10 or more extra reviews.",
+                    CriteriaValue = 10,
+                },
+                new Badge
+                {
+                    Name = "Why so serious?",
+                    Description = "Write 50 or more fully-completed extra reviews.",
+                    CriteriaValue = 50,
+                },
+                new Badge
+                {
+                    Name = "The Joker",
+                    Description = "More than 70% of your reviews are for Comedy films.",
+                    CriteriaValue = 70,
+                },
+                new Badge
+                {
+                    Name = "The Godfather I",
+                    Description = "Write 100 or more total reviews.",
+                    CriteriaValue = 100,
+                },
+                new Badge
+                {
+                    Name = "The Godfather II",
+                    Description = "Write 200 or more total reviews.",
+                    CriteriaValue = 200,
+                },
+                new Badge
+                {
+                    Name = "The Godfather III",
+                    Description = "Write 300 or more total reviews.",
+                    CriteriaValue = 300,
+                });
+
+            await _context.SaveChangesAsync();
+        }
+
         private async Task SeedMarathonsAsync()
         {
             if (await _context.Marathons.AnyAsync())
             {
                 return;
             }
-
             DateTime now = DateTime.UtcNow;
             string currentWeek = $"{now.Year}-W{System.Globalization.ISOWeek.GetWeekOfYear(now):D2}";
 

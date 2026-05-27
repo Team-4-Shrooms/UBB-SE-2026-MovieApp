@@ -38,20 +38,30 @@ namespace MovieApp.DataLayer.Repositories
 
         public async Task<int> GetReviewCountByUserIdAsync(int userId, CancellationToken ct = default)
         {
-            return await _context.Reviews
+            return await _context.MovieReviews
                 .AsNoTracking()
                 .CountAsync(review => review.User != null && review.User.Id == userId, ct);
         }
 
         public async Task<List<Review>> GetReviewsByUserIdAsync(int userId, CancellationToken ct = default)
         {
-            return await _context.Reviews
+            List<MovieReview> movieReviews = await _context.MovieReviews
                 .AsNoTracking()
                 .Include(review => review.Movie)
                     .ThenInclude(movie => movie.Genres)
                 .Include(review => review.User)
                 .Where(review => review.User != null && review.User.Id == userId)
                 .ToListAsync(ct);
+
+            // Map MovieReview → Review so badge criteria can evaluate them.
+            // IsExtraReview is always false (MovieReview has no such concept),
+            // so The Snob / Why so serious? badges will not trigger from these.
+            return movieReviews.Select(static mr => new Review
+            {
+                Movie = mr.Movie,
+                User = mr.User,
+                IsExtraReview = false,
+            }).ToList();
         }
     }
 }
