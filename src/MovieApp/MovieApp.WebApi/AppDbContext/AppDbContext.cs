@@ -190,6 +190,7 @@ namespace MovieApp.WebApi.Data
             modelBuilder.Entity<BattleBet>()
                 .HasOne(battleBet => battleBet.Battle)
                 .WithMany(battle => battle.Bets)
+                .HasForeignKey(battleBet => battleBet.BattleId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // ReferralLog

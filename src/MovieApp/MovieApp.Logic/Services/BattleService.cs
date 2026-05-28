@@ -174,9 +174,9 @@ namespace MovieApp.Logic.Services
                 throw new InvalidOperationException("User has already bet.");
             }
 
-            var user = await _userRepository.GetUserByIdAsync(userId) ?? throw new InvalidOperationException("User not found.");
-            var battle = await _battleRepository.GetByIdAsync(battleId, cancellationToken) ?? throw new InvalidOperationException("Battle not found.");
-            var movie = await _movieRepository.GetMovieByIdAsync(movieId) ?? throw new InvalidOperationException("Movie not found.");
+            User user = await _userRepository.GetUserByIdAsync(userId) ?? throw new InvalidOperationException("User not found.");
+            Battle battle = await _battleRepository.GetByIdAsync(battleId, cancellationToken) ?? throw new InvalidOperationException("Battle not found.");
+            Movie movie = await _movieRepository.GetMovieByIdAsync(movieId) ?? throw new InvalidOperationException("Movie not found.");
 
             if (!string.Equals(battle.Status, "Active", StringComparison.OrdinalIgnoreCase))
             {
@@ -188,7 +188,7 @@ namespace MovieApp.Logic.Services
                 throw new InvalidOperationException("Selected movie is not part of this battle.");
             }
 
-            //await _pointService.FreezePointsAsync(userId, amount, ct);
+            await _pointService.FreezePointsAsync(userId, amount);
 
             var bet = new BattleBet { User = user, Battle = battle, Movie = movie, Amount = amount };
             await _betRepository.InsertAsync(bet, cancellationToken);

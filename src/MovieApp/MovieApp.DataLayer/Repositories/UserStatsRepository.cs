@@ -30,8 +30,8 @@ namespace MovieApp.DataLayer.Repositories
 
         public async Task<UserStats?> GetByUserIdAsync(int userId, CancellationToken ct = default)
         {
+            //Debug.Write("USER ID!!!!!!!!!!!!!!!!!!!!!!!!  "+ userId + "  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             return await _context.UserStats
-                .AsNoTracking()
                 .FirstOrDefaultAsync(us => us.UserId == userId, ct);
         }
 

@@ -59,10 +59,6 @@ namespace MovieApp.Logic.Features.Battles
             {
                 pointsToAdd += 2;
             }
-            if (movie.Rating > 3.5m)
-            {
-                pointsToAdd += 2;
-            }
             else if (movie.Rating < 2.0m)
             {
                 pointsToAdd += 1;

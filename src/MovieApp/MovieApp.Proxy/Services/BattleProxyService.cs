@@ -69,7 +69,7 @@ namespace MovieApp.Proxy.Services
 
         public async Task<int> DetermineWinnerAsync(int battleId, CancellationToken cancellationToken = default)
         {
-            int response = await _apiClient.PostAsync<object, int>($"api/battles/{battleId}/determine-winner", new { });
+            int response = await _apiClient.GetAsync<int>($"api/battles/{battleId}/determine-winner");
             return response;
         }
 

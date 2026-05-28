@@ -51,6 +51,7 @@ namespace MovieApp.DataLayer
             await SeedMarathonsAsync();
             await SeedMarathonProgressionsAsync();
             await SeedSlotMachineDataAsync();
+            await SeedUserStatsAsync();
         }
 
         /// <summary>
@@ -2299,6 +2300,24 @@ namespace MovieApp.DataLayer
 
             _context.MarathonProgressions.AddRange(progressions);
             await _context.SaveChangesAsync();
+        }
+
+        private async Task SeedUserStatsAsync()
+        {
+            bool exists = await _context.UserStats.AnyAsync(user => user.UserId == 1);
+
+            if (!exists)
+            {
+                var stats = new UserStats
+                {
+                    TotalPoints = 10,
+                    WeeklyScore = 5,
+                    UserId = 1
+                };
+
+                _context.UserStats.Add(stats);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using MovieApp.DataLayer.Models;
 using MovieApp.Logic.Features.Battles;
 
@@ -10,8 +11,10 @@ namespace MovieApp.Proxy.Services
         public PointProxyService(ApiClient apiClient) => this.apiClient = apiClient;
 
         public async Task<UserStats> GetUserStatsAsync(int userId, CancellationToken ct = default)
-            => await this.apiClient.GetAsync<UserStats>($"api/users/{userId}/stats", ct)
-            ?? throw new InvalidOperationException("The API did not return user stats.");
+        {
+            return await this.apiClient.GetAsync<UserStats>($"api/stats/{userId}")
+                    ?? throw new InvalidOperationException("The API did not return user stats.");
+        }
 
         public Task AddPointsAsync(int userId, int movieId, bool isBattleMovie, CancellationToken ct = default)
             => throw new NotSupportedException("Point mutations are handled by the Web API.");
