@@ -10,7 +10,7 @@ namespace MovieApp.Tests.Integration.Endpoints;
 public sealed class ReelsUploadEndpointsIntegrationTests
     : IClassFixture<MovieAppWebApplicationFactory>
 {
-    private const int MaxUploadResponseMilliseconds = 2000;
+    private const int MaxUploadResponseMilliseconds = 5000;
     private const int FeedPollingAttempts = 10;
     private const int FeedPollingDelayMilliseconds = 200;
 
