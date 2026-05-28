@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using MovieApp.DataLayer.Interfaces;
 using MovieApp.DataLayer.Interfaces.Repositories;

@@ -1,6 +1,5 @@
 namespace MovieApp.Web.Controllers
 {
-    using System.Diagnostics;
     using Microsoft.AspNetCore.Mvc;
     using MovieApp.DataLayer.Models;
     using MovieApp.Logic.Features.Battles;
@@ -54,8 +53,6 @@ namespace MovieApp.Web.Controllers
                 winnerMovieId = await this._battleService
                     .DetermineWinnerAsync(battle.BattleId);
             }
-
-            Debug.WriteLine("------------------"+ userStats.TotalPoints+ "--------------------------");
 
             BattleViewModel viewModel = new BattleViewModel
             {

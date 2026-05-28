@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieApp.DataLayer.Models;
@@ -22,7 +21,6 @@ namespace MovieApp.WebApi.Endpoints
         [HttpGet("{userId:int}")]
         public async Task<IActionResult> GetUserStats(int userId, CancellationToken cancellationToken = default)
         {
-            Debug.WriteLine("here-------------------------------------------------------");
             UserStats? stats = await _userStatsService.GetByUserIdAsync(userId, cancellationToken);
             if (stats == null)
             {

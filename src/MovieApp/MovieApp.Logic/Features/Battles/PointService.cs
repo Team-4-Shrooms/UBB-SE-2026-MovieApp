@@ -64,7 +64,7 @@ namespace MovieApp.Logic.Features.Battles
                 pointsToAdd += 1;
             }
 
-                stats.TotalPoints = Math.Max(0, stats.TotalPoints + pointsToAdd);
+            stats.TotalPoints = Math.Max(0, stats.TotalPoints + pointsToAdd);
             await _userStatsRepository.UpdateAsync(stats, cancellationToken);
 
             await _badgeService.CheckAndAwardBadgesAsync(userId, cancellationToken);

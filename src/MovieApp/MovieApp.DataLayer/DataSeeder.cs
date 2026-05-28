@@ -2252,7 +2252,7 @@ namespace MovieApp.DataLayer
 
         private async Task SeedUserStatsAsync()
         {
-            bool exists = await _context.UserStats.AnyAsync(us => us.UserId == 1);
+            bool exists = await _context.UserStats.AnyAsync(user => user.UserId == 1);
 
             if (!exists)
             {
