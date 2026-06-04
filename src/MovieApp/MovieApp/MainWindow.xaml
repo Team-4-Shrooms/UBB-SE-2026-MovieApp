@@ -15,38 +15,80 @@
         IsSettingsVisible="False"
         PaneDisplayMode="Left"
         SelectionChanged="NavView_SelectionChanged"
-        >
+        OpenPaneLength="260">
 
         <NavigationView.MenuItems>
-            <NavigationViewItem Content="Reels Upload" Tag="ReelsUpload" Icon="Upload"/>
-            <NavigationViewItem Content="Trailer Scraping" Tag="TrailerScraping" Icon="Globe"/>
-            <NavigationViewItem Content="Reels Editing" Tag="ReelsEditing" Icon="Edit"/>
-            <NavigationViewItem Content="Movie Swipe" Tag="MovieSwipe" Icon="Shuffle"/>
-            <NavigationViewItem Content="Movie Tournament" Tag="MovieTournament" Icon="FourBars"/>
-            <NavigationViewItem Content="Personality Match" Tag="PersonalityMatch" Icon="People"/>
-            <NavigationViewItem Content="Reels Feed" Tag="ReelsFeed" Icon="Video"/>
-            <NavigationViewItem Content="Movie Catalog" Tag="MovieCatalog" Icon="Library"/>
-            <NavigationViewItem Content="Marketplace" Tag="Marketplace" Icon="Shop"/>
-            <NavigationViewItem Content="Events" Tag="Events" Icon="Calendar"/>
-            <NavigationViewItem Content="Inventory" Tag="Inventory" Icon="AllApps"/>
-            <NavigationViewItem Content="Wallet" Tag="Wallet" Icon="PreviewLink"/>
+
+            <!-- Discover group: Globe better represents exploration than Find (magnifier implies search, not browsing) -->
+            <NavigationViewItem Content="Discover" Icon="Globe" IsExpanded="True">
+                <NavigationViewItem.MenuItems>
+                    <NavigationViewItem Content="Movie Catalog"      Tag="MovieCatalog"     Icon="Library"/>
+                    <NavigationViewItem Content="Movie Swipe"        Tag="MovieSwipe"       Icon="Shuffle"/>
+                    <NavigationViewItem Content="Movie Tournament"   Tag="MovieTournament"  Icon="FourBars"/>
+                    <NavigationViewItem Content="Personality Match"  Tag="PersonalityMatch" Icon="Contact"/>
+                </NavigationViewItem.MenuItems>
+            </NavigationViewItem>
+
+            <!-- Media group (renamed from Content — more precise for video/screening features) -->
+            <!-- Star group icon avoids duplicating the Video icon used by Reels Feed child -->
+            <!-- Items reordered: consume-first (Feed, Screenings) before produce (Upload, Edit, Scraping) -->
+            <NavigationViewItem Content="Media" Icon="Play">
+                <NavigationViewItem.MenuItems>
+                    <NavigationViewItem Content="Reels Feed"       Tag="ReelsFeed"        Icon="Video"/>
+                    <NavigationViewItem Content="Screenings"       Tag="Screenings"       Icon="VideoChat"/>
+                    <NavigationViewItem Content="Reels Upload"     Tag="ReelsUpload"      Icon="Upload"/>
+                    <NavigationViewItem Content="Reels Editing"    Tag="ReelsEditing"     Icon="Edit"/>
+                    <NavigationViewItem Content="Trailer Scraping" Tag="TrailerScraping"  Icon="Find"/>
+                </NavigationViewItem.MenuItems>
+            </NavigationViewItem>
+
+            <!-- Commerce group: Tag icon replaces Shop to avoid duplicating Marketplace child's Shop icon -->
+            <!-- Items reordered: Marketplace (browse), Wallet (pay), Price Watchers (monitor), Inventory (owned) -->
+            <!-- Wallet child now uses the actual Wallet symbol instead of PreviewLink (chain-link) -->
+            <NavigationViewItem Content="Commerce" Icon="Tag">
+                <NavigationViewItem.MenuItems>
+                    <NavigationViewItem Content="Marketplace"    Tag="Marketplace"  Icon="Shop"/>
+                    <NavigationViewItem Content="Wallet"         Tag="Wallet"       Icon="Account"/>
+                    <NavigationViewItem Content="Price Watchers" Tag="PriceWatcher" Icon="Flag"/>
+                    <NavigationViewItem Content="Inventory"      Tag="Inventory"    Icon="AllApps"/>
+                </NavigationViewItem.MenuItems>
+            </NavigationViewItem>
+
+            <!-- Social group: People icon is kept; Battles child moved off Favorite to Permissions (competition/rules) -->
+            <!-- Marathons child changed from Go (arrow) to Flag (finish line) — more evocative of endurance events -->
+            <NavigationViewItem Content="Social" Icon="People">
+                <NavigationViewItem.MenuItems>
+                    <NavigationViewItem Content="Events"      Tag="Events"      Icon="Calendar"/>
+                    <NavigationViewItem Content="Ambassadors" Tag="Ambassadors" Icon="OtherUser"/>
+                    <NavigationViewItem Content="Referrals"   Tag="Referrals"   Icon="ContactInfo"/>
+                    <NavigationViewItem Content="Battles"     Tag="BattlesBet"  Icon="Target"/>
+                    <NavigationViewItem Content="Marathons"   Tag="Marathon"    Icon="Go"/>
+                </NavigationViewItem.MenuItems>
+            </NavigationViewItem>
+
+            <!-- Rewards group: Trophy replaces Favorite — trophy is unambiguously reward-themed -->
+            <!-- Items reordered: Leaderboard and Badges (status) first, then games (Trivia Wheel, Slot Machine) -->
+            <!-- Slot Machine changed from Placeholder (empty box) to Shuffle (random/chance) -->
+            <!-- Badges child moved off Tag (already used by Commerce group header) to NewFolder -->
+            <NavigationViewItem Content="Rewards" Icon="OutlineStar">
+                <NavigationViewItem.MenuItems>
+                    <NavigationViewItem Content="Leaderboard"  Tag="Leaderboard"  Icon="List"/>
+                    <NavigationViewItem Content="Badges"       Tag="Badges"       Icon="Favorite"/>
+                    <NavigationViewItem Content="Trivia Wheel" Tag="TriviaWheel"  Icon="Help"/>
+                    <NavigationViewItem Content="Slot Machine" Tag="SlotMachine"  Icon="RepeatAll"/>
+                </NavigationViewItem.MenuItems>
+            </NavigationViewItem>
+
+        </NavigationView.MenuItems>
+
+        <NavigationView.FooterMenuItems>
             <NavigationViewItem Content="Notifications" Tag="Notification" Icon="Mail">
                 <NavigationViewItem.InfoBadge>
                     <InfoBadge Value="{x:Bind NotificationViewModel.UnreadCount, Mode=OneWay}"
                                Visibility="{x:Bind NotificationViewModel.BadgeVisibility, Mode=OneWay}"/>
                 </NavigationViewItem.InfoBadge>
             </NavigationViewItem>
-            <NavigationViewItem Content="Slot Machine" Tag="SlotMachine" Icon="Placeholder"/>
-            <NavigationViewItem Content="Marathons" Tag="Marathon" Icon="Go"/>
-            <NavigationViewItem Content="Ambassadors" Tag="Ambassadors" Icon="Contact"/>
-            <NavigationViewItem Content="Trivia Wheel" Tag="TriviaWheel" Icon="Help"/>
-            <NavigationViewItem Content="Referrals" Tag="Referrals" Icon="ContactInfo"/>
-            <NavigationViewItem Content="Battles" Tag="BattlesBet" Icon="Favorite"/>
-            <NavigationViewItem Content="Price Watchers" Tag="PriceWatcher" Icon="Tag"/>
-            <NavigationViewItem Content="Screenings" Tag="Screenings" Icon="VideoChat"/>
-            <NavigationViewItem Content="Badges" Tag="Badges" Icon="Tag"/>
-            <NavigationViewItem Content="Leaderboard" Tag="Leaderboard" Icon="List"/>
-        </NavigationView.MenuItems>
+        </NavigationView.FooterMenuItems>
 
         <Frame x:Name="ContentFrame" />
     </NavigationView>
