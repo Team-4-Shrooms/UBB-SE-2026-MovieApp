@@ -30,7 +30,7 @@
             </NavigationViewItem>
 
             <!-- Media group (renamed from Content — more precise for video/screening features) -->
-            <!-- Star group icon avoids duplicating the Video icon used by Reels Feed child -->
+            <!-- Play group icon avoids duplicating the Video icon used by Reels Feed child -->
             <!-- Items reordered: consume-first (Feed, Screenings) before produce (Upload, Edit, Scraping) -->
             <NavigationViewItem Content="Media" Icon="Play">
                 <NavigationViewItem.MenuItems>
@@ -44,7 +44,7 @@
 
             <!-- Commerce group: Tag icon replaces Shop to avoid duplicating Marketplace child's Shop icon -->
             <!-- Items reordered: Marketplace (browse), Wallet (pay), Price Watchers (monitor), Inventory (owned) -->
-            <!-- Wallet child now uses the actual Wallet symbol instead of PreviewLink (chain-link) -->
+            <!-- Wallet child uses Account symbol (Wallet not in WinUI Symbol enum; Account is the closest available) -->
             <NavigationViewItem Content="Commerce" Icon="Tag">
                 <NavigationViewItem.MenuItems>
                     <NavigationViewItem Content="Marketplace"    Tag="Marketplace"  Icon="Shop"/>
@@ -54,8 +54,8 @@
                 </NavigationViewItem.MenuItems>
             </NavigationViewItem>
 
-            <!-- Social group: People icon is kept; Battles child moved off Favorite to Permissions (competition/rules) -->
-            <!-- Marathons child changed from Go (arrow) to Flag (finish line) — more evocative of endurance events -->
+            <!-- Social group: People icon is kept; Battles uses Target (competition/aim); Ambassadors uses OtherUser -->
+            <!-- Marathons keeps Go — Flag is already taken by Price Watchers in Commerce -->
             <NavigationViewItem Content="Social" Icon="People">
                 <NavigationViewItem.MenuItems>
                     <NavigationViewItem Content="Events"      Tag="Events"      Icon="Calendar"/>
@@ -66,10 +66,10 @@
                 </NavigationViewItem.MenuItems>
             </NavigationViewItem>
 
-            <!-- Rewards group: Trophy replaces Favorite — trophy is unambiguously reward-themed -->
+            <!-- Rewards group: OutlineStar replaces Favorite — clearly reward-themed without duplicating a child icon -->
             <!-- Items reordered: Leaderboard and Badges (status) first, then games (Trivia Wheel, Slot Machine) -->
-            <!-- Slot Machine changed from Placeholder (empty box) to Shuffle (random/chance) -->
-            <!-- Badges child moved off Tag (already used by Commerce group header) to NewFolder -->
+            <!-- Slot Machine uses RepeatAll (circular/spinning) — Shuffle already taken by Movie Swipe in Discover -->
+            <!-- Badges uses Favorite — Tag moved to Commerce group header, Favorite freed from Rewards header -->
             <NavigationViewItem Content="Rewards" Icon="OutlineStar">
                 <NavigationViewItem.MenuItems>
                     <NavigationViewItem Content="Leaderboard"  Tag="Leaderboard"  Icon="List"/>
