@@ -13,7 +13,7 @@ namespace MovieApp.Proxy.Services
         public async Task<UserStats> GetUserStatsAsync(int userId, CancellationToken ct = default)
         {
             return await this.apiClient.GetAsync<UserStats>($"api/stats/{userId}")
-                    ?? throw new InvalidOperationException("The API did not return user stats.");
+                   ?? new UserStats { UserId = userId };
         }
 
         public Task AddPointsAsync(int userId, int movieId, bool isBattleMovie, CancellationToken ct = default)

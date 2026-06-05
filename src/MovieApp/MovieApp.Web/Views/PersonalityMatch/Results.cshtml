@@ -5,7 +5,7 @@
 
 <div class="container mt-5">
     <div class="text-center mb-4">
-        <h1 class="display-4 text-primary fw-bold">🎭 Your Matches 🎭</h1>
+        <h1 class="page-title">Your Matches</h1>
         <p class="lead">These users share your taste in movies.</p>
     </div>
 
@@ -24,14 +24,14 @@
         @foreach (var match in Model.Matches)
             {
         <div class="col-md-6 col-lg-4">
-            <div class="card shadow-sm border-primary border-2 h-100">
-                <div class="card-body text-center bg-light">
-                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3"
-                         style="width: 64px; height: 64px; font-size: 1.6rem; font-weight: 700;">
+            <div class="card h-100" style="border:1.5px solid #e8e3db;">
+                <div class="card-body text-center" style="background:#f9f7f4;">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
+                         style="width:64px; height:64px; background:#1c1917; color:#c9a55a; font-size:1.6rem; font-weight:800; border:3px solid #c9a55a;">
                         @(match.Username.Length > 0 ? match.Username[0].ToString().ToUpper() : "?")
                     </div>
-                    <h5 class="card-title">@match.Username</h5>
-                    <p class="text-muted">@($"{match.MatchScore:P0}") match</p>
+                    <h5 class="card-title" style="font-weight:700;">@match.Username</h5>
+                    <p style="color:#b5800e; font-weight:700;">@($"{match.MatchScore:P0}") match</p>
                 </div>
             </div>
         </div>

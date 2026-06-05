@@ -200,6 +200,7 @@ namespace MovieApp.Logic.Services
             var battles = await _battleRepository.GetAllAsync(cancellationToken);
             foreach (var battle in battles)
             {
+                await _betRepository.DeleteByBattleIdAsync(battle.BattleId, cancellationToken);
                 await _battleRepository.DeleteAsync(battle.BattleId, cancellationToken);
             }
         }

@@ -10,43 +10,43 @@
 	int failedJobs = Model.RecentJobs.Count(j => j.Status.Equals("failed", StringComparison.OrdinalIgnoreCase));
 }
 
-<h2 class="mb-4">@ViewData["Title"]</h2>
+<h1 class="page-title">@ViewData["Title"]</h1>
 
 @if (TempData["SuccessMessage"] != null)
 {
 	<div class="alert alert-success">@TempData["SuccessMessage"]</div>
 }
 
-<div class="row mb-4 text-center">
+<div class="row mb-4 g-3 text-center">
 	<div class="col-md-3">
-		<div class="card bg-primary text-white">
+		<div class="card" style="border:1.5px solid #e8e3db;">
 			<div class="card-body">
-				<h5>Total Jobs</h5>
-				<h3 class="mb-0">@totalJobs</h3>
+				<div style="font-size:.72rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#8a8480; margin-bottom:.25rem;">Total Jobs</div>
+				<div style="font-size:2rem; font-weight:800; color:#1c1917;">@totalJobs</div>
 			</div>
 		</div>
 	</div>
 	<div class="col-md-3">
-		<div class="card bg-info text-white">
+		<div class="card" style="border:1.5px solid #e8e3db;">
 			<div class="card-body">
-				<h5>Running</h5>
-				<h3 class="mb-0">@runningJobs</h3>
+				<div style="font-size:.72rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#8a8480; margin-bottom:.25rem;">Running</div>
+				<div style="font-size:2rem; font-weight:800; color:#b5800e;">@runningJobs</div>
 			</div>
 		</div>
 	</div>
 	<div class="col-md-3">
-		<div class="card bg-success text-white">
+		<div class="card" style="border:1.5px solid #e8e3db;">
 			<div class="card-body">
-				<h5>Completed</h5>
-				<h3 class="mb-0">@completedJobs</h3>
+				<div style="font-size:.72rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#8a8480; margin-bottom:.25rem;">Completed</div>
+				<div style="font-size:2rem; font-weight:800; color:#2e7d52;">@completedJobs</div>
 			</div>
 		</div>
 	</div>
 	<div class="col-md-3">
-		<div class="card bg-danger text-white">
+		<div class="card" style="border:1.5px solid #e8e3db;">
 			<div class="card-body">
-				<h5>Failed</h5>
-				<h3 class="mb-0">@failedJobs</h3>
+				<div style="font-size:.72rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#8a8480; margin-bottom:.25rem;">Failed</div>
+				<div style="font-size:2rem; font-weight:800; color:#e53e1a;">@failedJobs</div>
 			</div>
 		</div>
 	</div>

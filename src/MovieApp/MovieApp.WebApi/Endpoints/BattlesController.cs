@@ -119,9 +119,16 @@ public class BattlesController : ControllerBase
     [HttpPost("reset")]
     public async Task<IActionResult> ResetDemo()
     {
-        await this.battleService.ResetAllBattlesForDemoAsync();
-        var newBattle = await this.battleService.CreateDemoBattleAsync();
-        return Ok(newBattle);
+        try
+        {
+            await this.battleService.ResetAllBattlesForDemoAsync();
+            var newBattle = await this.battleService.CreateDemoBattleAsync();
+            return Ok(newBattle);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     public class PlaceBetRequest

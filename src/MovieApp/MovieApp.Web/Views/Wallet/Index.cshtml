@@ -7,21 +7,42 @@
     bool hasNextPage = (bool)(ViewBag.HasNextPage ?? false);
 }
 
-<h1 class="mb-4">Wallet</h1>
+@section Styles {
+<style>
+    .wallet-balance-card {
+        background: #1c1917;
+        color: #fff;
+        border-radius: 12px;
+        max-width: 380px;
+        padding: 1.5rem 2rem;
+        margin-bottom: 2rem;
+    }
+    .wallet-balance-label { color: #c9a55a; font-size:.75rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; margin-bottom:.4rem; }
+    .wallet-balance-amount { font-size: 2.4rem; font-weight: 800; color: #fff; }
+    .table th { font-size:.75rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#6b6560; border-bottom: 2px solid #e8e3db; }
+    .table td { vertical-align: middle; border-bottom: 1px solid #f0ece6; }
+    .tx-type { display:inline-block; font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; background:#f0ece6; color:#6b6560; padding:.2rem .55rem; border-radius:4px; }
+    .page-link { color: #b5800e; }
+    .page-link:hover { color: #c9a55a; }
+    .page-item.active .page-link { background: #b5800e; border-color: #b5800e; }
+</style>
+}
 
-<div class="card bg-primary text-white mb-4" style="max-width: 400px;">
-    <div class="card-body">
-        <h6 class="card-subtitle mb-2 text-white-50">Your Balance</h6>
-        <h2 class="card-title mb-0">@balance.ToString("C")</h2>
-    </div>
+<h1 class="page-title">Wallet</h1>
+
+<div class="wallet-balance-card">
+    <div class="wallet-balance-label">Your Balance</div>
+    <div class="wallet-balance-amount">@balance.ToString("C")</div>
 </div>
 
-<h4 class="mb-3">Transaction History</h4>
+<h4 class="mb-3" style="font-weight:700; color:#1c1917;">Transaction History</h4>
 
 @if (transactions.Count == 0 && currentPage == 1)
 {
-    <div class="text-center py-5 text-muted">
-        <p class="lead">No transactions yet.</p>
+    <div style="text-align:center; padding:4rem 2rem; color:#8a8480;">
+        <div style="font-size:2.5rem; margin-bottom:.75rem;">💳</div>
+        <h5 style="font-weight:700; color:#1c1917;">No transactions yet</h5>
+        <p>Activity will appear here once you start buying, selling, or earning.</p>
     </div>
 }
 else
@@ -47,7 +68,7 @@ else
                         ?? "—";
                     <tr>
                         <td>@tx.Timestamp.ToString("MMM dd, yyyy HH:mm")</td>
-                        <td><span class="badge bg-secondary">@tx.Type</span></td>
+                        <td><span class="tx-type">@tx.Type</span></td>
                         <td>@description</td>
                         <td class="text-end @(isPositive ? "text-success" : "text-danger")">
                             @(isPositive ? "+" : "")@tx.Amount.ToString("C")

@@ -9,48 +9,63 @@
 
 <div class="container py-4">
 
+@section Styles {
+<style>
+    .profile-avatar {
+        width:72px; height:72px; border-radius:50%;
+        background: #1c1917;
+        display:flex; align-items:center; justify-content:center;
+        color: #c9a55a; font-size:1.8rem; font-weight:800; flex-shrink:0;
+        border: 3px solid #c9a55a;
+    }
+    .stat-card { text-align:center; padding:1.25rem; border:1.5px solid #e8e3db; border-radius:10px; }
+    .stat-number { font-size:2rem; font-weight:800; color:#1c1917; }
+    .stat-number.gold { color:#b5800e; }
+    .stat-label { font-size:.78rem; color:#8a8480; font-weight:600; letter-spacing:.05em; }
+    .progress { background:#f0ece6; }
+    .progress-bar { background:#c9a55a !important; }
+    .badge-card { border:1.5px solid #e8e3db; border-radius:8px; padding:.75rem .5rem; text-align:center; }
+    .badge-card.earned { border-color:#c9a55a; background:rgba(201,165,90,.05); }
+    .badge-card .badge-icon { font-size:1.8rem; color:#c9a55a; }
+    .badge-card .badge-icon.locked { color:#ccc; }
+    .badge-name { font-size:.78rem; font-weight:700; color:#1c1917; }
+    .section-heading { font-size:1rem; font-weight:800; color:#1c1917; padding-bottom:.5rem; border-bottom:2px solid #e2e2e2; margin-bottom:1rem; }
+</style>
+}
+
     <div class="d-flex align-items-center gap-3 mb-4">
-        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white fw-bold fs-3"
-             style="width:72px;height:72px;flex-shrink:0;">
+        <div class="profile-avatar">
             @(Model.Username.Length > 0 ? Model.Username[0].ToString().ToUpper() : "?")
         </div>
         <div>
-            <h1 class="mb-0 h2">@Model.Username</h1>
-            <small class="text-muted">Member profile</small>
+            <h1 class="mb-0 h2" style="font-weight:800;">@Model.Username</h1>
+            <small style="color:#8a8480;">Member profile</small>
         </div>
     </div>
 
     <div class="row g-3 mb-4">
         <div class="col-sm-6 col-lg-3">
-            <div class="card text-center shadow-sm h-100">
-                <div class="card-body">
-                    <div class="fs-1 fw-bold text-primary">@(Model.Stats?.TotalPoints ?? 0)</div>
-                    <div class="text-muted small">Total Points</div>
-                </div>
+            <div class="stat-card">
+                <div class="stat-number gold">@(Model.Stats?.TotalPoints ?? 0)</div>
+                <div class="stat-label">Total Points</div>
             </div>
         </div>
         <div class="col-sm-6 col-lg-3">
-            <div class="card text-center shadow-sm h-100">
-                <div class="card-body">
-                    <div class="fs-1 fw-bold text-success">@(Model.Stats?.WeeklyScore ?? 0)</div>
-                    <div class="text-muted small">Weekly Score</div>
-                </div>
+            <div class="stat-card">
+                <div class="stat-number">@(Model.Stats?.WeeklyScore ?? 0)</div>
+                <div class="stat-label">Weekly Score</div>
             </div>
         </div>
         <div class="col-sm-6 col-lg-3">
-            <div class="card text-center shadow-sm h-100">
-                <div class="card-body">
-                    <div class="fs-1 fw-bold text-warning">@Model.EarnedBadges.Count</div>
-                    <div class="text-muted small">Badges Earned</div>
-                </div>
+            <div class="stat-card">
+                <div class="stat-number gold">@Model.EarnedBadges.Count</div>
+                <div class="stat-label">Badges Earned</div>
             </div>
         </div>
         <div class="col-sm-6 col-lg-3">
-            <div class="card text-center shadow-sm h-100">
-                <div class="card-body">
-                    <div class="fs-1 fw-bold text-info">@pct<span class="fs-4">%</span></div>
-                    <div class="text-muted small">Collection Complete</div>
-                </div>
+            <div class="stat-card">
+                <div class="stat-number">@pct<span style="font-size:1.2rem;">%</span></div>
+                <div class="stat-label">Collection Complete</div>
             </div>
         </div>
     </div>
@@ -62,15 +77,14 @@
                 <span>Badge progress</span>
                 <span>@Model.EarnedBadges.Count / @Model.AllBadges.Count</span>
             </div>
-            <div class="progress" style="height:12px;" role="progressbar"
+            <div class="progress" style="height:10px;" role="progressbar"
                  aria-valuenow="@pct" aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
-                     style="width:@pct%"></div>
+                <div class="progress-bar" style="width:@pct%;"></div>
             </div>
         </div>
     }
 
-    <h2 class="h4 mb-3">Badge Collection</h2>
+    <div class="section-heading">Badge Collection</div>
 
     @if (!Model.AllBadges.Any())
     {
@@ -83,27 +97,23 @@
             {
                 bool isEarned = earned.Contains(badge.BadgeId);
                 <div class="col">
-                    <div class="card text-center h-100 shadow-sm @(isEarned ? "" : "opacity-50")"
+                    <div class="badge-card @(isEarned ? "earned" : "")"
                          title="@badge.Name — @(isEarned ? "Earned" : $"Requires {badge.CriteriaValue} criteria")">
-                        <div class="card-body p-2">
-                            <div class="mb-2" style="font-size:2rem;line-height:1;">
-                                @if (isEarned)
-                                {
-                                    <span class="text-warning">&#9733;</span>
-                                }
-                                else
-                                {
-                                    <span class="text-muted">&#9734;</span>
-                                }
-                            </div>
-                            <div class="fw-semibold small lh-sm">@badge.Name</div>
-                            <div class="text-muted" style="font-size:0.7rem;">@badge.Description</div>
+                        <div class="mb-1">
+                            @if (isEarned)
+                            {
+                                <span class="badge-icon">★</span>
+                            }
+                            else
+                            {
+                                <span class="badge-icon locked">☆</span>
+                            }
                         </div>
+                        <div class="badge-name">@badge.Name</div>
+                        <div style="font-size:.68rem; color:#8a8480;">@badge.Description</div>
                         @if (isEarned)
                         {
-                            <div class="card-footer p-1 bg-warning bg-opacity-25">
-                                <small class="text-warning fw-semibold">Earned</small>
-                            </div>
+                            <div style="font-size:.65rem; font-weight:700; color:#b5800e; margin-top:.3rem; letter-spacing:.08em;">EARNED</div>
                         }
                     </div>
                 </div>

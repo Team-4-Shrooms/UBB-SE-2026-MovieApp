@@ -5,11 +5,11 @@
 }
 
 <div class="marketplace-container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="display-4 fw-bold text-gradient">Marketplace</h1>
-        <div class="d-flex gap-3">
-            <input type="text" id="searchInput" class="form-control search-bar" placeholder="Search equipment by name..." />
-            <a asp-action="Sell" class="btn btn-primary btn-lg shadow-sm rounded-pill">Sell Equipment</a>
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <h1 class="page-title mb-0">Marketplace</h1>
+        <div class="d-flex gap-2">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search equipment..." style="width:220px;" />
+            <a asp-action="Sell" class="btn btn-primary">Sell Equipment</a>
         </div>
     </div>
 
@@ -26,13 +26,13 @@
                         <h5 class="card-title fw-bold">@item.Title</h5>
                         <p class="card-text text-muted text-truncate">@item.Description</p>
                         <div class="d-flex justify-content-between align-items-center mt-3">
-                            <span class="h4 mb-0 fw-bold text-primary">@item.Price.ToString("C")</span>
-                            <a asp-action="Detail" asp-route-id="@item.Id" class="btn btn-outline-dark rounded-pill px-4">Details</a>
+                            <span class="mp-price">@item.Price.ToString("C")</span>
+                            <a asp-action="Detail" asp-route-id="@item.Id" class="btn btn-outline-secondary">Details</a>
                         </div>
                     </div>
                     <div class="card-footer bg-transparent border-0 pb-3">
                         <form asp-action="Buy" asp-route-id="@item.Id" method="post">
-                            <button type="submit" class="btn btn-gradient w-100 shadow-sm rounded-pill py-2">Buy Now</button>
+                            <button type="submit" class="btn btn-primary w-100">Buy Now</button>
                         </form>
                     </div>
                 </div>
@@ -70,68 +70,26 @@
 }
 
 <style>
-    .text-gradient {
-        background: linear-gradient(90deg, #212529, #495057);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    .search-bar {
-        border-radius: 25px;
-        padding-left: 20px;
-        width: 300px;
-        border: 2px solid #dee2e6;
-        transition: all 0.3s ease;
-    }
-    .search-bar:focus {
-        border-color: #0d6efd;
-        box-shadow: 0 0 10px rgba(13, 110, 253, 0.2);
-    }
     .premium-card {
-        border-radius: 20px;
+        border: 1.5px solid #e8e3db;
+        border-radius: 10px;
         overflow: hidden;
-        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     }
     .premium-card:hover {
-        transform: translateY(-12px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.2) !important;
+        transform: translateY(-6px);
+        box-shadow: 0 16px 36px rgba(0,0,0,.1) !important;
+        border-color: #c9a55a;
     }
-    .card-img-container {
-        position: relative;
-        height: 220px;
-        overflow: hidden;
-    }
-    .card-img-top {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s ease;
-    }
-    .premium-card:hover .card-img-top {
-        transform: scale(1.1);
-    }
+    .card-img-container { position: relative; height: 200px; overflow: hidden; }
+    .card-img-top { width:100%; height:100%; object-fit:cover; transition: transform 0.3s ease; }
+    .premium-card:hover .card-img-top { transform: scale(1.05); }
     .card-badge {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background: rgba(0,0,0,0.6);
-        color: white;
-        padding: 6px 16px;
-        border-radius: 30px;
-        font-size: 0.75rem;
-        backdrop-filter: blur(8px);
-        font-weight: 600;
-        letter-spacing: 0.5px;
+        position: absolute; top: 10px; right: 10px;
+        background: rgba(0,0,0,.65); color: #c9a55a;
+        padding: 3px 12px; border-radius: 20px;
+        font-size: .7rem; font-weight: 700; letter-spacing: .08em;
+        backdrop-filter: blur(6px);
     }
-    .btn-gradient {
-        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-        color: white;
-        border: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-    .btn-gradient:hover {
-        opacity: 0.9;
-        color: white;
-        transform: scale(1.02);
-    }
+    .mp-price { font-size:1.2rem; font-weight:800; color:#1c1917; }
 </style>

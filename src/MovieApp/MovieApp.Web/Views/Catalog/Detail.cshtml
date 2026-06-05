@@ -2,50 +2,250 @@
 
 @{
     ViewData["Title"] = Model.Movie.Title;
-    
     var totalReviews = Model.StarRatingBuckets.Sum();
 }
 
-<div class="mb-3">
-    <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to Catalog</a>
+@section Styles {
+<style>
+    .detail-poster {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 16px 48px rgba(0,0,0,.18);
+        position: sticky;
+        top: 1rem;
+    }
+    .detail-poster img { width: 100%; display: block; object-fit: cover; }
+    .detail-poster-placeholder {
+        height: 520px;
+        background: #2a2a2a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #555;
+        font-size: .85rem;
+        letter-spacing: .1em;
+    }
+
+    .detail-genre-badge {
+        display: inline-block;
+        font-size: .7rem;
+        font-weight: 700;
+        letter-spacing: .15em;
+        text-transform: uppercase;
+        color: #b5800e;
+        margin-bottom: .5rem;
+    }
+    .detail-title {
+        font-size: clamp(1.6rem, 3vw, 2.4rem);
+        font-weight: 800;
+        color: #1c1917;
+        line-height: 1.15;
+        margin-bottom: .25rem;
+    }
+    .detail-year { color: #8a8480; font-weight: 400; font-size: 1.2rem; }
+
+    .detail-rating {
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        margin-bottom: 1.25rem;
+    }
+    .detail-rating-score {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #1c1917;
+        line-height: 1;
+    }
+    .detail-rating-stars { color: #c9a55a; font-size: 1.2rem; letter-spacing: .05em; }
+    .detail-rating-count { color: #8a8480; font-size: .82rem; }
+
+    .detail-price-block { margin-bottom: 1.5rem; }
+    .detail-price {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #1c1917;
+    }
+    .detail-price.on-sale { color: #e53e1a; }
+    .detail-price del {
+        font-size: 1rem;
+        font-weight: 400;
+        color: #aaa;
+        margin-left: .4rem;
+    }
+    .sale-pill {
+        display: inline-block;
+        background: #e53e1a;
+        color: #fff;
+        font-size: .65rem;
+        font-weight: 700;
+        padding: .2rem .6rem;
+        border-radius: 4px;
+        letter-spacing: .08em;
+        margin-left: .5rem;
+        vertical-align: middle;
+    }
+
+    .detail-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: 2rem; }
+
+    .btn-buy {
+        background: #b5800e;
+        color: #fff;
+        border: none;
+        font-size: 1rem;
+        font-weight: 700;
+        padding: .75rem 2rem;
+        border-radius: 6px;
+        transition: background .2s ease, box-shadow .2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+    }
+    .btn-buy:hover { background: #c9a55a; color: #fff; box-shadow: 0 6px 20px rgba(181,128,14,.3); }
+    .btn-buy:disabled { opacity: .55; cursor: not-allowed; }
+    .btn-buy.owned { background: #2e7d52; }
+    .btn-buy.owned:hover { background: #2e7d52; box-shadow: none; }
+
+    .btn-secondary-action {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .75rem 1.4rem;
+        border: 2px solid #e2e2e2;
+        border-radius: 6px;
+        color: #1c1917;
+        font-weight: 600;
+        font-size: .88rem;
+        text-decoration: none;
+        transition: border-color .2s ease, background .2s ease;
+    }
+    .btn-secondary-action:hover { border-color: #b5800e; color: #b5800e; }
+
+    .detail-synopsis-label {
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+        color: #b5800e;
+        margin-bottom: .5rem;
+    }
+    .detail-synopsis { color: #4a4540; line-height: 1.8; white-space: pre-line; }
+
+    /* review section */
+    .section-title {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: #1c1917;
+        padding-bottom: .5rem;
+        border-bottom: 2px solid #e2e2e2;
+        margin-bottom: 1.25rem;
+    }
+    .section-title span { color: #b5800e; }
+
+    .rating-bar-label { font-size: .78rem; font-weight: 600; color: #6b6560; width: 48px; }
+    .progress { border-radius: 4px; background: #f0ece6; }
+    .progress-bar { background: #c9a55a !important; border-radius: 4px; }
+    .rating-bar-pct { font-size: .75rem; color: #8a8480; width: 36px; text-align: right; }
+
+    .review-card {
+        border: 1.5px solid #e8e3db;
+        border-radius: 8px;
+        padding: 1rem 1.2rem;
+        margin-bottom: .75rem;
+    }
+    .review-stars { color: #c9a55a; font-size: 1rem; letter-spacing: .05em; }
+    .review-author { font-weight: 700; font-size: .88rem; }
+    .review-date { font-size: .75rem; color: #8a8480; }
+    .review-text { color: #4a4540; font-size: .9rem; line-height: 1.6; white-space: pre-line; margin: 0; }
+
+    .write-review-card {
+        background: #f9f7f4;
+        border: 1.5px solid #e8e3db;
+        border-radius: 8px;
+        padding: 1.25rem;
+    }
+
+    .external-review-card {
+        border: 1.5px solid #e8e3db;
+        border-radius: 8px;
+        padding: 1rem 1.2rem;
+        margin-bottom: .75rem;
+    }
+    .external-source { font-weight: 700; font-size: .88rem; }
+    .external-score {
+        background: #1c1917;
+        color: #c9a55a;
+        font-size: .75rem;
+        font-weight: 700;
+        padding: .2rem .55rem;
+        border-radius: 4px;
+    }
+
+    .comment-box {
+        background: #f9f7f4;
+        border: 1.5px solid #e8e3db;
+        border-radius: 8px;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+    }
+</style>
+}
+
+<div class="mb-4">
+    <a asp-action="Index" class="btn-secondary-action" style="font-size:.8rem; padding:.4rem .9rem;">
+        <i class="bi bi-arrow-left"></i> Back to Catalog
+    </a>
 </div>
 
-<div class="row mb-5">
-    <div class="col-md-4 mb-4 mb-md-0">
-        <div class="card box-shadow rounded-3 overflow-hidden">
+<!-- ── HERO ROW ── -->
+<div class="row mb-5 g-5">
+    <div class="col-md-4">
+        <div class="detail-poster">
             @if (string.IsNullOrEmpty(Model.Movie.PosterUrl))
             {
-                <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 500px;">
-                    <h2>No Poster Available</h2>
-                </div>
+                <div class="detail-poster-placeholder">NO POSTER</div>
             }
             else
             {
-                <img src="@Model.Movie.PosterUrl" alt="@Model.Movie.Title" class="img-fluid w-100" style="object-fit: cover;" />
+                <img src="@Model.Movie.PosterUrl" alt="@Model.Movie.Title" />
             }
         </div>
     </div>
 
-    <div class="col-md-8">
-        <h1 class="fw-bold mb-1">@Model.Movie.Title <span class="text-muted fs-3">(@Model.Movie.ReleaseYear)</span></h1>
-        
-        <div class="mb-3">
-            <span class="badge bg-secondary fs-6 me-2">@Model.Movie.Genre</span>
-            <span class="badge bg-warning text-dark fs-6"><i class="bi bi-star-fill"></i> @Model.Movie.Rating.ToString("0.#") / 5</span>
+    <div class="col-md-8 d-flex flex-column justify-content-center">
+        <div class="detail-genre-badge">@Model.Movie.Genre</div>
+
+        <h1 class="detail-title">
+            @Model.Movie.Title
+            <span class="detail-year">(@Model.Movie.ReleaseYear)</span>
+        </h1>
+
+        <div class="detail-rating">
+            <span class="detail-rating-score">@Model.Movie.Rating.ToString("0.#")</span>
+            <div>
+                <div class="detail-rating-stars">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        @(i <= (int)Math.Round((double)Model.Movie.Rating) ? "★" : "☆")
+                    }
+                </div>
+                <div class="detail-rating-count">@totalReviews review@(totalReviews == 1 ? "" : "s")</div>
+            </div>
         </div>
 
-        <h3 class="mb-4">
+        <div class="detail-price-block">
             @if (Model.Movie.HasActiveSale)
             {
-                <span class="text-danger fw-bold">$@Model.Movie.DiscountedPriceText</span>
-                <del class="text-muted fs-5 ms-2">$@Model.Movie.OriginalPriceText</del>
-                <span class="badge bg-danger ms-2 align-middle">ON SALE</span>
+                <span class="detail-price on-sale">
+                    $@Model.Movie.DiscountedPriceText
+                    <del>$@Model.Movie.OriginalPriceText</del>
+                </span>
+                <span class="sale-pill">ON SALE</span>
             }
             else
             {
-                <span class="fw-bold">$@Model.Movie.OriginalPriceText</span>
+                <span class="detail-price">$@Model.Movie.OriginalPriceText</span>
             }
-        </h3>
+        </div>
 
         @if (TempData["PurchaseSuccess"] != null)
         {
@@ -56,17 +256,17 @@
             <div class="alert alert-danger mb-3">@TempData["PurchaseError"]</div>
         }
 
-        <div class="d-flex flex-wrap gap-2 mb-4">
+        <div class="detail-actions">
             @if (Model.UserOwnsMovie)
             {
-                <button class="btn btn-outline-success btn-action" disabled>
-                    <i class="bi bi-check-circle-fill me-1"></i> Already Owned
+                <button class="btn-buy owned" disabled>
+                    <i class="bi bi-check-circle-fill"></i> Already Owned
                 </button>
             }
             else if (!Model.IsLoggedIn)
             {
-                <button class="btn btn-outline-secondary btn-action" disabled title="You must be logged in to purchase">
-                    <i class="bi bi-cart me-1"></i> Buy — $@(Model.Movie.HasActiveSale ? Model.Movie.DiscountedPriceText : Model.Movie.OriginalPriceText)
+                <button class="btn-buy" disabled title="You must be logged in to purchase">
+                    <i class="bi bi-lock"></i> Log in to Buy
                 </button>
             }
             else
@@ -74,96 +274,78 @@
                 <form asp-action="PurchaseMovie" method="post" class="m-0">
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="movieId" value="@Model.Movie.Id" />
-                    <button type="submit" class="btn btn-outline-primary btn-action">
-                        <i class="bi bi-cart-fill me-1"></i> Buy — $@(Model.Movie.HasActiveSale ? Model.Movie.DiscountedPriceText : Model.Movie.OriginalPriceText)
+                    <button type="submit" class="btn-buy">
+                        <i class="bi bi-cart-fill"></i>
+                        Buy — $@(Model.Movie.HasActiveSale ? Model.Movie.DiscountedPriceText : Model.Movie.OriginalPriceText)
                     </button>
                 </form>
             }
 
-            <a asp-controller="Events" asp-action="Index" asp-route-movieId="@Model.Movie.Id" class="btn btn-outline-secondary btn-action">
-                <i class="bi bi-calendar-event me-1"></i> View Events
+            <a asp-controller="Events" asp-action="Index" asp-route-movieId="@Model.Movie.Id" class="btn-secondary-action">
+                <i class="bi bi-calendar-event"></i> Events
             </a>
-
-            <a asp-controller="Screening" asp-action="ForMovie" asp-route-id="@Model.Movie.Id" class="btn btn-outline-secondary btn-action">
-                <i class="bi bi-film me-1"></i> View Screenings
+            <a asp-controller="Screening" asp-action="ForMovie" asp-route-id="@Model.Movie.Id" class="btn-secondary-action">
+                <i class="bi bi-film"></i> Screenings
             </a>
         </div>
 
-        <style>
-            .btn-action {
-                padding: 0.65rem 1.75rem;
-                font-size: 1.05rem;
-                border-radius: 0.5rem;
-                font-weight: 500;
-            }
-        </style>
-
-        <h5 class="fw-bold border-bottom pb-2">Synopsis</h5>
-        <p class="lead" style="white-space: pre-line;">@Model.Movie.Synopsis</p>
+        <div class="detail-synopsis-label">Synopsis</div>
+        <p class="detail-synopsis">@(string.IsNullOrEmpty(Model.Movie.Synopsis) ? "No synopsis available." : Model.Movie.Synopsis)</p>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-5 mb-5">
-        
-        <h4 class="fw-bold mb-3">Customer Reviews</h4>
-        <div class="card box-shadow mb-4">
-            <div class="card-body">
-                <div class="d-flex align-items-center mb-3">
-                    <h2 class="fw-bold mb-0 me-2">@Model.Movie.Rating.ToString("0.#")</h2>
-                    <div class="text-warning fs-4">
-                        @for (int i = 0; i < 5; i++)
-                        {
-                            <text>★</text>
-                        }
-                    </div>
-                </div>
-                <p class="text-muted">Based on @totalReviews reviews</p>
+<!-- ── REVIEWS ── -->
+<div class="row g-5 mb-5">
+    <div class="col-md-5">
+        <div class="section-title">Customer Reviews <span>(@totalReviews)</span></div>
 
-                @for (int i = 5; i >= 1; i--)
-                {
-                    var count = Model.StarRatingBuckets[i - 1];
-                    var percentage = totalReviews > 0 ? (count * 100) / totalReviews : 0;
-                    
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="text-nowrap me-2" style="width: 50px;">@i star</div>
-                        <div class="progress flex-grow-1" style="height: 12px;">
-                            <div class="progress-bar bg-warning" role="progressbar" style="width: @percentage%" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <div class="text-muted text-end ms-2" style="width: 40px;">@percentage%</div>
-                    </div>
-                }
+        <div class="d-flex align-items-center gap-3 mb-3">
+            <div style="font-size:3rem; font-weight:800; color:#1c1917; line-height:1;">@Model.Movie.Rating.ToString("0.#")</div>
+            <div>
+                <div style="color:#c9a55a; font-size:1.4rem;">
+                    @for (int i = 1; i <= 5; i++) { @(i <= (int)Math.Round((double)Model.Movie.Rating) ? "★" : "☆") }
+                </div>
+                <div style="font-size:.78rem; color:#8a8480;">out of 5</div>
             </div>
         </div>
 
-        <h4 class="fw-bold mb-3">Write a Review</h4>
-        <div class="card box-shadow">
-            <div class="card-body bg-light">
+        @for (int i = 5; i >= 1; i--)
+        {
+            var count = Model.StarRatingBuckets[i - 1];
+            var percentage = totalReviews > 0 ? (count * 100) / totalReviews : 0;
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="rating-bar-label">@i star</span>
+                <div class="progress flex-grow-1" style="height:10px;">
+                    <div class="progress-bar" style="width:@percentage%"></div>
+                </div>
+                <span class="rating-bar-pct">@percentage%</span>
+            </div>
+        }
+
+        <div class="mt-4">
+            <div class="section-title">Write a Review</div>
+            <div class="write-review-card">
                 @if (TempData["ErrorMessage"] != null)
                 {
-                    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                    <div class="alert alert-danger py-2">@TempData["ErrorMessage"]</div>
                 }
-
                 <form asp-action="AddReview" method="post">
                     <input type="hidden" asp-for="Form.MovieId" />
-                    
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Star Rating</label>
-                        <select asp-for="Form.StarRating" class="form-select w-50">
-                            <option value="5">5 - Excellent</option>
-                            <option value="4">4 - Good</option>
-                            <option value="3">3 - Average</option>
-                            <option value="2">2 - Poor</option>
-                            <option value="1">1 - Terrible</option>
+                        <label class="form-label">Star Rating</label>
+                        <select asp-for="Form.StarRating" class="form-select" style="width:auto;">
+                            <option value="5">★★★★★ Excellent</option>
+                            <option value="4">★★★★☆ Good</option>
+                            <option value="3">★★★☆☆ Average</option>
+                            <option value="2">★★☆☆☆ Poor</option>
+                            <option value="1">★☆☆☆☆ Terrible</option>
                         </select>
                     </div>
-
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Your Review</label>
-                        <textarea asp-for="Form.Comment" class="form-control" rows="4" placeholder="What did you think of the movie?"></textarea>
+                        <label class="form-label">Your Review</label>
+                        <textarea asp-for="Form.Comment" class="form-control" rows="3" placeholder="What did you think?"></textarea>
                         <span asp-validation-for="Form.Comment" class="text-danger small"></span>
                     </div>
-
                     <button type="submit" class="btn btn-primary w-100">Submit Review</button>
                 </form>
             </div>
@@ -171,135 +353,118 @@
     </div>
 
     <div class="col-md-7">
-        <h4 class="fw-bold mb-3">Recent Reviews</h4>
-        
+        <div class="section-title">Recent Reviews</div>
         @if (!Model.Reviews.Any())
         {
-            <div class="alert alert-secondary">
-                No reviews yet. Be the first to review this movie!
+            <div style="text-align:center; padding:3rem; color:#8a8480;">
+                <div style="font-size:2rem; margin-bottom:.5rem;">💬</div>
+                No reviews yet. Be the first!
             </div>
         }
         else
         {
-            <div class="list-group box-shadow">
-                @foreach (var review in Model.Reviews)
-                {
-                    <div class="list-group-item p-4">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h6 class="fw-bold mb-0">@(review.User?.Username ?? "AnonymousUser")</h6>
-                            <small class="text-muted">@review.DisplayCreatedAt</small>
-                        </div>
-                        <div class="text-warning mb-2">
-                            @for (int i = 0; i < review.StarRating; i++)
-                            {
-                                <text>★</text>
-                            }
-                            @for (int i = (int)review.StarRating; i < 5; i++)
-                            {
-                                <text>☆</text>
-                            }
-                            <span class="badge bg-secondary ms-2 text-white">@review.DisplayStarRating</span>
-                        </div>
-                        <p class="mb-0 text-break" style="white-space: pre-line;">@review.Comment</p>
+            @foreach (var review in Model.Reviews)
+            {
+                <div class="review-card">
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                        <span class="review-author">@(review.User?.Username ?? "Anonymous")</span>
+                        <span class="review-date">@review.DisplayCreatedAt</span>
                     </div>
-                }
-            </div>
+                    <div class="review-stars mb-2">
+                        @for (int i = 1; i <= 5; i++) { @(i <= (int)review.StarRating ? "★" : "☆") }
+                        <span style="font-size:.75rem; color:#8a8480; margin-left:.4rem;">@review.DisplayStarRating</span>
+                    </div>
+                    <p class="review-text">@review.Comment</p>
+                </div>
+            }
         }
     </div>
 </div>
 
-<div class="row">
-    <div class="col-12 mb-5">
-        <h4 class="fw-bold mb-3">External Reviews</h4>
-
-        @if (!Model.ExternalReviews.Any())
-        {
-            <div class="alert alert-secondary">
-                No external reviews available
-            </div>
-        }
-        else
-        {
-            <div class="list-group box-shadow">
-                @foreach (var critic in Model.ExternalReviews)
-                {
-                    <div class="list-group-item p-4">
+<!-- ── EXTERNAL REVIEWS ── -->
+@if (Model.ExternalReviews.Any())
+{
+    <div class="mb-5">
+        <div class="section-title">External Reviews</div>
+        <div class="row g-3">
+            @foreach (var critic in Model.ExternalReviews)
+            {
+                <div class="col-md-6">
+                    <div class="external-review-card">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h6 class="fw-bold mb-0">@critic.Source</h6>
+                            <span class="external-source">@critic.Source</span>
                             @if (critic.HasScore)
                             {
-                                <span class="badge bg-warning text-dark fs-6"><i class="bi bi-star-fill"></i> @critic.ScoreDisplay / 10</span>
+                                <span class="external-score">★ @critic.ScoreDisplay / 10</span>
                             }
                         </div>
                         @if (!string.IsNullOrWhiteSpace(critic.Headline))
                         {
-                            <p class="fw-semibold mb-1">@critic.Headline</p>
+                            <p class="fw-semibold mb-1" style="font-size:.88rem;">@critic.Headline</p>
                         }
                         @if (!string.IsNullOrWhiteSpace(critic.Snippet))
                         {
-                            <p class="mb-2 text-break" style="white-space: pre-line;">@critic.Snippet</p>
+                            <p class="mb-2 text-break" style="font-size:.82rem; color:#6b6560; white-space:pre-line;">@critic.Snippet</p>
                         }
                         @if (!string.IsNullOrWhiteSpace(critic.Url))
                         {
-                            <a href="@critic.Url" target="_blank" rel="noopener noreferrer" class="small">
+                            <a href="@critic.Url" target="_blank" rel="noopener noreferrer" style="font-size:.78rem;">
                                 Read full review <i class="bi bi-box-arrow-up-right"></i>
                             </a>
                         }
                     </div>
-                }
-            </div>
-        }
-    </div>
-</div>
-
-<div class="row mt-5">
-    <div class="col-12 mb-5">
-        <h4 class="fw-bold mb-3">Comments</h4>
-
-        @if (TempData["CommentSuccess"] != null)
-        {
-            <div class="alert alert-success">@TempData["CommentSuccess"]</div>
-        }
-        @if (TempData["CommentError"] != null)
-        {
-            <div class="alert alert-danger">@TempData["CommentError"]</div>
-        }
-
-        <div class="card box-shadow mb-4">
-            <div class="card-body bg-light">
-                @if (Model.IsLoggedIn)
-                {
-                    <form asp-action="AddComment" method="post">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="MovieId" value="@Model.Movie.Id" />
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Leave a Comment</label>
-                            <textarea name="Content" class="form-control" rows="3" placeholder="Share your thoughts..." required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Post Comment</button>
-                    </form>
-                }
-                else
-                {
-                    <p class="mb-0 text-muted">You must be logged in to post a comment.</p>
-                }
-            </div>
+                </div>
+            }
         </div>
+    </div>
+}
 
-        @if (!Model.Comments.Any())
+<!-- ── COMMENTS ── -->
+<div class="mb-5">
+    <div class="section-title">Comments</div>
+
+    @if (TempData["CommentSuccess"] != null)
+    {
+        <div class="alert alert-success">@TempData["CommentSuccess"]</div>
+    }
+    @if (TempData["CommentError"] != null)
+    {
+        <div class="alert alert-danger">@TempData["CommentError"]</div>
+    }
+
+    <div class="comment-box mb-4">
+        @if (Model.IsLoggedIn)
         {
-            <div class="alert alert-secondary">
-                No comments yet. Be the first to start the discussion!
-            </div>
+            <form asp-action="AddComment" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="MovieId" value="@Model.Movie.Id" />
+                <div class="mb-3">
+                    <label class="form-label">Leave a Comment</label>
+                    <textarea name="Content" class="form-control" rows="3" placeholder="Share your thoughts..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Post Comment</button>
+            </form>
         }
         else
         {
-            <div class="list-group border-0">
-                @foreach (var comment in Model.Comments)
-                {
-                    <partial name="_CommentNode" model="comment" view-data='new ViewDataDictionary(ViewData) { { "depth", 0 } }' />
-                }
-            </div>
+            <p class="mb-0" style="color:#8a8480;">You must be logged in to post a comment.</p>
         }
     </div>
+
+    @if (!Model.Comments.Any())
+    {
+        <div style="text-align:center; padding:2rem; color:#8a8480;">
+            <div style="font-size:1.5rem; margin-bottom:.5rem;">💬</div>
+            No comments yet. Start the discussion!
+        </div>
+    }
+    else
+    {
+        <div class="list-group border-0">
+            @foreach (var comment in Model.Comments)
+            {
+                <partial name="_CommentNode" model="comment" view-data='new ViewDataDictionary(ViewData) { { "depth", 0 } }' />
+            }
+        </div>
+    }
 </div>

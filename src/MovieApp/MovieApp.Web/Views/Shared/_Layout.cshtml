@@ -5,87 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - MovieApp</title>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 	@await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">MovieApp</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        <nav class="navbar navbar-expand-lg navbar-dark ma-navbar">
+            <div class="container-fluid px-4">
+                <a class="navbar-brand ma-navbar-brand" asp-controller="Home" asp-action="Index">MOVIEAPP</a>
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav flex-wrap">
+                    <ul class="navbar-nav gap-1">
+
+                        <!-- Catalog (standalone) -->
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Catalog" asp-action="Index">Movie Catalog</a>
+                            <a class="nav-link ma-nav-link" asp-controller="Catalog" asp-action="Index">Catalog</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Marketplace" asp-action="Index">Marketplace</a>
+
+                        <!-- Discover -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link ma-nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Discover</a>
+                            <ul class="dropdown-menu ma-dropdown">
+                                <li><a class="dropdown-item ma-dropdown-item" asp-controller="Marketplace" asp-action="Index">🏪 Marketplace</a></li>
+                                <li><a class="dropdown-item ma-dropdown-item" asp-controller="TrailerScraping" asp-action="Index">🎥 Trailer Scraping</a></li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Events" asp-action="Index">Events</a>
+
+                        <!-- Events -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link ma-nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Events</a>
+                            <ul class="dropdown-menu ma-dropdown">
+                                <li><a class="dropdown-item ma-dropdown-item" asp-controller="Events" asp-action="Index">🎭 Events</a></li>
+                                <li><a class="dropdown-item ma-dropdown-item" asp-controller="Screenings" asp-action="Index" asp-route-eventId="1">🎦 Screenings</a></li>
+                                <li><a class="dropdown-item ma-dropdown-item" asp-controller="Screenings" asp-action="MyBookings">🎟 My Bookings</a></li>
+                                <li><a class="dropdown-item ma-dropdown-item" asp-controller="Marathon" asp-action="Index">🏃 Marathon</a></li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Screenings" asp-action="Index" asp-route-eventId="1">Screenings</a>
+
+                        <!-- Compete -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link ma-nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Compete</a>
+                            <ul class="dropdown-menu ma-dropdown">
+                                <li><a class="dropdown-item ma-dropdown-item" asp-controller="Tournament" asp-action="Index">🏆 Tournament</a></li>
+                                <li><a class="dropdown-item ma-dropdown-item" asp-controller="Battle" asp-action="Index">⚔️ Battle &amp; Betting</a></li>
+                                <li><a class="dropdown-item ma-dropdown-item" asp-controller="Trivia" asp-action="Index">🧠 Trivia</a></li>
+                                <li><a class="dropdown-item ma-dropdown-item" asp-controller="SlotMachine" asp-action="Index">🎰 Slot Machine</a></li>
+                                <li><a class="dropdown-item ma-dropdown-item" asp-controller="Swipe" asp-action="Index">💫 Movie Swipe</a></li>
+                                <li><a class="dropdown-item ma-dropdown-item" asp-controller="PersonalityMatch" asp-action="Index">🎭 Personality Match</a></li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Screenings" asp-action="MyBookings">My Bookings</a>
+
+                        <!-- Reels -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link ma-nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Reels</a>
+                            <ul class="dropdown-menu ma-dropdown">
+                                <li><a class="dropdown-item ma-dropdown-item" asp-controller="ReelsFeed" asp-action="Index">📽 Feed</a></li>
+                                <li><a class="dropdown-item ma-dropdown-item" asp-controller="ReelsUpload" asp-action="Index">⬆️ Upload</a></li>
+                                <li><a class="dropdown-item ma-dropdown-item" asp-controller="ReelsEditing" asp-action="Index">✂️ Editing</a></li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Inventory" asp-action="Index">Inventory</a>
+
+                        <!-- Account -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link ma-nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Account</a>
+                            <ul class="dropdown-menu ma-dropdown">
+                                <li><a class="dropdown-item ma-dropdown-item" asp-controller="Profile" asp-action="Index">👤 Profile</a></li>
+                                <li><a class="dropdown-item ma-dropdown-item" asp-controller="Inventory" asp-action="Index">🎒 Inventory</a></li>
+                                <li><a class="dropdown-item ma-dropdown-item" asp-controller="Wallet" asp-action="Index">💳 Wallet</a></li>
+                                <li><hr class="dropdown-divider" style="border-color:#2a2a2a;"></li>
+                                <li><a class="dropdown-item ma-dropdown-item" asp-controller="Referral" asp-action="Index">🔗 Referrals</a></li>
+                                <li><a class="dropdown-item ma-dropdown-item" asp-controller="Ambassador" asp-action="Index">⭐ Ambassadors</a></li>
+                                <li><a class="dropdown-item ma-dropdown-item" asp-controller="PriceWatcher" asp-action="MyWatchers">👁 Price Watchers</a></li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Wallet" asp-action="Index">Wallet</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Swipe" asp-action="Index">Movie Swipe</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Tournament" asp-action="Index">Tournament</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="PersonalityMatch" asp-action="Index">Personality Match</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="ReelsFeed" asp-action="Index">Reels Feed</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="ReelsUpload" asp-action="Index">Reels Upload</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="ReelsEditing" asp-action="Index">Reels Editing</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="TrailerScraping" asp-action="Index">Trailer Scraping</a>
-                        </li>
-						<li class="nav-item">
-							<a class="nav-link" asp-controller="Battle" asp-action="Index">Battle</a>
-						</li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Trivia" asp-action="Index">Trivia</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Ambassador" asp-action="Index">Ambassadors</a>
-                        </li>
-						<li class="nav-item">
-							<a class="nav-link" asp-controller="SlotMachine" asp-action="Index">Slot Machine</a>
-						</li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Referral" asp-action="Index">Referrals</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="PriceWatcher" asp-action="MyWatchers">Price Watchers</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Marathon" asp-action="Index">Marathon</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Profile" asp-action="Index">Profile</a>
-                        </li>
+
                     </ul>
                     <div class="navbar-nav ms-auto">
                         @await Component.InvokeAsync("NotificationBadge")
