@@ -4,11 +4,19 @@
 	ViewData["Title"] = "Movie Battle";
 }
 
+@section Styles {
+<style>
+    .battle-points { font-size:.88rem; color:#8a8480; }
+    .battle-points strong { color:#b5800e; font-size:1.1rem; }
+    .battle-movie-card { border:1.5px solid #e8e3db; border-radius:10px; height:100%; padding:1.25rem; transition: border-color .2s ease; }
+    .battle-movie-card:hover { border-color:#c9a55a; }
+    .battle-movie-card.winner { border-color:#c9a55a; background:rgba(201,165,90,.05); }
+</style>
+}
+
 <div class="d-flex justify-content-between align-items-center mb-4">
-	<h2 class="fw-bold m-0">Movie Battle</h2>
-	<div class="text-muted fs-5">
-		Points: <span class="fw-bold text-dark">@Model.CurrentUserPoints</span>
-	</div>
+	<h1 class="page-title mb-0">Movie Battle</h1>
+	<div class="battle-points">Points: <strong>@Model.CurrentUserPoints</strong></div>
 </div>
 
 @if (Model.StatusMessage != null)

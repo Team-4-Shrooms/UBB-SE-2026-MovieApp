@@ -20,3 +20,179 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* ── GLOBAL ─────────────────────────────────── */
+:root {
+    --gold:        #c9a55a;
+    --gold-dark:   #b5800e;
+    --gold-bg:     rgba(201, 165, 90, .1);
+    --ink:         #1c1917;
+    --ink-50:      #6b6560;
+    --border:      #e2e2e2;
+}
+
+body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-weight: 400;
+    color: var(--ink);
+}
+
+/* headings */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+/* gold rule under page h1 */
+h1.page-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    padding-bottom: .75rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 3px solid var(--gold);
+    display: inline-block;
+}
+
+/* primary button — gold instead of Bootstrap blue */
+.btn-primary {
+    background-color: var(--gold-dark) !important;
+    border-color: var(--gold-dark) !important;
+    color: #fff !important;
+    font-weight: 600;
+    letter-spacing: .04em;
+}
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: #c9a55a !important;
+    border-color: #c9a55a !important;
+    color: #fff !important;
+    box-shadow: 0 4px 14px rgba(181, 128, 14, .3) !important;
+}
+
+/* outline-primary — gold ghost */
+.btn-outline-primary {
+    color: var(--gold-dark) !important;
+    border-color: var(--gold-dark) !important;
+    font-weight: 600;
+}
+.btn-outline-primary:hover {
+    background-color: var(--gold-dark) !important;
+    border-color: var(--gold-dark) !important;
+    color: #fff !important;
+}
+
+/* outline-secondary — clean dark ghost */
+.btn-outline-secondary {
+    color: var(--ink) !important;
+    border-color: var(--border) !important;
+    font-weight: 500;
+}
+.btn-outline-secondary:hover {
+    background-color: var(--ink) !important;
+    border-color: var(--ink) !important;
+    color: #fff !important;
+}
+
+/* badges */
+.badge.bg-warning {
+    background-color: var(--gold) !important;
+    color: #fff !important;
+}
+
+/* cards */
+.card {
+    border-color: var(--border);
+    border-radius: 8px;
+}
+.card-title {
+    font-weight: 700;
+}
+
+/* forms */
+.form-control, .form-select {
+    border-width: 2px;
+    border-color: var(--border);
+    font-weight: 400;
+}
+.form-control:focus, .form-select:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201, 165, 90, .15);
+}
+.form-label {
+    font-weight: 600;
+    font-size: .88rem;
+    color: var(--ink);
+}
+
+/* links */
+a {
+    color: var(--gold-dark);
+}
+a:hover {
+    color: var(--gold);
+}
+
+/* footer */
+.footer {
+    font-size: .82rem;
+    color: var(--ink-50);
+}
+
+/* ── NAVBAR ─────────────────────────────────── */
+.ma-navbar {
+    background: #111 !important;
+    border-bottom: 3px solid #c9a55a !important;
+    padding-top: .6rem;
+    padding-bottom: .6rem;
+}
+
+.ma-navbar-brand {
+    font-weight: 800;
+    font-size: .95rem;
+    letter-spacing: .18em;
+    color: #c9a55a !important;
+    font-family: system-ui, sans-serif;
+}
+
+.ma-navbar-brand:hover {
+    color: #e8c87a !important;
+}
+
+.ma-nav-link {
+    color: #bbb !important;
+    font-size: .82rem;
+    font-weight: 500;
+    letter-spacing: .04em;
+    padding: .4rem .7rem !important;
+    transition: color .18s ease;
+}
+
+.ma-nav-link:hover,
+.ma-nav-link:focus,
+.ma-nav-link.show {
+    color: #c9a55a !important;
+}
+
+.ma-dropdown {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-top: 2px solid #c9a55a;
+    border-radius: 0 0 6px 6px;
+    padding: .4rem 0;
+    min-width: 200px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4);
+}
+
+.ma-dropdown-item {
+    color: #ccc !important;
+    font-size: .82rem;
+    font-weight: 400;
+    padding: .45rem 1.1rem;
+    transition: background .15s ease, color .15s ease;
+}
+
+.ma-dropdown-item:hover {
+    background: #252525 !important;
+    color: #c9a55a !important;
+}

@@ -6,15 +6,18 @@
 
 @if (onSaleMovies.Any())
 {
-    <div class="alert alert-warning text-center mb-4 box-shadow rounded-3">
-        <h4 class="alert-heading fw-bold text-danger"> FLASH SALE </h4>
-        <p class="mb-2">Hurry! These exclusive deals end in: <strong id="flash-sale-timer" class="fs-5">00:00:00</strong></p>
-        
-        <div class="d-flex justify-content-center flex-wrap gap-2 mt-2">
+    <div class="mb-4" style="background:#1c1917; border-radius:8px; padding:1rem 1.5rem; display:flex; flex-wrap:wrap; align-items:center; gap:1rem;">
+        <div style="flex-shrink:0;">
+            <span style="font-size:.65rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:#e53e1a;">FLASH SALE</span>
+            <div style="font-size:.88rem; color:#ccc; margin-top:.15rem;">
+                Ends in: <strong id="flash-sale-timer" style="color:#c9a55a; font-family:monospace;">00:00:00</strong>
+            </div>
+        </div>
+        <div class="d-flex flex-wrap gap-2 align-items-center">
             @foreach (var movie in onSaleMovies.Take(4))
             {
-                <span class="badge bg-danger fs-6 py-2 px-3">
-                    @movie.Title — Now $@movie.DiscountedPriceText <del class="text-white-50 ms-1">$@movie.OriginalPriceText</del>
+                <span style="background:rgba(229,62,26,.15); border:1px solid #e53e1a; border-radius:5px; padding:.25rem .75rem; font-size:.8rem; color:#fff; font-weight:600;">
+                    @movie.Title <span style="color:#e53e1a;">$@movie.DiscountedPriceText</span> <del style="color:#666; font-weight:400;">$@movie.OriginalPriceText</del>
                 </span>
             }
         </div>

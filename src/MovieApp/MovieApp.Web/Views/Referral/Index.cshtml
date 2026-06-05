@@ -4,90 +4,111 @@
     ViewData["Title"] = "Referral Dashboard";
 }
 
-<div class="container mt-4">
-    <h2>My Referral Dashboard</h2>
-
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success">@TempData["Success"]</div>
+@section Styles {
+<style>
+    .referral-code-display {
+        font-size: 2.4rem;
+        font-weight: 800;
+        letter-spacing: .25em;
+        color: #b5800e;
+        background: rgba(201,165,90,.08);
+        border: 2px dashed #c9a55a;
+        border-radius: 8px;
+        padding: .75rem 1.5rem;
+        display: inline-block;
+        margin-bottom: .5rem;
     }
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger">@TempData["Error"]</div>
+    .reward-balance {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #1c1917;
     }
+    .reward-unit { font-size:1rem; font-weight:400; color:#8a8480; margin-left:.3rem; }
+    .referral-card { border:1.5px solid #e8e3db; border-radius:10px; padding:1.5rem; margin-bottom:1.25rem; }
+    .referral-card-title { font-size:.72rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:#b5800e; margin-bottom:.75rem; }
+    .table th { font-size:.75rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#6b6560; border-bottom:2px solid #e8e3db; }
+    .table td { border-bottom:1px solid #f0ece6; vertical-align:middle; }
+</style>
+}
 
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Your Referral Code</h5>
-                    @if (!string.IsNullOrEmpty(Model.ReferralCode))
-                    {
-                        <p class="display-6 text-primary">@Model.ReferralCode</p>
-                        <p class="text-muted">Share this code with your friends!</p>
-                    }
-                    else
-                    {
-                        <p>You don't have a referral code yet.</p>
-                        <form asp-action="GenerateCode" method="post">
-                            <button type="submit" class="btn btn-primary">Generate My Code</button>
-                        </form>
-                    }
-                </div>
-            </div>
+<h1 class="page-title">Referral Dashboard</h1>
 
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Reward Balance</h5>
-                    <p class="display-6 text-success">@Model.RewardBalance <span class="fs-5 text-muted">points</span></p>
-                </div>
-            </div>
-        </div>
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
 
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Apply a Friend's Code</h5>
-                    <form asp-action="ApplyCode" method="post">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="codeToApply" placeholder="Enter referral code" required>
-                            <button class="btn btn-outline-secondary" type="submit">Apply</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card mt-2">
-        <div class="card-body">
-            <h5 class="card-title">Referral History</h5>
-            @if (Model.History != null && Model.History.Any())
+<div class="row g-4 mt-1">
+    <div class="col-md-6">
+        <div class="referral-card">
+            <div class="referral-card-title">Your Referral Code</div>
+            @if (!string.IsNullOrEmpty(Model.ReferralCode))
             {
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Friend</th>
-                            <th>Event Title</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.History)
-                        {
-                            <tr>
-                                <td>@item.FormattedDate</td>
-                                <td>@item.FriendName</td> 
-                                <td>@item.EventTitle</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                <div class="referral-code-display">@Model.ReferralCode</div>
+                <p style="color:#8a8480; font-size:.88rem; margin-top:.5rem;">Share this code with friends to earn rewards!</p>
             }
             else
             {
-                <p class="text-muted">No referrals yet.</p>
+                <p style="color:#6b6560;">You don't have a referral code yet.</p>
+                <form asp-action="GenerateCode" method="post">
+                    <button type="submit" class="btn btn-primary">Generate My Code</button>
+                </form>
             }
         </div>
+
+        <div class="referral-card">
+            <div class="referral-card-title">Reward Balance</div>
+            <span class="reward-balance">@Model.RewardBalance</span>
+            <span class="reward-unit">points</span>
+        </div>
     </div>
+
+    <div class="col-md-6">
+        <div class="referral-card">
+            <div class="referral-card-title">Apply a Friend's Code</div>
+            <form asp-action="ApplyCode" method="post">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="codeToApply" placeholder="Enter referral code" required>
+                    <button class="btn btn-primary" type="submit">Apply</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="referral-card mt-2">
+    <div class="referral-card-title">Referral History</div>
+    @if (Model.History != null && Model.History.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Friend</th>
+                    <th>Event</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.History)
+                {
+                    <tr>
+                        <td style="color:#6b6560; font-size:.88rem;">@item.FormattedDate</td>
+                        <td style="font-weight:600;">@item.FriendName</td>
+                        <td>@item.EventTitle</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div style="text-align:center; padding:2.5rem; color:#8a8480;">
+            <div style="font-size:2rem; margin-bottom:.5rem;">🔗</div>
+            <p style="margin:0;">No referrals yet. Share your code to get started!</p>
+        </div>
+    }
 </div>

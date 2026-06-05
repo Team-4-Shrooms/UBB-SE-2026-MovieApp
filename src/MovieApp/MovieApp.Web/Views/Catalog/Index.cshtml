@@ -4,111 +4,277 @@
     ViewData["Title"] = "Movie Catalog";
 }
 
+@section Styles {
+<style>
+    /* ── filter bar ── */
+    .catalog-filters {
+        background: #1c1917;
+        border-radius: 8px;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 2rem;
+    }
+    .catalog-filters .form-label {
+        color: #c9a55a;
+        font-size: .72rem;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        font-weight: 600;
+        margin-bottom: .35rem;
+    }
+    .catalog-filters .form-control,
+    .catalog-filters .form-select {
+        background: #111;
+        border: 1.5px solid #333;
+        color: #eee;
+        border-radius: 4px;
+    }
+    .catalog-filters .form-control:focus,
+    .catalog-filters .form-select .form-control:focus {
+        border-color: #c9a55a;
+        background: #111;
+        color: #eee;
+    }
+    .catalog-filters .form-select option { background: #111; }
+    .catalog-filters .form-control::placeholder { color: #555; }
+
+    /* ── movie card ── */
+    .movie-card {
+        background: #fff;
+        border: 1.5px solid #e2e2e2;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        text-decoration: none;
+        color: inherit;
+    }
+    .movie-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 32px rgba(0,0,0,.12);
+        border-color: #c9a55a;
+        color: inherit;
+    }
+
+    /* poster */
+    .movie-card-poster {
+        position: relative;
+        overflow: hidden;
+        height: 300px;
+        background: #e8e4dc;
+        flex-shrink: 0;
+    }
+    .movie-card-poster img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform .3s ease;
+    }
+    .movie-card:hover .movie-card-poster img {
+        transform: scale(1.04);
+    }
+    .movie-card-poster-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #2a2a2a;
+        color: #555;
+        font-size: .8rem;
+        letter-spacing: .1em;
+    }
+
+    /* badges on poster */
+    .movie-card-rating {
+        position: absolute;
+        top: .6rem;
+        left: .6rem;
+        background: rgba(0,0,0,.75);
+        color: #c9a55a;
+        font-size: .75rem;
+        font-weight: 700;
+        padding: .2rem .5rem;
+        border-radius: 4px;
+        backdrop-filter: blur(4px);
+    }
+    .movie-card-sale-badge {
+        position: absolute;
+        top: .6rem;
+        right: .6rem;
+        background: #e53e1a;
+        color: #fff;
+        font-size: .65rem;
+        font-weight: 700;
+        padding: .2rem .5rem;
+        border-radius: 4px;
+        letter-spacing: .06em;
+    }
+
+    /* card body */
+    .movie-card-body {
+        padding: .9rem 1rem;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+    .movie-card-genre {
+        font-size: .68rem;
+        font-weight: 600;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        color: #b5800e;
+        margin-bottom: .3rem;
+    }
+    .movie-card-title {
+        font-size: .95rem;
+        font-weight: 700;
+        color: #1c1917;
+        line-height: 1.3;
+        margin-bottom: auto;
+    }
+    .movie-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: .8rem;
+        padding-top: .7rem;
+        border-top: 1px solid #f0ece6;
+    }
+    .movie-card-price {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: #1c1917;
+    }
+    .movie-card-price.on-sale {
+        color: #e53e1a;
+    }
+    .movie-card-price del {
+        font-size: .78rem;
+        font-weight: 400;
+        color: #aaa;
+        margin-left: .3rem;
+    }
+    .movie-card-btn {
+        font-size: .75rem;
+        font-weight: 600;
+        padding: .35rem .9rem;
+        background: #b5800e;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        transition: background .18s ease;
+        white-space: nowrap;
+    }
+    .movie-card-btn:hover { background: #c9a55a; color: #fff; }
+
+    /* empty state */
+    .catalog-empty {
+        text-align: center;
+        padding: 5rem 2rem;
+        color: #8a8480;
+    }
+    .catalog-empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: .4; }
+    .catalog-empty h5 { font-weight: 700; color: #1c1917; }
+</style>
+}
+
 <partial name="_FlashSaleBanner" model="Model.Movies" />
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold">Movie Catalog</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="page-title mb-0">Movie Catalog</h1>
+    <span class="text-muted small">@Model.Movies.Count() film@(Model.Movies.Count() == 1 ? "" : "s")</span>
 </div>
 
-<div class="card box-shadow mb-4">
-    <div class="card-body bg-light">
-        <form asp-action="Index" method="get" class="row g-3 align-items-end">
-            <div class="col-md-4">
-                <label class="form-label text-muted fw-bold">Search Title</label>
-                <input type="text" name="search" value="@Model.Filter.Search" class="form-control" placeholder="Search movies...">
-            </div>
-            <div class="col-md-2">
-                <label class="form-label text-muted fw-bold">Genre</label>
-                <select name="genre" class="form-select">
-                    <option value="">All Genres</option>
-                    @foreach (var genre in Model.Genres)
-                    {
-                        if (Model.Filter.Genre == genre)
-                        {
-                            <option value="@genre" selected>@genre</option>
-                        }
-                        else
-                        {
-                            <option value="@genre">@genre</option>
-                        }
-                    }
-                </select>
-            </div>
-            <div class="col-md-2">
-                <label class="form-label text-muted fw-bold">Min Rating</label>
-                <input type="number" step="0.1" min="0" max="10" name="minRating" value="@Model.Filter.MinRating" class="form-control" placeholder="e.g. 8.0">
-            </div>
-            <div class="col-md-2">
-                <label class="form-label text-muted fw-bold">Sort By</label>
-                <select name="sort" class="form-select">
-                    <option value="" selected="@(Model.Filter.Sort == null)">Title (A–Z)</option>
-                    <option value="price_asc" selected="@(Model.Filter.Sort == "price_asc")">Price (Low to High)</option>
-                    <option value="price_desc" selected="@(Model.Filter.Sort == "price_desc")">Price (High to Low)</option>
-                    <option value="rating_desc" selected="@(Model.Filter.Sort == "rating_desc")">Rating (High to Low)</option>
-                    <option value="rating_asc" selected="@(Model.Filter.Sort == "rating_asc")">Rating (Low to High)</option>
-                </select>
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">Filter</button>
-            </div>
-        </form>
-    </div>
+<div class="catalog-filters">
+    <form asp-action="Index" method="get" class="row g-3 align-items-end">
+        <div class="col-md-4">
+            <label class="form-label">Search Title</label>
+            <input type="text" name="search" value="@Model.Filter.Search" class="form-control" placeholder="Search movies...">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Genre</label>
+            <select name="genre" class="form-select">
+                <option value="">All Genres</option>
+                @foreach (var genre in Model.Genres)
+                {
+                    <option value="@genre" selected="@(Model.Filter.Genre == genre)">@genre</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Min Rating</label>
+            <input type="number" step="0.1" min="0" max="5" name="minRating" value="@Model.Filter.MinRating" class="form-control" placeholder="e.g. 4.0">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Sort By</label>
+            <select name="sort" class="form-select">
+                <option value="" selected="@(Model.Filter.Sort == null)">Title (A–Z)</option>
+                <option value="price_asc" selected="@(Model.Filter.Sort == "price_asc")">Price ↑</option>
+                <option value="price_desc" selected="@(Model.Filter.Sort == "price_desc")">Price ↓</option>
+                <option value="rating_desc" selected="@(Model.Filter.Sort == "rating_desc")">Rating ↓</option>
+                <option value="rating_asc" selected="@(Model.Filter.Sort == "rating_asc")">Rating ↑</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+    </form>
 </div>
 
 @if (!Model.Movies.Any())
 {
-    <div class="alert alert-info text-center py-5">
-        <h5 class="mb-0">No movies found matching your search criteria.</h5>
+    <div class="catalog-empty">
+        <div class="catalog-empty-icon">🎬</div>
+        <h5>No movies found</h5>
+        <p>Try adjusting your search or filter criteria.</p>
+        <a asp-action="Index" class="btn btn-outline-secondary mt-2">Clear filters</a>
     </div>
 }
 else
 {
-    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
         @foreach (var movie in Model.Movies)
         {
             <div class="col">
-                <div class="card h-100 box-shadow">
-                    @if (string.IsNullOrEmpty(movie.PosterUrl))
-                    {
-                        <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 350px;">
-                            <span>No Poster</span>
-                        </div>
-                    }
-                    else
-                    {
-                        <img src="@movie.PosterUrl" class="card-img-top" alt="@movie.Title" style="height: 350px; object-fit: cover;">
-                    }
-
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h5 class="card-title fw-bold mb-0">@movie.Title (@movie.ReleaseYear)</h5>
-                            <span class="badge bg-warning text-dark"><i class="bi bi-star-fill"></i> @movie.Rating.ToString("0.0")</span>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <span class="badge bg-secondary">@movie.Genre</span>
-                            @if (movie.HasActiveSale)
-                            {
-                                <span class="badge bg-danger ms-1">Sale</span>
-                            }
-                        </div>
-                        
-                        <div class="mt-auto d-flex justify-content-between align-items-center">
+                <a asp-action="Detail" asp-route-id="@movie.Id" class="movie-card">
+                    <div class="movie-card-poster">
+                        @if (string.IsNullOrEmpty(movie.PosterUrl))
+                        {
+                            <div class="movie-card-poster-placeholder">NO POSTER</div>
+                        }
+                        else
+                        {
+                            <img src="@movie.PosterUrl" alt="@movie.Title">
+                        }
+                        <span class="movie-card-rating">★ @movie.Rating.ToString("0.#")</span>
+                        @if (movie.HasActiveSale)
+                        {
+                            <span class="movie-card-sale-badge">SALE</span>
+                        }
+                    </div>
+                    <div class="movie-card-body">
+                        <div class="movie-card-genre">@movie.Genre · @movie.ReleaseYear</div>
+                        <div class="movie-card-title">@movie.Title</div>
+                        <div class="movie-card-footer">
                             <div>
                                 @if (movie.HasActiveSale)
                                 {
-                                    <span class="fs-5 fw-bold text-danger">$@movie.DiscountedPriceText</span>
-                                    <del class="text-muted small ms-1">$@movie.OriginalPriceText</del>
+                                    <span class="movie-card-price on-sale">
+                                        $@movie.DiscountedPriceText
+                                        <del>$@movie.OriginalPriceText</del>
+                                    </span>
                                 }
                                 else
                                 {
-                                    <span class="fs-5 fw-bold">$@movie.OriginalPriceText</span>
+                                    <span class="movie-card-price">$@movie.OriginalPriceText</span>
                                 }
                             </div>
-                            <a asp-action="Detail" asp-route-id="@movie.Id" class="btn btn-sm btn-outline-primary">View Details</a>
+                            <span class="movie-card-btn">View</span>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         }
     </div>

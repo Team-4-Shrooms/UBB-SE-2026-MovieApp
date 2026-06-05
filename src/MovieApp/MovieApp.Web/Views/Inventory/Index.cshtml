@@ -6,7 +6,7 @@
     var equipment = (List<Equipment>?)ViewBag.Equipment ?? new List<Equipment>();
 }
 
-<h1 class="mb-4">My Inventory</h1>
+<h1 class="page-title">My Inventory</h1>
 
 @if (TempData["Success"] != null)
 {
@@ -21,6 +21,17 @@
         @TempData["Error"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
+}
+
+@section Styles {
+<style>
+    .nav-tabs .nav-link { color: #6b6560; font-weight: 600; }
+    .nav-tabs .nav-link.active { color: #b5800e; border-bottom: 3px solid #b5800e; background: transparent; }
+    .nav-tabs { border-bottom: 2px solid #e2e2e2; }
+    .inv-empty { text-align:center; padding:4rem 2rem; color:#8a8480; }
+    .inv-empty-icon { font-size:2.5rem; margin-bottom:.75rem; }
+    .badge.bg-secondary { background:#e8e3db !important; color:#6b6560 !important; font-weight:600; }
+</style>
 }
 
 <ul class="nav nav-tabs mb-3" id="inventoryTabs" role="tablist">
@@ -45,9 +56,11 @@
     <div class="tab-pane fade show active" id="movies" role="tabpanel" aria-labelledby="movies-tab">
         @if (movies.Count == 0)
         {
-            <div class="text-center py-5 text-muted">
-                <p class="lead">You don't own any movies yet.</p>
-                <a asp-controller="Catalog" asp-action="Index" class="btn btn-outline-primary">Browse Catalog</a>
+            <div class="inv-empty">
+                <div class="inv-empty-icon">🎬</div>
+                <h5 style="font-weight:700; color:#1c1917;">No movies yet</h5>
+                <p>Purchase films from the catalog to build your collection.</p>
+                <a asp-controller="Catalog" asp-action="Index" class="btn btn-primary">Browse Catalog</a>
             </div>
         }
         else
@@ -91,9 +104,11 @@
     <div class="tab-pane fade" id="tickets" role="tabpanel" aria-labelledby="tickets-tab">
         @if (tickets.Count == 0)
         {
-            <div class="text-center py-5 text-muted">
-                <p class="lead">You don't have any tickets yet.</p>
-                <a asp-controller="Events" asp-action="Index" class="btn btn-outline-primary">Browse Events</a>
+            <div class="inv-empty">
+                <div class="inv-empty-icon">🎟</div>
+                <h5 style="font-weight:700; color:#1c1917;">No tickets yet</h5>
+                <p>Book tickets for upcoming events and screenings.</p>
+                <a asp-controller="Events" asp-action="Index" class="btn btn-primary">Browse Events</a>
             </div>
         }
         else
@@ -136,9 +151,11 @@
     <div class="tab-pane fade" id="equipment" role="tabpanel" aria-labelledby="equipment-tab">
         @if (equipment.Count == 0)
         {
-            <div class="text-center py-5 text-muted">
-                <p class="lead">You don't own any equipment yet.</p>
-                <a asp-controller="Marketplace" asp-action="Index" class="btn btn-outline-primary">Browse Marketplace</a>
+            <div class="inv-empty">
+                <div class="inv-empty-icon">🏪</div>
+                <h5 style="font-weight:700; color:#1c1917;">No equipment yet</h5>
+                <p>Browse the marketplace to find cinema equipment.</p>
+                <a asp-controller="Marketplace" asp-action="Index" class="btn btn-primary">Browse Marketplace</a>
             </div>
         }
         else

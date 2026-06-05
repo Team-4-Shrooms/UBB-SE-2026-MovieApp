@@ -10,15 +10,15 @@
         <div class="card-body p-5 text-center">
             <div class="mb-4">
                 <div class="success-icon d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
-                     style="width: 96px; height: 96px; background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);">
-                    <i class="bi bi-check-lg text-white" style="font-size: 3rem;"></i>
+                     style="width: 96px; height: 96px; background: #1c1917;">
+                    <i class="bi bi-check-lg" style="font-size: 3rem; color: #c9a55a;"></i>
                 </div>
-                <h1 class="display-5 fw-bold mb-2">Booking Confirmed!</h1>
+                <h1 class="mb-2" style="font-size:1.9rem; font-weight:800; color:#1c1917;">Booking Confirmed!</h1>
                 @if (bookedCount > 0)
                 {
-                    <p class="text-muted fs-5 mb-0">
+                    <p class="fs-5 mb-0" style="color:#6b6560;">
                         You've successfully reserved
-                        <span class="fw-bold text-primary">@bookedCount seat@(bookedCount != 1 ? "s" : "")</span>.
+                        <span class="fw-bold" style="color:#b5800e;">@bookedCount seat@(bookedCount != 1 ? "s" : "")</span>.
                     </p>
                 }
                 else
