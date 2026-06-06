@@ -18,6 +18,7 @@ public sealed class ReviewEndpointsController : ControllerBase
         _reviewService = reviewService;
     }
 
+    [AllowAnonymous]
     [HttpGet("movie/{movieId:int}")]
     public async Task<IActionResult> GetReviewsForMovie(int movieId)
     {
@@ -25,6 +26,7 @@ public sealed class ReviewEndpointsController : ControllerBase
         return Ok(reviews.Select(review => review.ToDto(movieId)));
     }
 
+    [AllowAnonymous]
     [HttpGet("movie/{movieId:int}/ratings")]
     public async Task<IActionResult> GetRawRatingsForMovie(int movieId)
     {

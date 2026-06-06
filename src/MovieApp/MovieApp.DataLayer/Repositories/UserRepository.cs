@@ -24,6 +24,19 @@ namespace MovieApp.DataLayer.Repositories
                 .FirstOrDefaultAsync(user => user.Username == username);
         }
 
+        public async Task<User?> GetUserByEmailAsync(string email)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(user => user.Email == email);
+        }
+
+        public async Task<User> CreateUserAsync(User user)
+        {
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+            return user;
+        }
+
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();

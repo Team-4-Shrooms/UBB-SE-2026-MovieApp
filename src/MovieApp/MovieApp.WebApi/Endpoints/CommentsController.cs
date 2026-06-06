@@ -23,6 +23,7 @@ public sealed class CommentsController : ControllerBase
         _commentService = commentService;
     }
 
+    [AllowAnonymous]
     [HttpGet("movies/{id}/comments")]
     public async Task<IActionResult> GetCommentsForMovie(int id)
     {

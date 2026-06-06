@@ -1,0 +1,57 @@
+@model MovieApp.Web.Models.Auth.RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-4">
+        <h2 class="mb-4">Create Account</h2>
+
+        @if (Model.Error is not null)
+        {
+            <div class="alert alert-danger">@Model.Error</div>
+        }
+
+        <form asp-action="Register" method="post" id="registerForm">
+            @Html.AntiForgeryToken()
+            <div class="mb-3">
+                <label asp-for="Username" class="form-label">Username</label>
+                <input asp-for="Username" class="form-control" autocomplete="username" required />
+            </div>
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label">Email</label>
+                <input asp-for="Email" type="email" class="form-control" autocomplete="email" required />
+            </div>
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label">Password</label>
+                <input asp-for="Password" type="password" class="form-control" id="password" autocomplete="new-password" required />
+            </div>
+            <div class="mb-3">
+                <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+                <input asp-for="ConfirmPassword" type="password" class="form-control" id="confirmPassword" autocomplete="new-password" required />
+                <div id="passwordMismatch" class="text-danger mt-1" style="display:none;">Passwords do not match.</div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Create Account</button>
+        </form>
+
+        <p class="mt-3 text-center">
+            Already have an account? <a asp-action="Login">Sign in here</a>
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function (e) {
+            var pw = document.getElementById('password').value;
+            var cpw = document.getElementById('confirmPassword').value;
+            if (pw !== cpw) {
+                e.preventDefault();
+                document.getElementById('passwordMismatch').style.display = 'block';
+            }
+        });
+        document.getElementById('confirmPassword').addEventListener('input', function () {
+            document.getElementById('passwordMismatch').style.display = 'none';
+        });
+    </script>
+}

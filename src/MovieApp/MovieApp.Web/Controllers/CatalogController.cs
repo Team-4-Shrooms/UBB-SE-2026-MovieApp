@@ -1,3 +1,4 @@
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using MovieApp.DataLayer.Models;
@@ -154,6 +155,7 @@ public sealed class CatalogController : Controller
         return View(viewModel);
     }
 
+    [Authorize]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> PurchaseMovie(int movieId)
@@ -196,6 +198,7 @@ public sealed class CatalogController : Controller
         return RedirectToAction(nameof(Detail), new { id = movieId });
     }
 
+    [Authorize]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddReview(AddReviewForm form)
@@ -213,6 +216,7 @@ public sealed class CatalogController : Controller
         return RedirectToAction(nameof(Detail), new { id = form.MovieId });
     }
 
+    [Authorize]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddComment(AddCommentInputModel model)
@@ -243,6 +247,7 @@ public sealed class CatalogController : Controller
         return RedirectToAction(nameof(Detail), new { id = model.MovieId });
     }
 
+    [Authorize]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddReply(AddReplyInputModel model)
@@ -273,3 +278,4 @@ public sealed class CatalogController : Controller
         return RedirectToAction(nameof(Detail), new { id = model.MovieId });
     }
 }
+

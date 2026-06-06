@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +9,7 @@ using MovieApp.Web.Models;
 
 namespace MovieApp.Web.Controllers;
 
+[Microsoft.AspNetCore.Authorization.Authorize]
 public sealed class MarathonController : Controller
 {
     private readonly IMarathonService _marathonService;
@@ -132,3 +133,4 @@ public sealed class MarathonController : Controller
         return View(viewModel);
     }
 }
+

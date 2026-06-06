@@ -7,7 +7,7 @@ using MovieApp.Web.Models;
 
 namespace MovieApp.Web.Controllers;
 
-//[Authorize]
+[Authorize]
 public class ReferralController : Controller
 {
     private readonly IAmbassadorService _ambassadorService;

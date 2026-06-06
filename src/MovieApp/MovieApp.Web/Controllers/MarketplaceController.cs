@@ -1,5 +1,6 @@
 namespace MovieApp.Web.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using MovieApp.DataLayer.Models;
@@ -48,6 +49,7 @@ namespace MovieApp.Web.Controllers
             return View(equipment);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Buy(int id)
@@ -70,12 +72,14 @@ namespace MovieApp.Web.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult Sell()
         {
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Sell(SellEquipmentForm form)

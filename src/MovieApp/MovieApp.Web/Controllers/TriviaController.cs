@@ -1,11 +1,12 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MovieApp.DataLayer.Models;
 using MovieApp.Logic.Interfaces.Services;
 using MovieApp.Web.ViewModels.Trivia;
 
 namespace MovieApp.Web.Controllers
 {
-    public sealed class TriviaController : Controller
+    [Microsoft.AspNetCore.Authorization.Authorize]
+public sealed class TriviaController : Controller
     {
         private readonly ITriviaService _triviaService;
         private readonly ICurrentUserService _currentUserService;
@@ -80,3 +81,4 @@ namespace MovieApp.Web.Controllers
         }
     }
 }
+

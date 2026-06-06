@@ -1,4 +1,4 @@
-namespace MovieApp.Web.Controllers
+﻿namespace MovieApp.Web.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
     using MovieApp.DataLayer.Models;
@@ -6,7 +6,8 @@ namespace MovieApp.Web.Controllers
     using MovieApp.Logic.Interfaces.Services;
     using MovieApp.Web.ViewModels.Battles;
 
-    public class BattleController : Controller
+    [Microsoft.AspNetCore.Authorization.Authorize]
+public class BattleController : Controller
     {
         private readonly IBattleService _battleService;
         private readonly ICurrentUserService _currentUserService;
@@ -161,3 +162,4 @@ namespace MovieApp.Web.Controllers
         }
     }
 }
+

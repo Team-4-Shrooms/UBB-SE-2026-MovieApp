@@ -21,6 +21,7 @@ public sealed class EventEndpointsController : ControllerBase
         _eventService = eventService;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetAllEvents([FromQuery] int? movieId)
     {
@@ -30,6 +31,7 @@ public sealed class EventEndpointsController : ControllerBase
         return Ok(events.Select(movieEvent => movieEvent.ToDto()));
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetEventById(int id)
     {
@@ -37,6 +39,7 @@ public sealed class EventEndpointsController : ControllerBase
         return Ok(movieEvent?.ToDto());
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:int}/tickets/{userId:int}")]
     public async Task<IActionResult> UserHasTicket(int id, int userId)
     {

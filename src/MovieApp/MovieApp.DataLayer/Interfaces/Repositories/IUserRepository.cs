@@ -15,6 +15,11 @@ namespace MovieApp.DataLayer.Interfaces.Repositories
         /// <param name="username">The username to look up.</param>
         /// <returns>The matching user, or null if not found.</returns>
         Task<User?> GetUserByUsernameAsync(string username);
+
+        Task<User?> GetUserByEmailAsync(string email);
+
+        Task<User> CreateUserAsync(User user);
+
         Task<int> SaveChangesAsync();
 
         /// <summary>

@@ -1,9 +1,10 @@
-namespace MovieApp.Web.Controllers
+﻿namespace MovieApp.Web.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
     using MovieApp.Logic.Interfaces.Services;
 
-    public sealed class WalletController : Controller
+    [Microsoft.AspNetCore.Authorization.Authorize]
+public sealed class WalletController : Controller
     {
         private const int PageSize = 20;
 
@@ -38,3 +39,4 @@ namespace MovieApp.Web.Controllers
         }
     }
 }
+

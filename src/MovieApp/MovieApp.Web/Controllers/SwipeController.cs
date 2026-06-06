@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using MovieApp.Logic.Features.MovieSwipe;
 using MovieApp.Logic.Interfaces;
@@ -7,7 +7,8 @@ using MovieApp.Web.Models;
 
 namespace MovieApp.Web.Controllers
 {
-    public class SwipeController : Controller
+    [Microsoft.AspNetCore.Authorization.Authorize]
+public class SwipeController : Controller
     {
         private const int FeedBatchSize = 20;
         private const string LikedKey = "swipe:liked";
@@ -108,3 +109,4 @@ namespace MovieApp.Web.Controllers
         }
     }
 }
+

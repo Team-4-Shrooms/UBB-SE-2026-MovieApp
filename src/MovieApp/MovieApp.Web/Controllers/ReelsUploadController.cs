@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +11,7 @@ using MovieApp.Web.ViewModels.ReelUpload;
 namespace MovieApp.Mvc.Features.ReelsUpload.Controllers;
 
 
+[Microsoft.AspNetCore.Authorization.Authorize]
 public class ReelsUploadController : Controller
 {
     private readonly IVideoStorageService _storageService;
@@ -102,3 +103,4 @@ public class ReelsUploadController : Controller
         }
     }
 }
+

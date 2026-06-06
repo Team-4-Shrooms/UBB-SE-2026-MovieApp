@@ -21,12 +21,14 @@ public sealed class EquipmentEndpointsController : ControllerBase
         _equipmentService = equipmentService;
     }
 
+    [AllowAnonymous]
     [HttpGet("available")]
     public async Task<IActionResult> FetchAvailableEquipment()
     {
         return Ok((await _equipmentService.GetAvailableEquipmentAsync()).Select(equipment => equipment.ToDto()));
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetByIdAsync(int id)
     {

@@ -6,6 +6,7 @@ using MovieApp.WebApi.Mappings;
 
 namespace MovieApp.Web.Controllers
 {
+    [Microsoft.AspNetCore.Authorization.Authorize]
     public sealed class TrailerScrapingController : Controller
     {
         private readonly IVideoIngestionService _ingestionService;
