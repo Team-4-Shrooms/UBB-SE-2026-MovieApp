@@ -105,17 +105,74 @@ namespace MovieApp.Features.Marketplace.ViewModels
             filePicker.FileTypeFilter.Add(".png");
             filePicker.FileTypeFilter.Add(".webp");
 
-            // Initialize with window handle
-            IntPtr windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
+            IntPtr windowHandle = IntPtr.Zero;
+            try
+            {
+                var window = App.MainWindow;
+                if (window != null)
+                {
+                    windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(window);
+                }
+            }
+            catch
+            {
+                // Fallback handled below
+            }
+
+            if (windowHandle == IntPtr.Zero)
+            {
+                // Fallback to active window handle via Win32 if window is null or not fully activated
+                var activeWindow = GetActiveWindow();
+                if (activeWindow != IntPtr.Zero)
+                {
+                    windowHandle = activeWindow;
+                }
+            }
+
+            if (windowHandle == IntPtr.Zero)
+            {
+                return;
+            }
+
             WinRT.Interop.InitializeWithWindow.Initialize(filePicker, windowHandle);
 
             var file = await filePicker.PickSingleFileAsync();
             if (file != null)
             {
-                SelectedImagePath = file.Path;
-                SelectedFileName = file.Name;
+                var dispatcher = App.MainWindow?.DispatcherQueue;
+                if (dispatcher != null && !dispatcher.HasThreadAccess)
+                {
+                    dispatcher.TryEnqueue(() =>
+                    {
+                        try
+                        {
+                            SelectedImagePath = file.Path;
+                            SelectedFileName = file.Name;
+                        }
+                        catch
+                        {
+                            // Ignored
+                        }
+                    });
+                }
+                else
+                {
+                    try
+                    {
+                        SelectedImagePath = file.Path;
+                        SelectedFileName = file.Name;
+                    }
+                    catch
+                    {
+                        // Ignored
+                    }
+                }
             }
+            GC.KeepAlive(filePicker);
         }
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern IntPtr GetActiveWindow();
 
         private void ValidateForm()
         {

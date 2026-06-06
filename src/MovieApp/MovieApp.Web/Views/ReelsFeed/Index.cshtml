@@ -23,8 +23,8 @@
 		<div class="reels-scroll">
 			@foreach (var reel in Model.Reels)
 			{
-				<div class="reel-item">
-					<video loop autoplay playsinline muted
+				<div class="reel-item" data-reel-id="@reel.Id">
+					<video loop autoplay muted playsinline
 						   onplay="this.startTime = Date.now()"
 						   ontimeupdate="updateProgress(@reel.Id, this)"
 						   onpause="handleWatch(@reel.Id, this, '@Url.Action("RecordWatch", "ReelsFeed")')"
@@ -35,6 +35,9 @@
 					<div class="reel-scrim"></div>
 
 					<div class="side-actions">
+						<button class="action-btn mute-btn" onclick="toggleMuteGlobal()">
+							<i class="bi bi-volume-mute-fill"></i>
+						</button>
 						<button id="like-btn-@reel.Id"
 								class="action-btn @(reel.IsLikedByMe ? "btn-danger-active" : "")"
 								onclick="toggleLike(@reel.Id, '@Url.Action("Like", "ReelsFeed")')">

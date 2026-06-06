@@ -623,153 +623,169 @@ namespace MovieApp.DataLayer
 
         private async Task SeedReelsAsync()
         {
-            if (await _context.Reels.AnyAsync())
+            // 1. Delete all existing reels to ensure we only have local ones (clean slate)
+            var existingReels = await _context.Reels.ToListAsync();
+            if (existingReels.Any())
             {
-                return;
+                _context.Reels.RemoveRange(existingReels);
+                await _context.SaveChangesAsync();
             }
 
             User? user1 = await _context.Users.FirstOrDefaultAsync(user => user.Username == "User1");
-
             if (user1 is null)
             {
                 return;
             }
 
-            Movie? inception = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Inception");
-            Movie? darkKnight = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "The Dark Knight");
-            Movie? interstellar = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Interstellar");
-            Movie? matrix = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "The Matrix");
-            Movie? parasite = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Parasite");
-            Movie? laLaLand = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "La La Land");
-            Movie? whiplash = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Whiplash");
-
-            if (inception is null || darkKnight is null || interstellar is null ||
-                matrix is null || parasite is null || laLaLand is null || whiplash is null)
+            // 2. Fetch seeded movies to distribute the reels
+            var movies = await _context.Movies.ToListAsync();
+            if (movies.Count == 0)
             {
                 return;
             }
 
-            _context.Reels.AddRange(
-                new Reel
+            // 3. Resolve videos source directory by traversing up to the solution root
+            string searchDir = AppDomain.CurrentDomain.BaseDirectory;
+            string videosSourceDir = null;
+            while (!string.IsNullOrEmpty(searchDir))
+            {
+                string testDir = System.IO.Path.Combine(searchDir, "videos");
+                if (System.IO.Directory.Exists(testDir))
                 {
-                    Movie = inception,
-                    CreatorUser = user1,
-                    VideoUrl = "https://samplelib.com/lib/preview/mp4/sample-10s.mp4",
-                    ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg",
-                    Title = "Inception - Dream Within a Dream",
-                    Caption = "Mind-bending scene from Inception where reality bends",
-                    FeatureDurationSeconds = 45.5m,
-                    Source = "youtube",
-                    CreatedAt = DateTime.UtcNow.AddDays(-10),
-                },
-                new Reel
+                    videosSourceDir = testDir;
+                    break;
+                }
+                searchDir = System.IO.Path.GetDirectoryName(searchDir);
+            }
+
+            if (videosSourceDir == null)
+            {
+                // Fallback to directory traversal starting from CurrentDirectory
+                searchDir = System.IO.Directory.GetCurrentDirectory();
+                while (!string.IsNullOrEmpty(searchDir))
                 {
-                    Movie = inception,
-                    CreatorUser = user1,
-                    VideoUrl = "https://samplelib.com/lib/preview/mp4/sample-15s.mp4",
-                    ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg",
-                    Title = "Inception - Rotating Hallway Fight",
-                    Caption = "The iconic zero-gravity hallway fight sequence",
-                    FeatureDurationSeconds = 60.2m,
-                    Source = "youtube",
-                    CreatedAt = DateTime.UtcNow.AddDays(-9),
-                },
-                new Reel
+                    string testDir = System.IO.Path.Combine(searchDir, "videos");
+                    if (System.IO.Directory.Exists(testDir))
+                    {
+                        videosSourceDir = testDir;
+                        break;
+                    }
+                    searchDir = System.IO.Path.GetDirectoryName(searchDir);
+                }
+            }
+
+            if (videosSourceDir == null)
+            {
+                // If still not found, we cannot copy, but we shouldn't throw an error to prevent startup crash
+                return;
+            }
+
+            // 4. Resolve WebApi uploads/videos destination directory
+            string uploadDestinationDir = null;
+            searchDir = AppDomain.CurrentDomain.BaseDirectory;
+            while (!string.IsNullOrEmpty(searchDir))
+            {
+                // The WebApi project is located at src/MovieApp/MovieApp.WebApi
+                string testDir = System.IO.Path.Combine(searchDir, "src", "MovieApp", "MovieApp.WebApi", "wwwroot", "uploads", "videos");
+                if (System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(testDir))))) // check if src exists
                 {
-                    Movie = darkKnight,
-                    CreatorUser = user1,
-                    VideoUrl = "https://samplelib.com/lib/preview/mp4/sample-20s.mp4",
-                    ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg",
-                    Title = "The Dark Knight - Joker Interrogation",
-                    Caption = "Heath Ledger's legendary Joker interrogation scene",
-                    FeatureDurationSeconds = 55.0m,
-                    Source = "youtube",
-                    CreatedAt = DateTime.UtcNow.AddDays(-8),
-                },
-                new Reel
+                    uploadDestinationDir = testDir;
+                    break;
+                }
+                searchDir = System.IO.Path.GetDirectoryName(searchDir);
+            }
+
+            if (uploadDestinationDir == null)
+            {
+                searchDir = System.IO.Directory.GetCurrentDirectory();
+                while (!string.IsNullOrEmpty(searchDir))
                 {
-                    Movie = darkKnight,
-                    CreatorUser = user1,
-                    VideoUrl = "https://samplelib.com/lib/preview/mp4/sample-30s.mp4",
-                    ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg",
-                    Title = "The Dark Knight - Batmobile Chase",
-                    Caption = "Epic chase scene through Gotham streets",
-                    FeatureDurationSeconds = 70.8m,
-                    Source = "youtube",
-                    CreatedAt = DateTime.UtcNow.AddDays(-7),
-                },
-                new Reel
+                    string testDir = System.IO.Path.Combine(searchDir, "src", "MovieApp", "MovieApp.WebApi", "wwwroot", "uploads", "videos");
+                    if (System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(testDir)))))
+                    {
+                        uploadDestinationDir = testDir;
+                        break;
+                    }
+                    searchDir = System.IO.Path.GetDirectoryName(searchDir);
+                }
+            }
+
+            // Fallback: if we cannot find the exact src folder, look for any wwwroot/uploads/videos folder in the traversed path
+            if (uploadDestinationDir == null)
+            {
+                searchDir = AppDomain.CurrentDomain.BaseDirectory;
+                while (!string.IsNullOrEmpty(searchDir))
                 {
-                    Movie = interstellar,
-                    CreatorUser = user1,
-                    VideoUrl = "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
-                    ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg",
-                    Title = "Interstellar - Docking Scene",
-                    Caption = "The intense docking sequence with the spinning station",
-                    FeatureDurationSeconds = 90.3m,
-                    Source = "youtube",
-                    CreatedAt = DateTime.UtcNow.AddDays(-6),
-                },
-                new Reel
+                    string testDir = System.IO.Path.Combine(searchDir, "wwwroot", "uploads", "videos");
+                    if (System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(testDir))))
+                    {
+                        uploadDestinationDir = testDir;
+                        break;
+                    }
+                    searchDir = System.IO.Path.GetDirectoryName(searchDir);
+                }
+            }
+
+            if (uploadDestinationDir == null)
+            {
+                // Fallback to simple subfolder from app base if all else fails
+                uploadDestinationDir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wwwroot", "uploads", "videos");
+            }
+
+            System.IO.Directory.CreateDirectory(uploadDestinationDir);
+
+            // 5. Copy video files matching *_video.mp4 and add to Reels (sorted alphabetically)
+            var videoFiles = System.IO.Directory.Exists(videosSourceDir)
+                ? System.IO.Directory.GetFiles(videosSourceDir, "*_video.mp4")
+                    .Select(System.IO.Path.GetFileName)
+                    .Where(name => name != null)
+                    .Cast<string>()
+                    .ToList()
+                : new List<string>();
+
+            videoFiles.Sort(StringComparer.InvariantCultureIgnoreCase);
+
+            int movieIndex = 0;
+            for (int index = 0; index < videoFiles.Count; index++)
+            {
+                string fileName = videoFiles[index];
+                string sourceFile = System.IO.Path.Combine(videosSourceDir, fileName);
+                string destinationFile = System.IO.Path.Combine(uploadDestinationDir, fileName);
+
+                if (System.IO.File.Exists(sourceFile))
                 {
-                    Movie = interstellar,
-                    CreatorUser = user1,
-                    VideoUrl = "https://filesamples.com/samples/video/mp4/sample_640x360.mp4",
-                    ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg",
-                    Title = "Interstellar - Tesseract Scene",
-                    Caption = "Cooper in the 5th dimension tesseract",
-                    FeatureDurationSeconds = 80.0m,
-                    Source = "youtube",
-                    CreatedAt = DateTime.UtcNow.AddDays(-5),
-                },
-                new Reel
-                {
-                    Movie = matrix,
-                    CreatorUser = user1,
-                    VideoUrl = "https://filesamples.com/samples/video/mp4/sample_960x400_ocean_with_audio.mp4",
-                    ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BNzQzOTk3NTAtNDQ2Ny00Njc2LTk3M2QtN2FjYTJjNzQzYzQwXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg",
-                    Title = "The Matrix - Bullet Time",
-                    Caption = "The revolutionary bullet time effect scene",
-                    FeatureDurationSeconds = 35.5m,
-                    Source = "youtube",
-                    CreatedAt = DateTime.UtcNow.AddDays(-4),
-                },
-                new Reel
-                {
-                    Movie = parasite,
-                    CreatorUser = user1,
-                    VideoUrl = "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4",
-                    ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTAtZGYzMC00ODQ0LWI2YTMtYjQ5NDU3N2NmZDIzXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg",
-                    Title = "Parasite - Basement Reveal",
-                    Caption = "The shocking basement discovery scene",
-                    FeatureDurationSeconds = 50.0m,
-                    Source = "youtube",
-                    CreatedAt = DateTime.UtcNow.AddDays(-3),
-                },
-                new Reel
-                {
-                    Movie = laLaLand,
-                    CreatorUser = user1,
-                    VideoUrl = "https://archive.org/download/ElephantsDream/ed_1024_512kb.mp4",
-                    ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BMjA2OTYxNTY2Nl5BMl5BanBnXkFtZTgwNzg4OTA5OTE@._V1_.jpg",
-                    Title = "La La Land - Highway Opening",
-                    Caption = "The colorful highway opening dance number",
-                    FeatureDurationSeconds = 65.2m,
-                    Source = "youtube",
-                    CreatedAt = DateTime.UtcNow.AddDays(-2),
-                },
-                new Reel
-                {
-                    Movie = whiplash,
-                    CreatorUser = user1,
-                    VideoUrl = "https://media.w3.org/2010/05/sintel/trailer.mp4",
-                    ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BMjE4NDYxNTAxNV5BMl5BanBnXkFtZTgwNzM0NDM1MjE@._V1_.jpg",
-                    Title = "Whiplash - Final Performance",
-                    Caption = "The intense final drum performance",
-                    FeatureDurationSeconds = 75.0m,
-                    Source = "youtube",
-                    CreatedAt = DateTime.UtcNow.AddDays(-1),
-                });
+                    try
+                    {
+                        if (!System.IO.File.Exists(destinationFile))
+                        {
+                            System.IO.File.Copy(sourceFile, destinationFile, overwrite: true);
+                        }
+
+                        // Select a movie round-robin to associate the reel
+                        var associatedMovie = movies[movieIndex % movies.Count];
+                        movieIndex++;
+
+                        var newReel = new Reel
+                        {
+                            Movie = associatedMovie,
+                            CreatorUser = user1,
+                            VideoUrl = $"/uploads/videos/{fileName}",
+                            ThumbnailUrl = string.Empty,
+                            Title = $"{associatedMovie.Title} - Local Reel {fileName.Replace("_video.mp4", "")}",
+                            Caption = $"High quality local video clip showing moments from {associatedMovie.Title}.",
+                            FeatureDurationSeconds = 15.0m,
+                            Source = "upload",
+                            CreatedAt = DateTime.UtcNow.AddMinutes(-index),
+                        };
+
+                        _context.Reels.Add(newReel);
+                    }
+                    catch (Exception)
+                    {
+                        // Ignore individual file copy/save errors to be resilient on startup
+                    }
+                }
+            }
 
             await _context.SaveChangesAsync();
         }

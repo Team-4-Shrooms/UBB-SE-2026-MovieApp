@@ -1,4 +1,4 @@
-﻿namespace MovieApp.Web.Controllers
+namespace MovieApp.Web.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -214,6 +214,10 @@ public sealed class ReelsEditingController : Controller
 
         private string ResolveMediaUrl(string mediaPath)
         {
+            if (string.IsNullOrEmpty(mediaPath))
+            {
+                return string.Empty;
+            }
             return mediaPath.StartsWith("/") ? this.webApiBaseUrl + mediaPath : mediaPath;
         }
 

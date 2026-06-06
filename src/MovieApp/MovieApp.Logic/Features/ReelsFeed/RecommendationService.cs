@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using MovieApp.DataLayer.Models;
@@ -28,9 +29,21 @@ namespace MovieApp.Logic.Features.ReelsFeed
         {
             bool userHasPreferences = await this.recommendationRepository.UserHasPreferencesAsync(userId);
 
-            return userHasPreferences
+            var reels = userHasPreferences
                 ? await this.GetPersonalizedReelsAsync(userId, count)
                 : await this.GetColdStartReelsAsync(userId, count);
+
+            if (reels.Any(r => r.VideoUrl != null && (r.VideoUrl.Contains("/uploads/videos/") || r.VideoUrl.Contains("_video.mp4"))))
+            {
+                return reels.OrderBy(r =>
+                {
+                    string url = r.VideoUrl ?? string.Empty;
+                    int idx = url.LastIndexOf('/');
+                    return idx >= 0 ? url.Substring(idx + 1) : url;
+                }, StringComparer.InvariantCultureIgnoreCase).ToList();
+            }
+
+            return reels;
         }
 
         private async Task<IList<Reel>> GetPersonalizedReelsAsync(int userId, int count)
