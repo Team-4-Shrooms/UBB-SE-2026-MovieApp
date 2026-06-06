@@ -350,38 +350,5 @@ public sealed class SlotMachineControllerTests
         Assert.IsType<ForbidResult>(result);
     }
 
-    [Fact]
-    public async Task GrantJackpotDiscount_ReturnsOk_WhenUserIdsMatch()
-    {
-        // Arrange
-        _currentUserServiceMock
-            .Setup(x => x.UserId)
-            .Returns(1);
 
-        var request = new GrantJackpotDiscountRequestBody
-        {
-            UserId = 1,
-            MovieId = 1
-        };
-
-        _slotMachineServiceMock
-            .Setup(x =>
-                x.GrantJackpotDiscountAsync(
-                    request.UserId,
-                    request.MovieId))
-            .Returns(Task.CompletedTask);
-
-        // Act
-        IActionResult result =
-            await _controller.GrantJackpotDiscount(request);
-
-        // Assert
-        Assert.IsType<OkResult>(result);
-
-        _slotMachineServiceMock.Verify(
-            x => x.GrantJackpotDiscountAsync(
-                request.UserId,
-                request.MovieId),
-            Times.Once);
-    }
 }

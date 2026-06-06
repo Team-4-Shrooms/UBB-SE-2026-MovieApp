@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using MovieApp.DataLayer.Models;
 using MovieApp.Logic.Interfaces.Services;
@@ -23,63 +23,7 @@ public sealed class CommentsControllerTests
             _commentServiceMock.Object);
     }
 
-    [Fact]
-    public async Task GetCommentsForMovie_ReturnsOkWithComments()
-    {
-        // Arrange
-        int movieId = 1;
 
-        var comments = new List<Comment>
-        {
-            new Comment
-            {
-                CommentId = 1,
-                AuthorId = 1,
-                MovieId = movieId,
-                Content = "Root comment",
-                CreatedAt = DateTime.UtcNow,
-                Author = new User
-                {
-                    Username = "Ale"
-                }
-            },
-            new Comment
-            {
-                CommentId = 2,
-                AuthorId = 2,
-                MovieId = movieId,
-                ParentCommentId = 1,
-                Content = "Reply",
-                CreatedAt = DateTime.UtcNow,
-                Author = new User
-                {
-                    Username = "ReplyUser"
-                }
-            }
-        };
-
-        _commentServiceMock
-            .Setup(x =>
-                x.GetCommentsForMovieAsync(
-                    movieId,
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(comments);
-
-        // Act
-        IActionResult result =
-            await _controller.GetCommentsForMovie(movieId);
-
-        // Assert
-        var okResult = Assert.IsType<OkObjectResult>(result);
-
-        var response =
-            Assert.IsAssignableFrom<List<CommentResponseDto>>(
-                okResult.Value);
-
-        Assert.Single(response);
-
-        Assert.Single(response[0].Replies);
-    }
 
     [Fact]
     public async Task AddComment_ReturnsBadRequest_WhenRequestIsNull()

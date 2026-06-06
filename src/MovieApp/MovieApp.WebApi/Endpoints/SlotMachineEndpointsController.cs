@@ -136,7 +136,7 @@ public sealed class SlotMachineEndpointsController : ControllerBase
             return Forbid();
         }
 
-        //await this._slotMachineService.GrantJackpotDiscountAsync(requestBody.UserId, requestBody.MovieId);
+        await this._slotMachineService.GrantJackpotDiscountAsync(requestBody.UserId, requestBody.MovieId);
         return Ok();
     }
 }
