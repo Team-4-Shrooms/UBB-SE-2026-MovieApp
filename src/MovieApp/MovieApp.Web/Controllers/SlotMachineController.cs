@@ -1,10 +1,11 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MovieApp.Logic.Interfaces.Services;
 using MovieApp.Web.Models;
 
 namespace MovieApp.Web.Controllers
 {
-    public class SlotMachineController : Controller
+    [Microsoft.AspNetCore.Authorization.Authorize]
+public class SlotMachineController : Controller
     {
         private readonly ISlotMachineService _slotMachineService;
         private readonly ICurrentUserService _currentUserService;
@@ -79,3 +80,4 @@ namespace MovieApp.Web.Controllers
         }
     }
 }
+

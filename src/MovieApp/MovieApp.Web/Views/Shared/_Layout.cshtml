@@ -92,6 +92,21 @@
                         @await Component.InvokeAsync("NotificationBadge")
                     </div>
                 </div>
+                <div class="d-flex align-items-center ms-3 gap-2">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <span class="text-light small d-none d-xl-inline">@User.Identity.Name</span>
+                        <form asp-controller="Auth" asp-action="Logout" method="post" class="mb-0">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-outline-light btn-sm">Sign Out</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a asp-controller="Auth" asp-action="Login" class="btn btn-outline-light btn-sm">Sign In</a>
+                        <a asp-controller="Auth" asp-action="Register" class="btn btn-light btn-sm">Register</a>
+                    }
+                </div>
             </div>
         </nav>
     </header>

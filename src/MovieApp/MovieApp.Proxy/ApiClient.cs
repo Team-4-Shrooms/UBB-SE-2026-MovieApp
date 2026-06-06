@@ -55,12 +55,16 @@ namespace MovieApp.Proxy
                 AttachToken();
                 response = await send(cancellationToken);
             }
+
             if (!response.IsSuccessStatusCode)
             {
                 string errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
+                string message = string.IsNullOrWhiteSpace(errorContent)
+                    ? response.ReasonPhrase ?? response.StatusCode.ToString()
+                    : errorContent.Trim('"');
+                throw new HttpRequestException(message, null, response.StatusCode);
             }
 
-            response.EnsureSuccessStatusCode();
             return response;
         }
 
@@ -91,9 +95,11 @@ namespace MovieApp.Proxy
             if (!response.IsSuccessStatusCode)
             {
                 string errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
+                string message = string.IsNullOrWhiteSpace(errorContent)
+                    ? response.ReasonPhrase ?? response.StatusCode.ToString()
+                    : errorContent.Trim('"');
+                throw new HttpRequestException(message, null, response.StatusCode);
             }
-
-            response.EnsureSuccessStatusCode();
 
             if ((response.Content.Headers.ContentLength ?? 1) == 0)
                 return default;

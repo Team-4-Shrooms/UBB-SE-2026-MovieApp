@@ -5,6 +5,7 @@ using MovieApp.Web.Models;
 
 namespace MovieApp.Web.Controllers
 {
+    [Microsoft.AspNetCore.Authorization.Authorize]
     public class ReelsFeedController : Controller
     {
         private readonly IRecommendationService _recommendationService;

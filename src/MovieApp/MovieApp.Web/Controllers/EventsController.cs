@@ -1,5 +1,6 @@
 namespace MovieApp.Web.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using MovieApp.Logic.Interfaces.Services;
     using MovieApp.DataLayer.Models;
@@ -46,6 +47,7 @@ namespace MovieApp.Web.Controllers
             return View(movieEvent);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> BuyTicket(int eventId)

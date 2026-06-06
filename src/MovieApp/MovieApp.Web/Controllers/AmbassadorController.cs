@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MovieApp.Logic.Interfaces.Services;
@@ -6,6 +6,7 @@ using MovieApp.Web.Models;
 
 namespace MovieApp.Web.Controllers;
 
+[Microsoft.AspNetCore.Authorization.Authorize]
 public sealed class AmbassadorController : Controller
 {
     private readonly IAmbassadorService _ambassadorService;
@@ -68,3 +69,4 @@ public sealed class AmbassadorController : Controller
     private static string GenerateReferralCode(int userId) =>
         $"AMB{userId}{Guid.NewGuid().ToString("N")[..6].ToUpper()}";
 }
+

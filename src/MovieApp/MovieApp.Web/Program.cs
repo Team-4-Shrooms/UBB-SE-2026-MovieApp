@@ -16,20 +16,33 @@ var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<MovieApp.Web.Filters.UnauthorizedApiFilter>();
+})
+    .ConfigureApplicationPartManager(apm =>
+    {
+        // The MVC project references MovieApp.WebApi for types, but we must NOT let
+        // ASP.NET Core discover WebApi controllers in this MVC app — they need
+        // different DI registrations and would cause routing conflicts.
+        var toRemove = apm.ApplicationParts
+            .OfType<Microsoft.AspNetCore.Mvc.ApplicationParts.AssemblyPart>()
+            .Where(p => p.Assembly.GetName().Name == "MovieApp.WebApi")
+            .ToList();
+        foreach (var part in toRemove)
+            apm.ApplicationParts.Remove(part);
+    });
 
 // HTTP client for auto-login and for ApiClient
 builder.Services.AddHttpClient();
 builder.Services.AddHttpClient<ApiClient>(httpClient =>
     httpClient.BaseAddress = new Uri(config["WebApi:BaseUrl"]!));
 
-// JWT token store — single instance satisfying both IAuthTokenProvider and ICurrentUserService
-builder.Services.AddSingleton<JwtTokenStore>();
-builder.Services.AddSingleton<IAuthTokenProvider>(serviceProvider => serviceProvider.GetRequiredService<JwtTokenStore>());
-builder.Services.AddSingleton<ICurrentUserService>(serviceProvider => serviceProvider.GetRequiredService<JwtTokenStore>());
-
-// Auto-login on startup
-builder.Services.AddHostedService<JwtAutoLoginService>();
+// Per-request token store backed by ISession
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<JwtTokenStore>();
+builder.Services.AddScoped<IAuthTokenProvider>(serviceProvider => serviceProvider.GetRequiredService<JwtTokenStore>());
+builder.Services.AddScoped<ICurrentUserService>(serviceProvider => serviceProvider.GetRequiredService<JwtTokenStore>());
 
 // Proxy services
 builder.Services.AddTransient<IBattleService, BattleProxyService>();
@@ -52,7 +65,7 @@ builder.Services.AddTransient<IReelInteractionService, ReelInteractionProxyServi
 builder.Services.AddTransient<IVideoProcessingService, VideoProcessingProxyService>();
 builder.Services.AddTransient<IVideoStorageService, VideoStorageProxyService>();
 builder.Services.AddTransient<IVideoIngestionService, VideoIngestionProxyService>();
-builder.Services.AddSingleton<ITournamentLogicService, TournamentLogicProxyService>();
+builder.Services.AddTransient<ITournamentLogicService, TournamentLogicProxyService>();
 builder.Services.AddTransient<IMovieTournamentService, MovieTournamentProxyService>();
 builder.Services.AddTransient<INotificationService, NotificationProxyService>();
 builder.Services.AddTransient<ISlotMachineService, SlotMachineProxyService>();
@@ -82,7 +95,7 @@ builder.Services.AddSession();
 builder.Services.AddAuthentication(Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Home/Index";
+        options.LoginPath = "/Auth/Login";
     });
 
 var app = builder.Build();

@@ -1,38 +1,38 @@
 namespace MovieApp.Web.Auth
 {
+    using Microsoft.AspNetCore.Http;
     using MovieApp.Logic.Interfaces.Services;
     using MovieApp.Proxy;
 
-    /// <summary>
-    /// Holds the JWT token obtained at startup.
-    /// Registered as a singleton and implements both
-    /// <see cref="IAuthTokenProvider"/> (used by proxy services to attach the Bearer header)
-    /// and <see cref="ICurrentUserService"/> (used by controllers to get the current user ID).
-    /// </summary>
     public sealed class JwtTokenStore : IAuthTokenProvider, ICurrentUserService
     {
-        private string? token;
-        private int userId;
+        private const string TokenKey = "jwt_token";
+        private const string UserIdKey = "jwt_user_id";
 
-        /// <inheritdoc/>
-        public string? GetToken() => this.token;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        /// <inheritdoc/>
-        /// MVC token refresh is handled by JwtAutoLoginService — nothing to do here.
+        public JwtTokenStore(IHttpContextAccessor httpContextAccessor)
+            => this.httpContextAccessor = httpContextAccessor;
+
+        private ISession Session => this.httpContextAccessor.HttpContext!.Session;
+
+        public string? GetToken() => this.Session.GetString(TokenKey);
+
+        public int UserId
+            => int.TryParse(this.Session.GetString(UserIdKey), out int id) ? id : 0;
+
         public Task RefreshAsync() => Task.CompletedTask;
 
-        /// <inheritdoc/>
-        public int UserId => this.userId;
-
-        /// <summary>
-        /// Stores the token and user ID after a successful login.
-        /// </summary>
-        /// <param name="token">The JWT token string.</param>
-        /// <param name="userId">The authenticated user's ID.</param>
         public void SetToken(string token, int userId)
         {
-            this.token = token;
-            this.userId = userId;
+            this.Session.SetString(TokenKey, token);
+            this.Session.SetString(UserIdKey, userId.ToString());
+        }
+
+        public void Clear()
+        {
+            this.Session.Remove(TokenKey);
+            this.Session.Remove(UserIdKey);
         }
     }
 }

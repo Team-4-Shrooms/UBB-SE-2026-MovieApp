@@ -3,6 +3,7 @@ namespace MovieApp.WebApi.Auth
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using MovieApp.DataLayer.Interfaces.Repositories;
+    using MovieApp.DataLayer.Models;
 
     /// <summary>
     /// Handles authentication — issues JWT tokens on successful login.
@@ -53,6 +54,40 @@ namespace MovieApp.WebApi.Auth
 
             return this.Ok(new LoginResponse(token, user.Id, expiresAt));
         }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest request)
+        {
+            if (request.Password != request.ConfirmPassword)
+            {
+                return this.BadRequest("Passwords do not match.");
+            }
+
+            bool usernameTaken = await this.userRepository.GetUserByUsernameAsync(request.Username) is not null;
+            if (usernameTaken)
+            {
+                return this.Conflict("Username is already in use.");
+            }
+
+            bool emailTaken = await this.userRepository.GetUserByEmailAsync(request.Email) is not null;
+            if (emailTaken)
+            {
+                return this.Conflict("Email is already in use.");
+            }
+
+            string hash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            var newUser = new User
+            {
+                Username = request.Username,
+                Email = request.Email,
+                PasswordHash = hash,
+                Balance = 0m,
+            };
+
+            User created = await this.userRepository.CreateUserAsync(newUser);
+            (string token, DateTime expiresAt) = this.tokenService.GenerateToken(created.Id, created.Username);
+            return this.Ok(new LoginResponse(token, created.Id, expiresAt));
+        }
     }
 
     /// <summary>Login request body.</summary>
@@ -60,4 +95,7 @@ namespace MovieApp.WebApi.Auth
 
     /// <summary>Successful login response.</summary>
     public sealed record LoginResponse(string Token, int UserId, DateTime ExpiresAt);
+
+    /// <summary>Register request body.</summary>
+    public sealed record RegisterRequest(string Username, string Email, string Password, string ConfirmPassword);
 }

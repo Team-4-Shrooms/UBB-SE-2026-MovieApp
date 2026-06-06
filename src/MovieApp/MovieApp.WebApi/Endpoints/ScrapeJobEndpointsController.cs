@@ -86,6 +86,7 @@ public sealed class ScrapeJobEndpointsController : ControllerBase
         return Ok((await _scrapeJobService.GetDashboardStatsAsync()).ToDto());
     }
 
+    [AllowAnonymous]
     [HttpGet("search-movies")]
     public async Task<IActionResult> SearchMoviesByNameAsync([FromQuery] string partialName)
     {
@@ -121,6 +122,7 @@ public sealed class ScrapeJobEndpointsController : ControllerBase
         return Ok(await _scrapeJobService.InsertScrapedReelAsync(reelModel));
     }
 
+    [AllowAnonymous]
     [HttpGet("movies")]
     public async Task<IActionResult> GetAllMoviesAsync()
     {

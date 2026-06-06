@@ -1,9 +1,10 @@
-namespace MovieApp.Web.Controllers
+﻿namespace MovieApp.Web.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
     using MovieApp.Logic.Interfaces.Services;
 
-    public sealed class InventoryController : Controller
+    [Microsoft.AspNetCore.Authorization.Authorize]
+public sealed class InventoryController : Controller
     {
         private readonly IInventoryService _inventoryService;
         private readonly ICurrentUserService _currentUser;
@@ -83,3 +84,4 @@ namespace MovieApp.Web.Controllers
         }
     }
 }
+

@@ -1,4 +1,4 @@
-namespace MovieApp.Web.Controllers;
+﻿namespace MovieApp.Web.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +8,7 @@ using MovieApp.Logic.Interfaces.Services;
 using MovieApp.Web.Models;
 using MovieApp.WebDTOs.DTOs;
 
+[Microsoft.AspNetCore.Authorization.Authorize]
 public sealed class ScreeningsController : Controller
 {
     private const int DefaultEventId = 1;
@@ -192,3 +193,4 @@ public sealed class ScreeningsController : Controller
         return result;
     }
 }
+

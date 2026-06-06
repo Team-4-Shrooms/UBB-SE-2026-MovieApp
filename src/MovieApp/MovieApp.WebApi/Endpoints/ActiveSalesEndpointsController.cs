@@ -16,6 +16,7 @@ public sealed class ActiveSalesEndpointsController : ControllerBase
         _activeSalesService = activeSalesService;
     }
 
+    [AllowAnonymous]
     [HttpGet("current")]
     public async Task<IActionResult> GetCurrentSales()
     {

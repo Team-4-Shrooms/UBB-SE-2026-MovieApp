@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using MovieApp.Logic.Features.PersonalityMatch;
 using MovieApp.Logic.Interfaces;
@@ -7,7 +7,8 @@ using MovieApp.Web.Models;
 
 namespace MovieApp.Web.Controllers
 {
-    public class PersonalityMatchController : Controller
+    [Microsoft.AspNetCore.Authorization.Authorize]
+public class PersonalityMatchController : Controller
     {
         private const int TotalQuestions = 10;
         private const int TopPreferencesCount = TotalQuestions;
@@ -133,3 +134,4 @@ namespace MovieApp.Web.Controllers
         }
     }
 }
+

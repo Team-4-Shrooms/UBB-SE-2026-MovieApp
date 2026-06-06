@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MovieApp.Logic.Features.MovieTournament;
 using MovieApp.Logic.Interfaces;
 using MovieApp.Logic.Interfaces.Services;
@@ -6,7 +6,8 @@ using MovieApp.Web.Models;
 
 namespace MovieApp.Web.Controllers
 {
-    public class TournamentController : Controller
+    [Microsoft.AspNetCore.Authorization.Authorize]
+public class TournamentController : Controller
     {
         private readonly ITournamentLogicService _tournamentLogicService;
         private readonly IMovieTournamentService _movieTournamentService;
@@ -116,3 +117,4 @@ namespace MovieApp.Web.Controllers
         }
     }
 }
+

@@ -1,4 +1,4 @@
-namespace MovieApp.Web.Controllers
+﻿namespace MovieApp.Web.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -12,7 +12,8 @@ namespace MovieApp.Web.Controllers
     using MovieApp.Logic.Interfaces.Services;
     using MovieApp.Web.ViewModels.ReelsEditing;
 
-    public sealed class ReelsEditingController : Controller
+    [Microsoft.AspNetCore.Authorization.Authorize]
+public sealed class ReelsEditingController : Controller
     {
         private const int BaseVideoWidth = 1920;
         private const int BaseVideoHeight = 1080;
@@ -352,3 +353,4 @@ namespace MovieApp.Web.Controllers
         }
     }
 }
+

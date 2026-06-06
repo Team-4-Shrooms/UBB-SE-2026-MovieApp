@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +7,7 @@ using MovieApp.Logic.Interfaces.Services;
 
 namespace MovieApp.Web.Controllers;
 
+[Microsoft.AspNetCore.Authorization.Authorize]
 public sealed class NotificationController : Controller
 {
     private readonly INotificationService _notificationService;
@@ -58,3 +59,4 @@ public sealed class NotificationController : Controller
         return RedirectToAction(nameof(Index));
     }
 }
+

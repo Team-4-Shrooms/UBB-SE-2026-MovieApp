@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MovieApp.DataLayer.Models;
@@ -6,6 +6,7 @@ using MovieApp.Logic.Interfaces.Services;
 
 namespace MovieApp.Web.Controllers;
 
+[Microsoft.AspNetCore.Authorization.Authorize]
 public sealed class PriceWatcherController : Controller
 {
     private readonly IPriceWatcherService _priceWatcherService;
@@ -58,3 +59,4 @@ public sealed class PriceWatcherController : Controller
         return RedirectToAction(nameof(MyWatchers));
     }
 }
+

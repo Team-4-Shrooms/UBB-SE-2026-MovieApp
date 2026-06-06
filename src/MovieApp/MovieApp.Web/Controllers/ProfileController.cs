@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,7 +9,8 @@ using MovieApp.Web.Models;
 
 namespace MovieApp.Web.Controllers
 {
-    public class ProfileController : Controller
+    [Microsoft.AspNetCore.Authorization.Authorize]
+public class ProfileController : Controller
     {
         private readonly IBadgeService _badgeService;
         private readonly IUserStatsService _userStatsService;
@@ -36,7 +37,7 @@ namespace MovieApp.Web.Controllers
             // Evaluate and award any newly earned badges before reading the results.
             await _badgeService.CheckAndAwardBadgesAsync(userId, ct);
 
-            // Parallel calls — no sequential waiting
+            // Parallel calls â€” no sequential waiting
             Task<UserStats?> statsTask = _userStatsService.GetByUserIdAsync(userId, ct);
             Task<List<UserBadge>> earnedTask = _badgeService.GetUserBadgesAsync(userId, ct);
             Task<List<Badge>> allTask = _badgeService.GetAllBadgesAsync(ct);
@@ -61,3 +62,4 @@ namespace MovieApp.Web.Controllers
         }
     }
 }
+

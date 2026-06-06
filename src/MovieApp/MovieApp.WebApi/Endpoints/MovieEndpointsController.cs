@@ -23,6 +23,7 @@ public sealed class MovieEndpointsController : ControllerBase
         _externalReviewService = externalReviewService;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetAllMovies()
     {
@@ -30,6 +31,7 @@ public sealed class MovieEndpointsController : ControllerBase
         return Ok(movies.Select(movie => movie.ToDto()));
     }
 
+    [AllowAnonymous]
     [HttpGet("{movieId:int}")]
     public async Task<IActionResult> GetMovieById(int movieId)
     {
@@ -43,6 +45,7 @@ public sealed class MovieEndpointsController : ControllerBase
         return Ok(movie.ToDto());
     }
 
+    [AllowAnonymous]
     [HttpGet("search")]
     public async Task<IActionResult> SearchTop10MoviesAsync([FromQuery] string? partialMovieName)
     {
@@ -50,6 +53,7 @@ public sealed class MovieEndpointsController : ControllerBase
         return Ok(movies.Select(movie => movie.ToDto()));
     }
 
+    [AllowAnonymous]
     [HttpGet("{movieId:int}/owned/{userId:int}")]
     public async Task<IActionResult> UserOwnsMovie(int movieId, int userId)
     {
@@ -63,6 +67,7 @@ public sealed class MovieEndpointsController : ControllerBase
         return Ok();
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:int}/external-reviews")]
     public async Task<IActionResult> GetExternalReviews(int id, CancellationToken cancellationToken)
     {
@@ -78,6 +83,7 @@ public sealed class MovieEndpointsController : ControllerBase
         return Ok(reviews);
     }
 
+    [AllowAnonymous]
     [HttpGet("external-reviews/by-title")]
     public async Task<IActionResult> GetExternalReviewsByTitle([FromQuery] string title, [FromQuery] int year, CancellationToken cancellationToken)
     {
