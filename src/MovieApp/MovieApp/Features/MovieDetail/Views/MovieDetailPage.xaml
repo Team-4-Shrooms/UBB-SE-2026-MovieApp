@@ -50,17 +50,17 @@
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                 <StackPanel>
                     <Grid>
-                        <TextBlock Text="{x:Bind Source}" FontWeight="SemiBold" FontSize="13" Foreground="White" />
-                        <TextBlock Text="{x:Bind ScoreDisplay}" HorizontalAlignment="Right" FontWeight="Bold" Foreground="#1DB954" />
+                        <TextBlock Text="{x:Bind Source}" FontWeight="SemiBold" FontSize="13" Foreground="{StaticResource TextPrimaryBrush}" />
+                        <TextBlock Text="{x:Bind ScoreDisplay}" HorizontalAlignment="Right" FontWeight="Bold" Foreground="{StaticResource GoldBrush}" />
                     </Grid>
-                    <TextBlock Text="{x:Bind Snippet}" TextWrapping="Wrap" Margin="0,6,0,0" 
-                               FontStyle="Italic" Foreground="#CCCCCC" />
+                    <TextBlock Text="{x:Bind Snippet}" TextWrapping="Wrap" Margin="0,6,0,0"
+                               FontStyle="Italic" Foreground="{StaticResource TextSecondaryBrush}" />
                 </StackPanel>
             </Border>
         </DataTemplate>
     </Page.Resources>
 
-    <Grid Background="#1E1E1E">
+    <Grid Background="{StaticResource AppBackgroundBrush}">
         <Grid Padding="32">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -74,7 +74,7 @@
                     FontSize="24"
                     Click="BackButton_Click"
                     Background="Transparent"
-                    Foreground="White"
+                    Foreground="{StaticResource TextPrimaryBrush}"
                     HorizontalAlignment="Left"
                     Margin="0,0,0,16"/>
 
@@ -85,10 +85,10 @@
                 </Grid.ColumnDefinitions>
 
                 <Border Grid.Column="0"
-                        Background="#1A1A1A"
+                        Background="{StaticResource CardHoverBrush}"
                         CornerRadius="12"
                         Margin="0,0,24,0"
-                        BorderBrush="#333"
+                        BorderBrush="{StaticResource CardBorderBrush}"
                         BorderThickness="1"
                         MaxHeight="640">
                     <Image x:Name="PosterImage"
@@ -107,22 +107,22 @@
                     <TextBlock x:Name="TitleBlock"
                                FontSize="36"
                                FontWeight="Bold"
-                               Foreground="White"
+                               Foreground="{StaticResource TextPrimaryBrush}"
                                TextWrapping="Wrap"/>
 
                     <TextBlock x:Name="DescriptionBlock"
                                FontSize="16"
-                               Foreground="#CCCCCC"
+                               Foreground="{StaticResource TextSecondaryBrush}"
                                TextWrapping="Wrap"/>
 
                     <TextBlock x:Name="RatingBlock"
                                FontSize="18"
-                               Foreground="#FFC107"/>
+                               Foreground="{StaticResource GoldBrush}"/>
 
                     <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center" Margin="0,0,0,16">
 
                         <TextBlock x:Name="OriginalPriceBlock"
-                                           Foreground="Gray"
+                                           Foreground="{StaticResource TextSecondaryBrush}"
                                            FontSize="20"
                                            TextDecorations="Strikethrough"
                                            VerticalAlignment="Bottom"
@@ -131,7 +131,7 @@
 
                         <TextBlock x:Name="PriceBlock"
                                         FontSize="28"
-                                        Foreground="#1DB954"
+                                        Foreground="{StaticResource GoldBrush}"
                                         FontWeight="Bold"
                                         TextWrapping="Wrap"/>
 
@@ -229,8 +229,8 @@
                             <StackPanel Spacing="8" Margin="0,24,0,32">
                                 <TextBlock Text="External Critic Reviews" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,8"/>
 
-                                <TextBlock Text="No external reviews available for this movie." 
-                                       Foreground="Gray" FontStyle="Italic"
+                                <TextBlock Text="No external reviews available for this movie."
+                                       Foreground="{StaticResource TextSecondaryBrush}" FontStyle="Italic"
                                        Visibility="{x:Bind CommentsViewModel.ExternalReviews.Count, Mode=OneWay, Converter={StaticResource IntToVisibility}, FallbackValue=Collapsed}" />
 
                                 <ItemsControl ItemsSource="{x:Bind CommentsViewModel.ExternalReviews, Mode=OneWay}"

@@ -52,7 +52,7 @@
                                         <div class="fw-semibold">@watcher.EventTitle</div>
                                         <div class="text-muted small">Event #@watcher.EventId</div>
                                     </td>
-                                    <td class="fw-bold text-success">@watcher.TargetPrice.ToString("C")</td>
+                                    <td class="fw-bold text-success">@watcher.TargetPrice.ToString("F2") lei</td>
                                     <td class="text-end">
                                         <form asp-controller="PriceWatcher" asp-action="Unwatch" method="post">
                                             @Html.AntiForgeryToken()

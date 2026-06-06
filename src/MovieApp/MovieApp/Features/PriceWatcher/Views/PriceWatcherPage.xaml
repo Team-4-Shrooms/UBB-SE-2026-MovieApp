@@ -29,10 +29,10 @@
             </StackPanel>
 
             <!-- Add new watcher -->
-            <Border CornerRadius="8" Padding="16" Background="#252525">
+            <Border CornerRadius="8" Padding="16" Background="{StaticResource CardBackgroundBrush}">
                 <StackPanel Spacing="12">
                     <TextBlock Text="Add a watcher"
-                               FontSize="16" FontWeight="SemiBold" Foreground="White" />
+                               FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" />
 
                     <Grid ColumnSpacing="12" RowSpacing="8">
                         <Grid.ColumnDefinitions>

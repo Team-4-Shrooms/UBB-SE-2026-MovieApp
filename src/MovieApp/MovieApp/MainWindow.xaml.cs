@@ -69,13 +69,13 @@ namespace MovieApp
             ["Screenings"] = typeof(ScreeningPage),
             ["Badges"] = typeof(BadgePage),
             ["Leaderboard"] = typeof(LeaderboardPage),
+            ["MyBookings"] = typeof(MyBookingsPage),
         };
 
         public MainWindow()
         {
             InitializeComponent();
             ContentFrame.Navigate(typeof(Page));
-
         }
 
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)

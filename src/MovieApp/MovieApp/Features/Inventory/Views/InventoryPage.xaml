@@ -14,7 +14,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="My Inventory" FontSize="28" FontWeight="Bold" Foreground="White"/>
+        <TextBlock Grid.Row="0" Text="My Inventory" FontSize="28" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
 
         <Pivot Grid.Row="1">
             <PivotItem Header="Movies">
@@ -31,17 +31,17 @@
                     </GridView.ItemContainerStyle>
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="models:Movie">
-                            <Border Background="#2A2A2A"
+                            <Border Background="{StaticResource CardBackgroundBrush}"
                                     CornerRadius="10"
                                     Padding="0"
                                     Width="200"
-                                    BorderBrush="#404040"
+                                    BorderBrush="{StaticResource CardBorderBrush}"
                                     BorderThickness="1">
                                 <StackPanel Spacing="8" Padding="10">
-                                    <Border Height="260" Background="#1A1A1A" CornerRadius="6">
+                                    <Border Height="260" Background="{StaticResource CardHoverBrush}" CornerRadius="6">
                                         <Image Source="{x:Bind PosterUrl}" Stretch="UniformToFill"/>
                                     </Border>
-                                    <TextBlock Text="{x:Bind Title}" Foreground="White" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap"/>
+                                    <TextBlock Text="{x:Bind Title}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap"/>
                                     <Button Content="Remove" HorizontalAlignment="Right" Click="RemoveMovie_Click" Margin="0,4,0,0"/>
                                 </StackPanel>
                             </Border>
@@ -59,14 +59,14 @@
                     </GridView.ItemContainerStyle>
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="models:OwnedTicket">
-                            <Border Background="#252525" CornerRadius="10" Padding="14" Width="300">
+                            <Border Background="{StaticResource CardBackgroundBrush}" CornerRadius="10" Padding="14" Width="300">
                                 <StackPanel>
-                                    <Border Height="150" Background="#1A1A1A" CornerRadius="6">
+                                    <Border Height="150" Background="{StaticResource CardHoverBrush}" CornerRadius="6">
                                         <Image Source="{x:Bind Event.PosterUrl}" Stretch="UniformToFill"/>
                                     </Border>
-                                    <TextBlock Text="{x:Bind Event.Title}" Foreground="White" FontSize="16" FontWeight="Bold" TextWrapping="Wrap"/>
-                                    <TextBlock Text="{x:Bind Event.DisplayDate}" Foreground="#CCCCCC" FontSize="12"/>
-                                    <TextBlock Text="{x:Bind Event.DisplayTicketPrice}" Foreground="#1DB954" FontWeight="SemiBold"/>
+                                    <TextBlock Text="{x:Bind Event.Title}" Foreground="{StaticResource TextPrimaryBrush}" FontSize="16" FontWeight="Bold" TextWrapping="Wrap"/>
+                                    <TextBlock Text="{x:Bind Event.DisplayDate}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"/>
+                                    <TextBlock Text="{x:Bind Event.DisplayTicketPrice}" Foreground="{StaticResource GoldBrush}" FontWeight="SemiBold"/>
                                     <Button Content="Remove" HorizontalAlignment="Right" Click="RemoveTicket_Click" Margin="0,8,0,0"/>
                                 </StackPanel>
                             </Border>
@@ -84,14 +84,14 @@
                     </GridView.ItemContainerStyle>
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="models:Equipment">
-                            <Border Background="#2A2A2A" CornerRadius="10" Padding="12" Width="300">
+                            <Border Background="{StaticResource CardBackgroundBrush}" CornerRadius="10" Padding="12" Width="300">
                                 <StackPanel>
-                                    <Border Height="160" Background="#1A1A1A" CornerRadius="6">
+                                    <Border Height="160" Background="{StaticResource CardHoverBrush}" CornerRadius="6">
                                         <Image Source="{x:Bind ImageUrl}" Stretch="UniformToFill"/>
                                     </Border>
-                                    <TextBlock Text="{x:Bind Title}" Foreground="White" FontWeight="SemiBold" TextWrapping="Wrap"/>
-                                    <TextBlock Text="{x:Bind Category}" Foreground="#CCCCCC" FontSize="12"/>
-                                    <TextBlock Text="{x:Bind Price}" Foreground="#1DB954" FontWeight="SemiBold"/>
+                                    <TextBlock Text="{x:Bind Title}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                                    <TextBlock Text="{x:Bind Category}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"/>
+                                    <TextBlock Text="{x:Bind Price}" Foreground="{StaticResource GoldBrush}" FontWeight="SemiBold"/>
                                     <Button Content="Remove" HorizontalAlignment="Right" Click="RemoveEquipment_Click" Margin="0,8,0,0"/>
                                 </StackPanel>
                             </Border>

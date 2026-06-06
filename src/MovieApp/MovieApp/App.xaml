@@ -12,20 +12,32 @@
  
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" xmlns:converters="using:MovieApp.Features.Shared.Converters"/>
 
-            <Color x:Key="TextPrimaryColor">#FFFFFF</Color>
-            <Color x:Key="TextSecondaryColor">#94A3B8</Color>
+            <Color x:Key="TextPrimaryColor">#F5F0E8</Color>
+            <Color x:Key="TextSecondaryColor">#8A8074</Color>
             <Color x:Key="TextMutedColor">#64748B</Color>
 
-            <Color x:Key="AppBackgroundColor">#121218</Color>
-            <Color x:Key="CardBackgroundColor">#1E1E2A</Color>
-            <Color x:Key="CardBorderColor">#2A2A3A</Color>
+            <Color x:Key="AppBackgroundColor">#0F0E0C</Color>
+            <Color x:Key="CardBackgroundColor">#1C1A17</Color>
+            <Color x:Key="CardHoverColor">#252320</Color>
+            <Color x:Key="CardBorderColor">#2E2B26</Color>
+            <Color x:Key="GoldColor">#C9A55A</Color>
 
-
-            <SolidColorBrush x:Key="AppBackgroundBrush" Color="{StaticResource AppBackgroundColor}"/>
+            <SolidColorBrush x:Key="AppBackgroundBrush"  Color="{StaticResource AppBackgroundColor}"/>
             <SolidColorBrush x:Key="CardBackgroundBrush" Color="{StaticResource CardBackgroundColor}"/>
-            <SolidColorBrush x:Key="CardBorderBrush" Color="{StaticResource CardBorderColor}"/>
-            <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimaryColor}"/>
-            <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondaryColor}"/>
+            <SolidColorBrush x:Key="CardHoverBrush"      Color="{StaticResource CardHoverColor}"/>
+            <SolidColorBrush x:Key="CardBorderBrush"     Color="{StaticResource CardBorderColor}"/>
+            <SolidColorBrush x:Key="GoldBrush"           Color="{StaticResource GoldColor}"/>
+            <SolidColorBrush x:Key="TextPrimaryBrush"    Color="{StaticResource TextPrimaryColor}"/>
+            <SolidColorBrush x:Key="TextSecondaryBrush"  Color="{StaticResource TextSecondaryColor}"/>
+
+            <!-- NavigationView selected item: gold fill, black text -->
+            <SolidColorBrush x:Key="NavigationViewItemBackgroundSelected"            Color="{StaticResource GoldColor}"/>
+            <SolidColorBrush x:Key="NavigationViewItemBackgroundSelectedPointerOver" Color="{StaticResource GoldColor}"/>
+            <SolidColorBrush x:Key="NavigationViewItemBackgroundSelectedPressed"     Color="{StaticResource GoldColor}"/>
+            <SolidColorBrush x:Key="NavigationViewItemForegroundSelected"            Color="#000000"/>
+            <SolidColorBrush x:Key="NavigationViewItemForegroundSelectedPointerOver" Color="#000000"/>
+            <SolidColorBrush x:Key="NavigationViewItemForegroundSelectedPressed"     Color="#000000"/>
+            <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground"      Color="{StaticResource GoldColor}"/>
 
 
 

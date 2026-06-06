@@ -24,7 +24,7 @@
                        Text="My Wallet"
                        FontSize="28"
                        FontWeight="Bold"
-                       Foreground="White"
+                       Foreground="{StaticResource TextPrimaryBrush}"
                        VerticalAlignment="Center"/>
 
             <!-- Balance top right -->
@@ -34,12 +34,12 @@
                          Padding="16,8">
                 <TextBlock Text="Current Balance"
                            FontSize="12"
-                           Foreground="Gray"
+                           Foreground="{StaticResource TextSecondaryBrush}"
                            HorizontalAlignment="Center"/>
                 <TextBlock Text="{x:Bind ViewModel.DisplayBalance, Mode=OneWay}"
                            FontSize="28"
                            FontWeight="Bold"
-                           Foreground="White"
+                           Foreground="{StaticResource GoldBrush}"
                            HorizontalAlignment="Center"/>
             </StackPanel>
         </Grid>
@@ -59,12 +59,12 @@
                 CornerRadius="8"
                 Padding="20"
                 Margin="0,0,0,20"
-                Background="#252525">
+                Background="{StaticResource CardBackgroundBrush}">
             <StackPanel Spacing="12">
                 <TextBlock Text="Add Funds"
                            FontSize="18"
                            FontWeight="SemiBold"
-                           Foreground="White"/>
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
 
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -79,14 +79,14 @@
 
                     <!-- Cardholder Name -->
                     <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,10,10">
-                        <TextBlock Text="Cardholder Name" FontSize="12" Foreground="Gray" Margin="0,0,0,4"/>
+                        <TextBlock Text="Cardholder Name" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,4"/>
                         <TextBox PlaceholderText="John Doe"
                                  Text="{x:Bind ViewModel.CardHolderName, Mode=TwoWay}"/>
                     </StackPanel>
 
                     <!-- Amount -->
                     <StackPanel Grid.Row="0" Grid.Column="1" Margin="10,0,0,10">
-                        <TextBlock Text="Amount" FontSize="12" Foreground="Gray" Margin="0,0,0,4"/>
+                        <TextBlock Text="Amount" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,4"/>
                         <NumberBox PlaceholderText="0.00"
                                    Value="{x:Bind ViewModel.TopUpAmount, Mode=TwoWay}"
                                    Minimum="0"
@@ -95,7 +95,7 @@
 
                     <!-- Card Number -->
                     <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,10,10">
-                        <TextBlock Text="Card Number" FontSize="12" Foreground="Gray" Margin="0,0,0,4"/>
+                        <TextBlock Text="Card Number" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,4"/>
                         <TextBox PlaceholderText="1234567890123456"
                               Text="{x:Bind ViewModel.CardNumber, Mode=TwoWay}"
                              MaxLength="16"/>
@@ -108,13 +108,13 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0" Margin="0,0,5,0">
-                            <TextBlock Text="Expiry (MM/YY)" FontSize="12" Foreground="Gray" Margin="0,0,0,4"/>
+                            <TextBlock Text="Expiry (MM/YY)" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,4"/>
                             <TextBox PlaceholderText="MM/YY"
                                      Text="{x:Bind ViewModel.ExpirationDate, Mode=TwoWay}"
                                      MaxLength="5"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Margin="5,0,0,0">
-                            <TextBlock Text="CVV" FontSize="12" Foreground="Gray" Margin="0,0,0,4"/>
+                            <TextBlock Text="CVV" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,4"/>
                             <TextBox PlaceholderText="123"
                                      Text="{x:Bind ViewModel.CVV, Mode=TwoWay}"
                                      MaxLength="3"/>
@@ -127,8 +127,8 @@
                             Command="{x:Bind ViewModel.TopUpCommand}"
                             HorizontalAlignment="Stretch"
                             FontSize="16"
-                            Background="DarkGreen"
-                            Foreground="White"
+                            Background="{StaticResource GoldBrush}"
+                            Foreground="#000000"
                             Padding="0,12"/>
                 </Grid>
             </StackPanel>
@@ -145,7 +145,7 @@
                        Text="Transaction History"
                        FontSize="18"
                        FontWeight="SemiBold"
-                       Foreground="White"
+                       Foreground="{StaticResource TextPrimaryBrush}"
                        Margin="0,0,0,10"/>
 
             <ScrollViewer Grid.Row="1"
@@ -160,8 +160,8 @@
                                    HorizontalAlignment="Stretch"
                                    CanUserSortColumns="True"
                                    CanUserResizeColumns="True"
-                                   Background="#1E1E1E"
-                                   Foreground="White">
+                                   Background="{StaticResource AppBackgroundBrush}"
+                                   Foreground="{StaticResource TextPrimaryBrush}">
 
                     <controls:DataGrid.Columns>
                         <controls:DataGridTextColumn Header="Date"
