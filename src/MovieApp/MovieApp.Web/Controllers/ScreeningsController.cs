@@ -47,7 +47,7 @@ public sealed class ScreeningsController : Controller
         }
         else
         {
-            return BadRequest("Provide eventId or movieId.");
+            screenings = await _screeningService.GetAllScreeningsAsync();
         }
 
         var cards = new List<ScreeningDetailsDto>();

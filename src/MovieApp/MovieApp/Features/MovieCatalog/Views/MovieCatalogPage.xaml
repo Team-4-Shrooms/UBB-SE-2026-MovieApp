@@ -10,7 +10,7 @@
     xmlns:local="using:MovieApp.Features.MovieCatalog.Views"
     mc:Ignorable="d">
 
-    <Grid Background="#1E1E1E">
+    <Grid Background="{StaticResource AppBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -25,7 +25,7 @@
             </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Column="0" Spacing="14" Margin="0,0,16,0">
-            <TextBlock Text="Search by title" FontSize="14" Foreground="Gray"/>
+            <TextBlock Text="Search by title" FontSize="14" Foreground="{StaticResource TextSecondaryBrush}"/>
             <TextBox x:Name="SearchBox" PlaceholderText="Search..."/>
 
             <TextBlock Text="Sort" FontSize="18" FontWeight="Bold" Margin="0,8,0,4"/>
@@ -40,7 +40,7 @@
         <Grid Grid.Column="1">
             <TextBlock x:Name="FlashSaleEndedText"
                        Text="The flash sale has ended!"
-                       Foreground="White"
+                       Foreground="{StaticResource TextPrimaryBrush}"
                        FontSize="28"
                        FontWeight="Bold"
                        HorizontalAlignment="Center"
@@ -60,11 +60,11 @@
                 </GridView.ItemContainerStyle>
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="local:MovieCatalogItem">
-                        <Border Background="#2A2A2A"
+                        <Border Background="{StaticResource CardBackgroundBrush}"
                                 CornerRadius="10"
                                 Padding="0"
                                 Width="200"
-                                BorderBrush="#404040"
+                                BorderBrush="{StaticResource CardBorderBrush}"
                                 BorderThickness="1"
                                 RenderTransformOrigin="0.5,0.5"
                                 PointerEntered="MovieCard_PointerEntered"
@@ -72,29 +72,29 @@
                             <StackPanel Spacing="8" Padding="10">
 
                                 <Grid Height="260">
-                                    <Border Background="#1A1A1A" CornerRadius="6">
+                                    <Border Background="{StaticResource CardHoverBrush}" CornerRadius="6">
                                         <Image Source="{x:Bind ImageUrl}" Stretch="UniformToFill"/>
                                     </Border>
 
-                                    <Border Background="#CC5555" CornerRadius="12" Padding="8,4"
+                                    <Border Background="{StaticResource GoldBrush}" CornerRadius="12" Padding="8,4"
                                             HorizontalAlignment="Left" VerticalAlignment="Top"
                                             Margin="10,10,0,0"
                                             Visibility="{x:Bind SaleVisibility, Mode=OneWay}">
-                                        <TextBlock Text="SALE" FontSize="12" FontWeight="Bold" Foreground="White"/>
+                                        <TextBlock Text="SALE" FontSize="12" FontWeight="Bold" Foreground="#000000"/>
                                     </Border>
                                 </Grid>
 
-                                <TextBlock Text="{x:Bind Title}" Foreground="White" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap"/>
+                                <TextBlock Text="{x:Bind Title}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap"/>
 
                                 <TextBlock Text="{x:Bind RatingAndReviewCountText, Mode=OneWay}"
-                                           Foreground="#FFC107"
+                                           Foreground="{StaticResource GoldBrush}"
                                            FontWeight="SemiBold"
                                            TextWrapping="Wrap"/>
 
                                 <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
 
-                                    <TextBlock Text="{x:Bind OriginalPriceText, Mode=OneWay}" 
-                                               Foreground="Gray" 
+                                    <TextBlock Text="{x:Bind OriginalPriceText, Mode=OneWay}"
+                                               Foreground="{StaticResource TextSecondaryBrush}"
                                                FontSize="14" 
                                                TextDecorations="Strikethrough"
                                                VerticalAlignment="Center"

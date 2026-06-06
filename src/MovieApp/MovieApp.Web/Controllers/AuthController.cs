@@ -127,6 +127,14 @@ namespace MovieApp.Web.Controllers
             return this.RedirectToAction("Login");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ForceLogout()
+        {
+            this.tokenStore.Clear();
+            await this.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return this.RedirectToAction("Login");
+        }
+
         private async Task SignInWithCookieAsync(int userId, string username)
         {
             var claims = new List<Claim>

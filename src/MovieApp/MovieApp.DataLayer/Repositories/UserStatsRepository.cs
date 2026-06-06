@@ -67,7 +67,9 @@ namespace MovieApp.DataLayer.Repositories
         {
             return await _context.UserStats
                 .AsNoTracking()
+                .Include(us => us.User)
                 .OrderByDescending(us => us.TotalPoints)
+                .ThenByDescending(us => us.WeeklyScore)
                 .ToListAsync(ct);
         }
     }

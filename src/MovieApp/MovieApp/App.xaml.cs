@@ -183,6 +183,7 @@ namespace MovieApp
 
             // Screenings
             services.AddTransient<ScreeningViewModel>();
+            services.AddTransient<MovieApp.Features.Screenings.ViewModels.MyBookingsViewModel>();
 
             // Movie detail comments
             services.AddTransient<MovieApp.Features.MovieDetail.ViewModels.MovieDetailViewModel>();

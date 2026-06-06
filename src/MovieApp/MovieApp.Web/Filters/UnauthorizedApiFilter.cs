@@ -10,7 +10,10 @@ namespace MovieApp.Web.Filters
         {
             if (context.Exception is HttpRequestException { StatusCode: HttpStatusCode.Unauthorized })
             {
-                context.Result = new RedirectToActionResult("Login", "Auth", null);
+                // ForceLogout clears both the JWT session and the auth cookie so the user
+                // can re-authenticate cleanly (avoids the loop where Login redirects
+                // authenticated-cookie users back to Home without a fresh JWT).
+                context.Result = new RedirectToActionResult("ForceLogout", "Auth", null);
                 context.ExceptionHandled = true;
             }
         }

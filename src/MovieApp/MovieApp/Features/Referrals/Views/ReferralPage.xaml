@@ -8,7 +8,7 @@
     xmlns:models="using:MovieApp.DataLayer.Models"
     mc:Ignorable="d">
 
-    <Grid Background="#1E1E1E" Padding="24">
+    <Grid Background="{StaticResource AppBackgroundBrush}" Padding="24">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -17,49 +17,49 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="Referrals" FontSize="28" FontWeight="Bold" Foreground="White" Margin="0,0,0,16"/>
+        <TextBlock Grid.Row="0" Text="Referrals" FontSize="28" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,16"/>
 
-        <Border Grid.Row="1" Background="#252525" CornerRadius="12" Padding="20" Margin="0,0,0,16" BorderBrush="#333333" BorderThickness="1">
+        <Border Grid.Row="1" Background="{StaticResource CardBackgroundBrush}" CornerRadius="12" Padding="20" Margin="0,0,0,16" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="1">
             <StackPanel Spacing="8">
-                <TextBlock Text="Your referral code" Foreground="Gray" FontSize="12"/>
-                <TextBlock Text="{x:Bind ViewModel.ReferralCode, Mode=OneWay}" FontSize="28" FontWeight="Bold" Foreground="#4CAF50"/>
+                <TextBlock Text="Your referral code" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"/>
+                <TextBlock Text="{x:Bind ViewModel.ReferralCode, Mode=OneWay}" FontSize="28" FontWeight="Bold" Foreground="{StaticResource GoldBrush}"/>
             </StackPanel>
         </Border>
 
-        <Border Grid.Row="2" Background="#252525" CornerRadius="12" Padding="20" Margin="0,0,0,16" BorderBrush="#333333" BorderThickness="1">
+        <Border Grid.Row="2" Background="{StaticResource CardBackgroundBrush}" CornerRadius="12" Padding="20" Margin="0,0,0,16" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="1">
             <StackPanel Spacing="10">
-                <TextBlock Text="Apply a friend's code" Foreground="Gray" FontSize="12"/>
+                <TextBlock Text="Apply a friend's code" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"/>
                 <StackPanel Orientation="Horizontal" Spacing="10">
                     <TextBox Width="240" PlaceholderText="Enter code" Text="{x:Bind ViewModel.CodeInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button Content="Apply" Command="{x:Bind ViewModel.ApplyCodeCommand}" Background="#1565C0" Foreground="White" CornerRadius="6" Padding="16,6"/>
+                    <Button Content="Apply" Command="{x:Bind ViewModel.ApplyCodeCommand}" Background="{StaticResource GoldBrush}" Foreground="#000000" CornerRadius="6" Padding="16,6"/>
                 </StackPanel>
                 <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" Foreground="#FFD54F" FontStyle="Italic" TextWrapping="Wrap"/>
             </StackPanel>
         </Border>
 
-        <TextBlock Grid.Row="3" Text="Referral history" FontSize="18" FontWeight="SemiBold" Foreground="White" Margin="0,8,0,8"/>
+        <TextBlock Grid.Row="3" Text="Referral history" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,8,0,8"/>
 
         <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto">
             <StackPanel>
                 <TextBlock Text="No referrals yet."
-                           Foreground="Gray"
+                           Foreground="{StaticResource TextSecondaryBrush}"
                            FontStyle="Italic"
                            Margin="0,8,0,0"
                            Visibility="{x:Bind ViewModel.EmptyMessageVisibility, Mode=OneWay}"/>
                 <ItemsControl ItemsSource="{x:Bind ViewModel.History, Mode=OneWay}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="models:ReferralHistoryItem">
-                            <Border Background="#252525" CornerRadius="8" Padding="14" Margin="0,0,0,8" BorderBrush="#333333" BorderThickness="1">
+                            <Border Background="{StaticResource CardBackgroundBrush}" CornerRadius="8" Padding="14" Margin="0,0,0,8" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="1">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Grid.Column="0" Spacing="2">
-                                        <TextBlock Text="{x:Bind FriendName}" Foreground="White" FontWeight="SemiBold"/>
-                                        <TextBlock Text="{x:Bind EventTitle}" Foreground="Gray" FontSize="12"/>
+                                        <TextBlock Text="{x:Bind FriendName}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold"/>
+                                        <TextBlock Text="{x:Bind EventTitle}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"/>
                                     </StackPanel>
-                                    <TextBlock Grid.Column="1" Text="{x:Bind FormattedDate}" Foreground="Gray" FontSize="12" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" Text="{x:Bind FormattedDate}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" VerticalAlignment="Center"/>
                                 </Grid>
                             </Border>
                         </DataTemplate>

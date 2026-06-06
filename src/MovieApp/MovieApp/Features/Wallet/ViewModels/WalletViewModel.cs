@@ -31,7 +31,7 @@ namespace MovieApp.Features.Wallet.ViewModels
                 OnPropertyChanged(nameof(DisplayBalance));
             }
         }
-        public string DisplayBalance => Balance.ToString("C");
+        public string DisplayBalance => $"{Balance:F2} lei";
 
         private string _cardHolderName = string.Empty;
         public string CardHolderName
@@ -177,7 +177,7 @@ namespace MovieApp.Features.Wallet.ViewModels
 
                 Transactions.Insert(0, transaction);
 
-                SuccessMessage = $"Successfully added {amount:C} to your wallet!";
+                SuccessMessage = $"Successfully added {amount:F2} lei to your wallet!";
                 ClearForm();
             }
             catch (Exception ex)
