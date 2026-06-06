@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using MovieApp.DataLayer.Models;
 using MovieApp.Logic.Features.ReelsFeed;
+using Windows.Media.Core;
 using Windows.Media.Playback;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Dispatching;
@@ -99,9 +100,6 @@ namespace MovieApp.Features.ReelsFeed.Views
         {
             this.InitializeComponent();
             this.interactionService = Ioc.Default.GetRequiredService<IReelInteractionService>();
-
-            // Do NOT hook MediaEnded here — it's done in OnReelChanged after setting Source,
-            // so we always hook the correct auto-created MediaPlayer instance.
             this.Unloaded += this.ReelItemView_Unloaded;
         }
 
@@ -660,14 +658,15 @@ namespace MovieApp.Features.ReelsFeed.Views
             {
                 this.DisposeCurrentPlayer();
                 this.disposed = false;
+
+                // Always create a fresh MediaPlayer — SetMediaPlayer(null) in DisposeCurrentPlayer
+                // disables auto-creation, so setting Source alone would be silently ignored.
+                var player = new MediaPlayer { IsLoopingEnabled = false };
+                player.MediaEnded += this.MediaPlayer_MediaEnded;
+                this.ReelPlayer.SetMediaPlayer(player);
+
                 this.ReelPlayer.Source = playbackItem;
                 this.loadedVideoUrl = videoUrl;
-
-                if (this.ReelPlayer.MediaPlayer != null)
-                {
-                    this.ReelPlayer.MediaPlayer.IsLoopingEnabled = false;
-                    this.ReelPlayer.MediaPlayer.MediaEnded += this.MediaPlayer_MediaEnded;
-                }
             }
             catch
             {

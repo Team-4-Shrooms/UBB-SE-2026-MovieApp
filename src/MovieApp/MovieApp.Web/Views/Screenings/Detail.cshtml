@@ -59,7 +59,7 @@
                 <div class="card-body p-4 p-md-5">
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2">@details.EventTitle</span>
-                        <h4 class="mb-0 fw-bold" style="color:#b5800e;">@details.TicketPrice.ToString("F2") lei <small class="fw-normal" style="color:#8a8480;">/ seat</small></h4>
+                        <h4 class="mb-0 fw-bold" style="color:#b5800e;">€@details.TicketPrice.ToString("F2") <small class="fw-normal" style="color:#8a8480;">/ seat</small></h4>
                     </div>
                     <h1 class="mb-3" style="font-size:1.8rem; font-weight:800; color:#1c1917;">@details.MovieTitle</h1>
                     <div class="row g-3 mb-3">
@@ -148,7 +148,7 @@
                 </div>
                 <div class="text-end">
                     <div class="text-muted small">Total</div>
-                    <div class="fw-bold fs-5"><span id="selectedSeatsCount">0</span> × @details.TicketPrice.ToString("F2") lei = <span id="selectedSeatsTotal" class="text-success">0.00 lei</span></div>
+                    <div class="fw-bold fs-5"><span id="selectedSeatsCount">0</span> × €@details.TicketPrice.ToString("F2") = <span id="selectedSeatsTotal" class="text-success">€0.00</span></div>
                 </div>
             </div>
 
@@ -285,7 +285,7 @@
                 ? 'None'
                 : keys.map(k => { const p = k.split(','); return 'R' + p[0] + 'C' + p[1]; }).join(', ');
             const sum = keys.length * unitPrice;
-            total.textContent = sum.toFixed(2) + ' lei';
+            total.textContent = '€' + sum.toFixed(2);
             confirm.disabled = keys.length === 0;
         }
     })();

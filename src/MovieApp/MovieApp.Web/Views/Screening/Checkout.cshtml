@@ -58,7 +58,7 @@
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2">@s.EventTitle</span>
                         <h4 class="mb-0 fw-bold" style="color:#b5800e;">
-                            @s.TicketPrice.ToString("0.00") lei
+                            €@s.TicketPrice.ToString("0.00")
                             <small class="fw-normal" style="color:#8a8480;">/ seat</small>
                         </h4>
                     </div>
@@ -155,8 +155,8 @@
                     <div class="text-muted small">Total</div>
                     <div class="fw-bold fs-5">
                         <span id="selectedCount">0</span> ×
-                        @s.TicketPrice.ToString("0.00") lei =
-                        <span id="selectedTotal" class="text-success">0.00 lei</span>
+                        €@s.TicketPrice.ToString("0.00") =
+                        <span id="selectedTotal" class="text-success">€0.00</span>
                     </div>
                 </div>
             </div>
@@ -294,7 +294,7 @@
             label.textContent = keys.length === 0
                 ? 'None'
                 : keys.map(k => { const p = k.split('-'); return 'R' + p[0] + 'C' + p[1]; }).join(', ');
-            total.textContent = (keys.length * unitPrice).toFixed(2) + ' lei';
+            total.textContent = '€' + (keys.length * unitPrice).toFixed(2);
             confirm.disabled = keys.length === 0;
         }
     })();

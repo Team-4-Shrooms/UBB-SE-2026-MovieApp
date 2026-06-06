@@ -32,7 +32,7 @@
 
 <div class="wallet-balance-card">
     <div class="wallet-balance-label">Your Balance</div>
-    <div class="wallet-balance-amount">@balance.ToString("F2") lei</div>
+    <div class="wallet-balance-amount">€@balance.ToString("F2")</div>
 </div>
 
 <h4 class="mb-3" style="font-weight:700; color:#1c1917;">Transaction History</h4>
@@ -71,7 +71,7 @@ else
                         <td><span class="tx-type">@tx.Type</span></td>
                         <td>@description</td>
                         <td class="text-end @(isPositive ? "text-success" : "text-danger")">
-                            @(isPositive ? "+" : "")@tx.Amount.ToString("F2") lei
+                            @(isPositive ? "+" : "")€@tx.Amount.ToString("F2")
                         </td>
                     </tr>
                 }

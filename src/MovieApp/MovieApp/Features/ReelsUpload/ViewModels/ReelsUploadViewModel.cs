@@ -74,21 +74,24 @@ namespace MovieApp.Features.ReelsUpload.ViewModels
         [RelayCommand]
         private async Task SelectVideoFileAsync()
         {
-            Windows.Storage.Pickers.FileOpenPicker filePicker = new Windows.Storage.Pickers.FileOpenPicker();
-            filePicker.FileTypeFilter.Add(VideoFileExtension);
-
-            IntPtr windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
-            WinRT.Interop.InitializeWithWindow.Initialize(filePicker, windowHandle);
-
-            Windows.Storage.StorageFile selectedMovieFile = await filePicker.PickSingleFileAsync();
-            if (selectedMovieFile != null)
+            try
             {
-                string tempDirectory = Path.GetTempPath();
-                string tempFilePath = Path.Combine(tempDirectory, selectedMovieFile.Name);
+                var filePicker = new Windows.Storage.Pickers.FileOpenPicker();
+                filePicker.FileTypeFilter.Add(VideoFileExtension);
 
-                File.Copy(selectedMovieFile.Path, tempFilePath, overwrite: true);
+                IntPtr windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
+                WinRT.Interop.InitializeWithWindow.Initialize(filePicker, windowHandle);
 
-                LocalVideoFilePath = tempFilePath;
+                var selectedFile = await filePicker.PickSingleFileAsync();
+                if (selectedFile != null)
+                {
+                    LocalVideoFilePath = selectedFile.Path;
+                    StatusMessage = $"Selected: {selectedFile.Name}";
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Could not open file picker: {ex.Message}";
             }
         }
 

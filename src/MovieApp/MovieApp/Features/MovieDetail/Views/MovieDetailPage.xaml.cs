@@ -91,12 +91,12 @@ namespace MovieApp.Features.MovieDetail.Views
             }
 
             decimal effectivePrice = GetEffectivePrice();
-            PriceBlock.Text = $"{effectivePrice:F2} lei";
+            PriceBlock.Text = $"€{effectivePrice:F2}";
 
             if (_appliedDiscount > 0)
             {
                 OriginalPriceBlock.Visibility = Visibility.Visible;
-                OriginalPriceBlock.Text = $"{_movie.Price:F2} lei";
+                OriginalPriceBlock.Text = $"€{_movie.Price:F2}";
             }
             else
             {
@@ -168,7 +168,7 @@ namespace MovieApp.Features.MovieDetail.Views
             if (insufficient)
             {
                 BuyMovieButton.IsEnabled = false;
-                ToolTipService.SetToolTip(BuyMovieButton, $"Insufficient funds. Balance: {balance:F2} lei — Price: {effectivePrice:F2} lei");
+                ToolTipService.SetToolTip(BuyMovieButton, $"Insufficient funds. Balance: €{balance:F2} — Price: €{effectivePrice:F2}");
                 BuyMovieButton.Opacity = 0.55;
                 return;
             }
@@ -187,7 +187,7 @@ namespace MovieApp.Features.MovieDetail.Views
             var confirm = new ContentDialog
             {
                 Title = "Confirm purchase",
-                Content = $"Buy \"{_movie.Title}\" for {effectivePrice:F2} lei? This will be charged to your balance.",
+                Content = $"Buy \"{_movie.Title}\" for €{effectivePrice:F2}? This will be charged to your balance.",
                 PrimaryButtonText = "Buy",
                 CloseButtonText = "Cancel",
                 DefaultButton = ContentDialogButton.Primary,

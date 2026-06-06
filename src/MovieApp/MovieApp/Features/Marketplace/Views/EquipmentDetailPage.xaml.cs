@@ -65,7 +65,7 @@ namespace MovieApp.Features.Marketplace.Views
             ErrorText.Visibility = canAfford ? Visibility.Collapsed : Visibility.Visible;
             if (!canAfford)
             {
-                ErrorText.Text = $"Insufficient funds. Balance: {balance:F2} lei — Price: {_selectedItem.Price:F2} lei";
+                ErrorText.Text = $"Insufficient funds. Balance: €{balance:F2} — Price: €{_selectedItem.Price:F2}";
             }
         }
 

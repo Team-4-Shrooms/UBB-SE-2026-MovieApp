@@ -41,8 +41,15 @@ public class ReelsUploadController : Controller
     public async Task<IActionResult> Index()
     {
         ViewData[TitleKey] = "Upload Reel";
-        var movies = await _movieService.GetAllMoviesAsync();
-        ViewBag.AvailableMovies = movies;
+        try
+        {
+            var movies = await _movieService.GetAllMoviesAsync();
+            ViewBag.AvailableMovies = movies;
+        }
+        catch
+        {
+            ViewBag.AvailableMovies = Array.Empty<MovieApp.DataLayer.Models.Movie>();
+        }
 
         return View(new ReelUploadForm());
     }

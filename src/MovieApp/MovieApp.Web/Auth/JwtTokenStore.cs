@@ -1,5 +1,6 @@
 namespace MovieApp.Web.Auth
 {
+    using System.Security.Claims;
     using Microsoft.AspNetCore.Http;
     using MovieApp.Logic.Interfaces.Services;
     using MovieApp.Proxy;
@@ -19,7 +20,22 @@ namespace MovieApp.Web.Auth
         public string? GetToken() => this.Session.GetString(TokenKey);
 
         public int UserId
-            => int.TryParse(this.Session.GetString(UserIdKey), out int id) ? id : 0;
+        {
+            get
+            {
+                // Session is the primary source (has the live JWT user ID)
+                if (int.TryParse(this.Session.GetString(UserIdKey), out int sessionId) && sessionId > 0)
+                    return sessionId;
+
+                // Fall back to the cookie claim written at login — survives session expiry
+                var claim = this.httpContextAccessor.HttpContext?.User
+                    ?.FindFirst(ClaimTypes.NameIdentifier);
+                if (claim != null && int.TryParse(claim.Value, out int claimId) && claimId > 0)
+                    return claimId;
+
+                return 0;
+            }
+        }
 
         public Task RefreshAsync() => Task.CompletedTask;
 

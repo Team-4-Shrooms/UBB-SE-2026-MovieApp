@@ -178,7 +178,7 @@
                             <div class="card-body">
                                 <h5 class="card-title fw-semibold">@item.Title</h5>
                                 <p class="card-text text-muted small">@item.Category</p>
-                                <p class="card-text fw-semibold" style="color: #1DB954;">@item.Price.ToString("F2") lei</p>
+                                <p class="card-text fw-semibold" style="color: #1DB954;">€@item.Price.ToString("F2")</p>
                             </div>
                             <div class="card-footer">
                                 <form asp-action="RemoveEquipment" method="post">

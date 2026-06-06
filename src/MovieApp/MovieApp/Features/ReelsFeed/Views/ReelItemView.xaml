@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     DoubleTapped="ReelItemView_DoubleTapped">
 
-    <Grid Background="Black">
+    <Grid Background="Black" CornerRadius="12">
         <!-- The Media Player -->
         <MediaPlayerElement x:Name="ReelPlayer"
                             AreTransportControlsEnabled="False"
