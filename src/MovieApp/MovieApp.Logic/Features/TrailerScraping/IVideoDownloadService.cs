@@ -11,5 +11,6 @@ namespace MovieApp.Logic.Features.TrailerScraping
         Task EnsureDependenciesAsync();
         Task<string?> DownloadVideoAsMp4Async(string youtubeUrl, int maxDurationSeconds = 60);
         string GetExpectedFilePath(string videoId);
+        string GetPublicUrl(string localFilePath);
     }
 }

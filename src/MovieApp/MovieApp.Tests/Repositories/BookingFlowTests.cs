@@ -1,3 +1,4 @@
+using MovieApp.DataLayer.Interfaces.Repositories;
 using MovieApp.DataLayer.Models;
 using MovieApp.DataLayer.Repositories;
 using MovieApp.Logic.Services;
@@ -17,7 +18,8 @@ public sealed class BookingFlowTests
 
         var screeningRepo = new ScreeningRepository(context);
         var bookingRepo = new BookingRepository(context);
-        var bookingService = new BookingService(bookingRepo, screeningRepo);
+        IUserRepository userRepo = new UserRepository(context);
+        var bookingService = new BookingService(bookingRepo, screeningRepo, userRepo);
 
         var seat = new List<(int Row, int Column)> { (2, 3) };
 
@@ -38,7 +40,8 @@ public sealed class BookingFlowTests
         var bookingRepo = new BookingRepository(context);
         var movieRepo = new MovieRepository(context);
         var screeningService = new ScreeningService(screeningRepo, bookingRepo, movieRepo);
-        var bookingService = new BookingService(bookingRepo, screeningRepo);
+        IUserRepository userRepo = new UserRepository(context);
+        var bookingService = new BookingService(bookingRepo, screeningRepo, userRepo);
 
         await bookingService.BookSeatsAsync(screening.Id, userId: 1, new List<(int, int)> { (1, 1) });
 
@@ -57,7 +60,8 @@ public sealed class BookingFlowTests
 
         var screeningRepo = new ScreeningRepository(context);
         var bookingRepo = new BookingRepository(context);
-        var bookingService = new BookingService(bookingRepo, screeningRepo);
+        IUserRepository userRepo = new UserRepository(context);
+        var bookingService = new BookingService(bookingRepo, screeningRepo, userRepo);
 
         var duplicates = new List<(int Row, int Column)> { (1, 1), (1, 1) };
 
@@ -74,7 +78,8 @@ public sealed class BookingFlowTests
 
         var screeningRepo = new ScreeningRepository(context);
         var bookingRepo = new BookingRepository(context);
-        var bookingService = new BookingService(bookingRepo, screeningRepo);
+        IUserRepository userRepo = new UserRepository(context);
+        var bookingService = new BookingService(bookingRepo, screeningRepo, userRepo);
 
         bool result = await bookingService.BookSeatsAsync(
             screening.Id,
@@ -92,7 +97,8 @@ public sealed class BookingFlowTests
 
         var screeningRepo = new ScreeningRepository(context);
         var bookingRepo = new BookingRepository(context);
-        var bookingService = new BookingService(bookingRepo, screeningRepo);
+        IUserRepository userRepo = new UserRepository(context);
+        var bookingService = new BookingService(bookingRepo, screeningRepo, userRepo);
 
         await bookingService.BookSeatsAsync(screening.Id, userId: 1, new List<(int, int)> { (3, 3) });
         var booking = context.Bookings.Single(b => b.Row == 3 && b.Column == 3);

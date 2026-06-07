@@ -31,10 +31,14 @@ namespace MovieApp.DataLayer.Repositories
                 .ToListAsync();
         }
 
-        public Task RemoveMovieOwnershipsAsync(IEnumerable<OwnedMovie> ownerships)
+        public async Task RemoveMovieOwnershipsAsync(IEnumerable<OwnedMovie> ownerships)
         {
-            _context.OwnedMovies.RemoveRange(ownerships);
-            return Task.CompletedTask;
+            foreach (OwnedMovie ownership in ownerships)
+            {
+                OwnedMovie? tracked = await _context.OwnedMovies.FindAsync(ownership.Id);
+                if (tracked != null)
+                    _context.OwnedMovies.Remove(tracked);
+            }
         }
 
         public async Task<List<OwnedTicket>> GetTicketOwnershipsAsync(int userId, int eventId)
@@ -46,10 +50,14 @@ namespace MovieApp.DataLayer.Repositories
                 .ToListAsync();
         }
 
-        public Task RemoveTicketOwnershipsAsync(IEnumerable<OwnedTicket> ownerships)
+        public async Task RemoveTicketOwnershipsAsync(IEnumerable<OwnedTicket> ownerships)
         {
-            _context.OwnedTickets.RemoveRange(ownerships);
-            return Task.CompletedTask;
+            foreach (OwnedTicket ownership in ownerships)
+            {
+                OwnedTicket? tracked = await _context.OwnedTickets.FindAsync(ownership.Id);
+                if (tracked != null)
+                    _context.OwnedTickets.Remove(tracked);
+            }
         }
 
         public async Task<List<OwnedTicket>> GetAllTicketsForUserAsync(int userId)

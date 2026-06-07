@@ -52,9 +52,11 @@ public sealed class MarathonTriviaViewModel : INotifyPropertyChanged
         }
     }
 
+    private const int PassThreshold = 3;
+
     public int CorrectCount => _correctCount;
 
-    public bool IsPassed => IsComplete && _correctCount == _questions.Count;
+    public bool IsPassed => IsComplete && _correctCount >= PassThreshold;
 
     public TriviaQuestion? CurrentQuestion =>
         _currentIndex < _questions.Count ? _questions[_currentIndex] : null;

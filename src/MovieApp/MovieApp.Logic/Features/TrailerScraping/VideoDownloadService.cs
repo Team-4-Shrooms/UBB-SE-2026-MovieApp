@@ -31,17 +31,19 @@ namespace MovieApp.Logic.Features.TrailerScraping
         private const string ErrorProcessExceptionFormat = "yt-dlp process error: {0}";
 
         private readonly string downloadFolder;
+        private readonly string publicUrlBase;
         private string ytDlpPath = YtDlpExecutableName;
         private string ffmpegPath = FfmpegExecutableName;
         private bool isInitialized;
 
-        public VideoDownloadService(string? downloadFolder = null)
+        public VideoDownloadService(string? downloadFolder = null, string publicUrlBase = "/uploads/videos")
         {
             this.downloadFolder = downloadFolder
                 ?? Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                     AppDataFolderName,
                     VideosFolderName);
+            this.publicUrlBase = publicUrlBase.TrimEnd('/');
 
             Directory.CreateDirectory(this.downloadFolder);
         }
@@ -154,6 +156,12 @@ namespace MovieApp.Logic.Features.TrailerScraping
         public string GetExpectedFilePath(string videoId)
         {
             return Path.Combine(this.downloadFolder, string.Format(Mp4FileFormat, videoId));
+        }
+
+        public string GetPublicUrl(string localFilePath)
+        {
+            string fileName = Path.GetFileName(localFilePath);
+            return $"{this.publicUrlBase}/{fileName}";
         }
     }
 }

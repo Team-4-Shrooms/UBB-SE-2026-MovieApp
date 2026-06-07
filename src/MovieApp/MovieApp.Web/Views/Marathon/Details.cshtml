@@ -115,6 +115,15 @@
                                 {
                                     <span class="badge bg-success rounded-pill">Verified</span>
                                 }
+                                else if (Model.IsJoined && i == Model.CompletedMovies)
+                                {
+                                    <form asp-action="LogMovie" asp-controller="Marathon" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="marathonId" value="@Model.Marathon.Id" />
+                                        <input type="hidden" name="movieId" value="@movie.Id" />
+                                        <button type="submit" class="btn btn-sm btn-outline-success">Mark as Watched</button>
+                                    </form>
+                                }
                                 else
                                 {
                                     <span class="badge bg-light text-muted rounded-pill">Pending</span>

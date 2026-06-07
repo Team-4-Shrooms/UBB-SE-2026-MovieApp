@@ -13,6 +13,9 @@ namespace MovieApp.DataLayer.Models
         public string PosterUrl { get; set; } = string.Empty;
         public int Capacity { get; set; } = 100;
 
+        [NotMapped]
+        public int MaxCapacity { get; set; } = 100;
+
         public Movie Movie { get; set; }
 
         [NotMapped]

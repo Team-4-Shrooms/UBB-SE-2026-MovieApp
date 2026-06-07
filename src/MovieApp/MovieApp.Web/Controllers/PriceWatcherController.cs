@@ -52,9 +52,9 @@ public sealed class PriceWatcherController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Unwatch(int watchId)
+    public async Task<IActionResult> Unwatch(int eventId)
     {
-        await _priceWatcherService.RemoveWatchAsync(watchId);
+        await _priceWatcherService.RemoveWatchAsync(eventId);
         TempData["Success"] = "Removed from your watchlist.";
         return RedirectToAction(nameof(MyWatchers));
     }

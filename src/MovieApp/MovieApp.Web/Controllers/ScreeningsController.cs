@@ -160,7 +160,16 @@ public sealed class ScreeningsController : Controller
             return RedirectToAction(nameof(Detail), new { id });
         }
 
-        var success = await _bookingService.BookSeatsAsync(id, _currentUserService.UserId, parsed);
+        bool success;
+        try
+        {
+            success = await _bookingService.BookSeatsAsync(id, _currentUserService.UserId, parsed);
+        }
+        catch (InvalidOperationException ex)
+        {
+            TempData["Error"] = ex.Message;
+            return RedirectToAction(nameof(Detail), new { id });
+        }
         if (!success)
         {
             TempData["Error"] = "One or more selected seats are no longer available. Please try again.";

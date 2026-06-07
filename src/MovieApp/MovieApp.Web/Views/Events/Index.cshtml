@@ -14,10 +14,8 @@
     <div class="row row-cols-1 row-cols-md-2 g-4">
         @foreach (var item in Model)
         {
-            // Simple logic for remaining capacity: Assume 10 tickets sold if not available
-            var soldTickets = 0; 
-            var remaining = Math.Max(0, item.Capacity - soldTickets);
-            var isSoldOut = remaining <= 0 || item.Capacity <= 0;
+            var remaining = Math.Max(0, item.Capacity);
+            var isSoldOut = item.Capacity <= 0;
 
             <div class="col event-card-wrapper" data-title="@item.Title">
                 <div class="card h-100 border-0 shadow-lg event-card">
@@ -50,7 +48,7 @@
                                     </div>
                                     <div class="d-flex align-items-center">
                                         <i class="bi bi-people me-2 event-detail-icon"></i>
-                                        <span class="small">@remaining / @item.Capacity remaining</span>
+                                        <span class="small">@remaining / @item.MaxCapacity remaining</span>
                                     </div>
                                 </div>
 

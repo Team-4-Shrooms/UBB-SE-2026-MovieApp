@@ -61,16 +61,14 @@
                 </NavigationViewItem.MenuItems>
             </NavigationViewItem>
 
-            <!-- Account: Profile, Inventory, Wallet, Referrals, Ambassadors, Price Watchers, Leaderboard -->
+            <!-- Account: Profile, Inventory, Wallet, Referrals, Price Watchers -->
             <NavigationViewItem Content="Account" Icon="Contact" IsExpanded="False">
                 <NavigationViewItem.MenuItems>
                     <NavigationViewItem Content="Profile"         Tag="Badges"       Icon="ContactInfo"/>
                     <NavigationViewItem Content="Inventory"       Tag="Inventory"    Icon="AllApps"/>
                     <NavigationViewItem Content="Wallet"          Tag="Wallet"       Icon="Account"/>
                     <NavigationViewItem Content="Referrals"       Tag="Referrals"    Icon="ContactInfo"/>
-                    <NavigationViewItem Content="Ambassadors"     Tag="Ambassadors"  Icon="OtherUser"/>
                     <NavigationViewItem Content="Price Watchers"  Tag="PriceWatcher" Icon="Flag"/>
-                    <NavigationViewItem Content="Leaderboard"     Tag="Leaderboard"  Icon="List"/>
                 </NavigationViewItem.MenuItems>
             </NavigationViewItem>
 

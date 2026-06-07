@@ -85,6 +85,6 @@ public sealed class UserSpinData
             this.LoginStreak = InitialStreakValue;
         }
 
-        lastRecordedDate = currentUtcDate;
+        this.LastLoginDate = currentUtcDate;
     }
 }

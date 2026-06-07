@@ -3,8 +3,7 @@
 @{
     ViewData["Title"] = "Event Details";
     var hasTicket = (bool)ViewBag.HasTicket;
-    var soldTickets = 0; // Assumption
-    var isSoldOut = (Model.Capacity - soldTickets) <= 0;
+    var isSoldOut = Model.Capacity <= 0;
     var isWatching = ViewBag.IsWatching is bool b && b;
 }
 
@@ -76,7 +75,7 @@
                                     </div>
                                     <div>
                                         <div class="text-muted small">Availability</div>
-                                        <div class="fw-bold">@(Model.Capacity - soldTickets) / @Model.Capacity Seats</div>
+                                        <div class="fw-bold">@Model.Capacity / @Model.MaxCapacity Seats Remaining</div>
                                     </div>
                                 </div>
                             </div>
@@ -119,7 +118,7 @@
                         {
                             <form asp-controller="PriceWatcher" asp-action="Unwatch" method="post">
                                 @Html.AntiForgeryToken()
-                                <input type="hidden" name="watchId" value="@Model.Id" />
+                                <input type="hidden" name="eventId" value="@Model.Id" />
                                 <button type="submit" class="btn btn-outline-warning btn-lg w-100 rounded-pill py-3">
                                     <i class="bi bi-bell-slash me-2"></i> Unwatch Price
                                 </button>

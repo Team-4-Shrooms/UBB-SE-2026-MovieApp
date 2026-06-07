@@ -17,15 +17,18 @@ public class PersonalityMatchController : Controller
         private readonly IPersonalityMatchService _personalityMatchService;
         private readonly IPersonalityMatchingService _personalityMatchingService;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IMovieService _movieService;
 
         public PersonalityMatchController(
             IPersonalityMatchService personalityMatchService,
             IPersonalityMatchingService personalityMatchingService,
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService,
+            IMovieService movieService)
         {
             _personalityMatchService = personalityMatchService;
             _personalityMatchingService = personalityMatchingService;
             _currentUserService = currentUserService;
+            _movieService = movieService;
         }
 
         [HttpGet]
@@ -48,13 +51,18 @@ public class PersonalityMatchController : Controller
 
             var preferences = await _personalityMatchingService.GetTopMoviePreferencesAsync(userId, TopPreferencesCount);
 
+            List<string> allTitles;
             if (preferences == null || preferences.Count == 0)
             {
-                return RedirectToAction(nameof(Results));
+                var movies = await _movieService.GetAllMoviesAsync();
+                allTitles = movies.Select(m => m.Title).Distinct().ToList();
+                if (allTitles.Count == 0)
+                    return RedirectToAction(nameof(Results));
             }
-
-            // Each preference's Title becomes a question option
-            var allTitles = preferences.Select(p => p.Title).Distinct().ToList();
+            else
+            {
+                allTitles = preferences.Select(p => p.Title).Distinct().ToList();
+            }
 
             int optionCount = Math.Min(4, allTitles.Count);
             int startIndex = (questionIndex * optionCount) % Math.Max(allTitles.Count, 1);
@@ -117,6 +125,11 @@ public class PersonalityMatchController : Controller
             else
             {
                 matches = await _personalityMatchingService.GetTopMatchesAsync(userId, TopMatchesCount);
+            }
+
+            if (matches.Count == 0)
+            {
+                matches = await _personalityMatchingService.GetRandomUsersAsync(userId, TopMatchesCount);
             }
 
             var viewModel = new PersonalityMatchResultsViewModel

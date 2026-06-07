@@ -1923,6 +1923,7 @@ namespace MovieApp.DataLayer
             foreach (var e in zeroCapacityEvents)
             {
                 e.Capacity = 100;
+                e.MaxCapacity = 100;
             }
 
             // Fix users with 0 or low balance to enable marketplace testing
@@ -2257,6 +2258,93 @@ namespace MovieApp.DataLayer
 
             _context.Marathons.AddRange(eliteScifi, eliteAction);
             await _context.SaveChangesAsync();
+
+            await SeedAdditionalMarathonsAsync();
+        }
+
+        private async Task SeedAdditionalMarathonsAsync()
+        {
+            DateTime now = DateTime.UtcNow;
+            string currentWeek = $"{now.Year}-W{System.Globalization.ISOWeek.GetWeekOfYear(now):D2}";
+
+            if (!await _context.Marathons.AnyAsync(m => m.Title == "Superhero Showdown"))
+            {
+                Movie? avengers = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Avengers: Endgame");
+                Movie? ironMan = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Iron Man");
+                Movie? joker = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Joker");
+                Movie? darkKnight2 = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Dark Knight");
+
+                _context.Marathons.Add(new Marathon
+                {
+                    Title = "Superhero Showdown",
+                    Description = "Marvel meets DC — the biggest superhero films that defined a generation.",
+                    Theme = "Superhero",
+                    PosterUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
+                    IsActive = true,
+                    WeekScoping = currentWeek,
+                    Movies = new List<Movie>(new[] { avengers, ironMan, joker, darkKnight2 }.OfType<Movie>()),
+                });
+                await _context.SaveChangesAsync();
+            }
+
+            if (!await _context.Marathons.AnyAsync(m => m.Title == "Drama Legends"))
+            {
+                Movie? shawshank = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Shawshank Redemption");
+                Movie? forrest = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Forrest Gump");
+                Movie? titanic = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Titanic");
+                Movie? laLaLand = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "La La Land");
+
+                _context.Marathons.Add(new Marathon
+                {
+                    Title = "Drama Legends",
+                    Description = "Timeless dramas that moved audiences to tears and left a permanent mark on cinema.",
+                    Theme = "Drama",
+                    PosterUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
+                    IsActive = true,
+                    WeekScoping = currentWeek,
+                    Movies = new List<Movie>(new[] { shawshank, forrest, titanic, laLaLand }.OfType<Movie>()),
+                });
+                await _context.SaveChangesAsync();
+            }
+
+            if (!await _context.Marathons.AnyAsync(m => m.Title == "Horror Night"))
+            {
+                Movie? conjuring = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Conjuring");
+                Movie? getOut = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Get Out");
+                Movie? quietPlace = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "A Quiet Place");
+
+                _context.Marathons.Add(new Marathon
+                {
+                    Title = "Horror Night",
+                    Description = "Three modern horror masterpieces — watch with the lights on.",
+                    Theme = "Horror",
+                    PosterUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/wVYREutTvI2tmxr6ujrHT704wGF.jpg",
+                    IsActive = true,
+                    WeekScoping = currentWeek,
+                    Movies = new List<Movie>(new[] { conjuring, getOut, quietPlace }.OfType<Movie>()),
+                });
+                await _context.SaveChangesAsync();
+            }
+
+            if (!await _context.Marathons.AnyAsync(m => m.Title == "Auteur's Cut"))
+            {
+                Movie? whiplash = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Whiplash");
+                Movie? grandBudapest = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Grand Budapest Hotel");
+                Movie? fightClub = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Fight Club");
+                Movie? socialNetwork = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Social Network");
+
+                _context.Marathons.Add(new Marathon
+                {
+                    Title = "Auteur's Cut",
+                    Description = "Four films where a director's singular vision is undeniable — Chazelle, Anderson, Fincher.",
+                    Theme = "Auteur",
+                    PosterUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/AwkbpAzh6hEU6oPFphrMXO7YAQG.jpg",
+                    IsActive = true,
+                    WeekScoping = currentWeek,
+                    Movies = new List<Movie>(new[] { whiplash, grandBudapest, fightClub, socialNetwork }.OfType<Movie>()),
+                });
+                await _context.SaveChangesAsync();
+            }
         }
 
         private async Task SeedMarathonProgressionsAsync()
@@ -2387,20 +2475,38 @@ namespace MovieApp.DataLayer
 
         private async Task SeedUserStatsAsync()
         {
-            bool exists = await _context.UserStats.AnyAsync(user => user.UserId == 1);
+            List<int> allUserIds = await _context.Users.Select(u => u.Id).ToListAsync();
+            List<int> existingStatUserIds = await _context.UserStats.Select(s => s.UserId).ToListAsync();
 
-            if (!exists)
-            {
-                var stats = new UserStats
+            List<UserStats> toAdd = allUserIds
+                .Except(existingStatUserIds)
+                .Select(uid => new UserStats
                 {
-                    TotalPoints = 10,
-                    WeeklyScore = 5,
-                    UserId = 1,
-                };
+                    UserId = uid,
+                    TotalPoints = 1000,
+                    WeeklyScore = 200,
+                })
+                .ToList();
 
-                _context.UserStats.Add(stats);
+            if (toAdd.Count > 0)
+            {
+                _context.UserStats.AddRange(toAdd);
                 await _context.SaveChangesAsync();
             }
+
+            // Ensure existing stats have enough points to demo battles
+            List<UserStats> lowPointStats = await _context.UserStats
+                .Where(s => s.TotalPoints < 100)
+                .ToListAsync();
+
+            foreach (UserStats s in lowPointStats)
+            {
+                s.TotalPoints = 1000;
+                s.WeeklyScore = 200;
+            }
+
+            if (lowPointStats.Count > 0)
+                await _context.SaveChangesAsync();
         }
 
         private async Task SeedAdditionalScreeningsAsync()
