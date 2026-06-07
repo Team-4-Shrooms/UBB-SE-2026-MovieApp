@@ -39,6 +39,11 @@ namespace MovieApp.Logic.Services
                 throw new InvalidOperationException("You already own a ticket for this event.");
             }
 
+            if (movieEvent.Capacity <= 0)
+            {
+                throw new InvalidOperationException("This event is sold out.");
+            }
+
             decimal price = movieEvent.TicketPrice;
             if (user.Balance < price)
             {
@@ -46,6 +51,7 @@ namespace MovieApp.Logic.Services
             }
 
             user.Balance -= price;
+            movieEvent.Capacity--;
 
             await _eventRepo.AddOwnedTicketAsync(new OwnedTicket
             {

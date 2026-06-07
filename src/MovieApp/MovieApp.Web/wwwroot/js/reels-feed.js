@@ -1,3 +1,81 @@
+let globalMuted = true; // Start muted to allow autoplay
+
+document.addEventListener("DOMContentLoaded", function () {
+    const videos = document.querySelectorAll(".reel-item video");
+    
+    // Set initial mute state on all videos
+    videos.forEach(video => {
+        video.muted = globalMuted;
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const video = entry.target;
+            if (entry.isIntersecting) {
+                // Apply global mute state to the video before playing
+                video.muted = globalMuted;
+                updateMuteButtons();
+                
+                // Play active video
+                video.play().catch(err => {
+                    console.log("Autoplay blocked or interrupted:", err);
+                });
+            } else {
+                // Pause inactive video
+                video.pause();
+            }
+        });
+    }, {
+        threshold: 0.6 // Trigger when 60% of the video is visible
+    });
+
+    videos.forEach(video => {
+        observer.observe(video);
+    });
+    
+    // Add click listener to videos to toggle play/pause or unmute
+    videos.forEach(video => {
+        video.addEventListener("click", function () {
+            if (video.muted) {
+                // If it was muted, unmute globally
+                globalMuted = false;
+                syncMuteStateAcrossVideos();
+            } else {
+                // Otherwise toggle play/pause
+                if (video.paused) {
+                    video.play();
+                } else {
+                    video.pause();
+                }
+            }
+            updateMuteButtons();
+        });
+    });
+});
+
+function syncMuteStateAcrossVideos() {
+    const videos = document.querySelectorAll(".reel-item video");
+    videos.forEach(video => {
+        video.muted = globalMuted;
+    });
+    updateMuteButtons();
+}
+
+function updateMuteButtons() {
+    const muteButtons = document.querySelectorAll(".mute-btn i");
+    muteButtons.forEach(icon => {
+        if (globalMuted) {
+            icon.className = "bi bi-volume-mute-fill";
+        } else {
+            icon.className = "bi bi-volume-up-fill";
+        }
+    });
+}
+
+window.toggleMuteGlobal = function () {
+    globalMuted = !globalMuted;
+    syncMuteStateAcrossVideos();
+};
 
 window.toggleLike = function (id, url) {
     if (typeof $ === 'undefined') {

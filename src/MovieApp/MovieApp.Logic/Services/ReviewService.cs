@@ -39,17 +39,18 @@ namespace MovieApp.Logic.Services
             var movie = await _movieRepo.GetMovieByIdAsync(movieId) ?? throw new KeyNotFoundException("Movie not found");
             var user = await _userRepo.GetUserByIdAsync(userId) ?? throw new KeyNotFoundException("User not found");
 
+            int clampedRating = Math.Clamp(rating, 1, 5);
             var existingRatings = await _reviewRepo.GetRawRatingsForMovieAsync(movieId);
-            var allRatings = existingRatings.Append(rating).ToList();
-            movie.Rating = Math.Round(allRatings.Average(), 1);
+            var allRatings = existingRatings.Append((decimal)clampedRating).ToList();
+            movie.Rating = Math.Min(5m, Math.Max(0m, Math.Round(allRatings.Average(), 1)));
 
             await _reviewRepo.AddReviewAsync(new MovieReview
             {
                 Movie = movie,
                 User = user,
-                StarRating = rating,
+                StarRating = clampedRating,
                 Comment = comment,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
             });
             await _reviewRepo.SaveChangesAsync();
         }

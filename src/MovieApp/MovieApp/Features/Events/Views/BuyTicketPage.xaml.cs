@@ -75,7 +75,7 @@ namespace MovieApp.Features.Events.Views
             DescriptionText.Text = _event.Description ?? "";
             DateText.Text = _event.Date.ToString("dd MMM yyyy");
             LocationText.Text = _event.Location;
-            PriceText.Text = $"{_event.TicketPrice:F2} lei";
+            PriceText.Text = $"€{_event.TicketPrice:F2}";
 
             if (!string.IsNullOrEmpty(_event.PosterUrl))
             {
@@ -117,7 +117,7 @@ namespace MovieApp.Features.Events.Views
                 }
                 else
                 {
-                    InsufficientText.Text = $"Insufficient funds. Balance: {balance:F2} lei — Price: {_event.TicketPrice:F2} lei";
+                    InsufficientText.Text = $"Insufficient funds. Balance: €{balance:F2} — Price: €{_event.TicketPrice:F2}";
                 }
 
                 InsufficientText.Visibility = Visibility.Visible;

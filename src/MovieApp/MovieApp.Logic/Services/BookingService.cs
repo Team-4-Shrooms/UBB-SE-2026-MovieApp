@@ -9,11 +9,13 @@ public sealed class BookingService : IBookingService
 {
     private readonly IBookingRepository _bookings;
     private readonly IScreeningRepository _screenings;
+    private readonly IUserRepository _users;
 
-    public BookingService(IBookingRepository bookings, IScreeningRepository screenings)
+    public BookingService(IBookingRepository bookings, IScreeningRepository screenings, IUserRepository users)
     {
         _bookings = bookings;
         _screenings = screenings;
+        _users = users;
     }
 
     public Task<IReadOnlyList<Booking>> GetBookingsForScreeningAsync(int screeningId, CancellationToken cancellationToken = default)
@@ -45,7 +47,24 @@ public sealed class BookingService : IBookingService
             return false;
         }
 
-        return await _bookings.ReserveAsync(screeningId, userId, seats, cancellationToken);
+        decimal totalCost = screening.TicketPrice * seats.Count;
+        decimal balance = 0;
+
+        if (totalCost > 0)
+        {
+            balance = await _users.GetBalanceAsync(userId);
+            if (balance < totalCost)
+                throw new InvalidOperationException("Insufficient wallet balance.");
+        }
+
+        bool reserved = await _bookings.ReserveAsync(screeningId, userId, seats, cancellationToken);
+
+        if (reserved && totalCost > 0)
+        {
+            await _users.UpdateBalanceAsync(userId, balance - totalCost);
+        }
+
+        return reserved;
     }
 
     public Task<bool> CancelBookingAsync(int bookingId, int userId, CancellationToken cancellationToken = default)

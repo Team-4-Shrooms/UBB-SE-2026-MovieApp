@@ -129,12 +129,12 @@ namespace MovieApp.Features.SlotMachine.ViewModels
             LoadStateCommand = new AsyncRelayCommand(ExecuteLoadStateAsync);
         }
 
-        private bool CanSpin() => !_isSpinning && (_availableSpins + _bonusSpins) > 0;
+        private bool CanSpin() => !_isSpinning && _availableSpins > 0;
 
         public async Task ExecuteLoadStateAsync()
         {
             UserSpinData spinData = await _service.GetUserSpinStateAsync(SessionManager.CurrentUserID);
-            AvailableSpins = spinData.DailySpinsRemaining;
+            AvailableSpins = spinData.DailySpinsRemaining + spinData.BonusSpins;
             BonusSpins = spinData.BonusSpins;
             LoginStreak = spinData.LoginStreak;
             SelectedGenre = await _service.GetRandomGenreAsync();
@@ -159,7 +159,7 @@ namespace MovieApp.Features.SlotMachine.ViewModels
                 }
                 History.Insert(0, result);
                 UserSpinData refreshed = await _service.GetUserSpinStateAsync(SessionManager.CurrentUserID);
-                AvailableSpins = refreshed.DailySpinsRemaining;
+                AvailableSpins = refreshed.DailySpinsRemaining + refreshed.BonusSpins;
                 BonusSpins = refreshed.BonusSpins;
             }
             finally

@@ -28,19 +28,9 @@ namespace MovieApp.Logic.Services
             string weekIdentifier = $"{currentDateTime.Year}-W" +
                 ISOWeek.GetWeekOfYear(currentDateTime).ToString("D2");
 
-            IEnumerable<Marathon> existingMarathons = await _marathonRepo
-                .GetWeeklyMarathonsForUserAsync(userId, weekIdentifier);
+            await _marathonRepo.AssignWeeklyMarathonsAsync(userId, weekIdentifier, 10);
 
-            List<Marathon> marathonList = existingMarathons.ToList();
-
-            if (marathonList.Count == 0)
-            {
-                await _marathonRepo.AssignWeeklyMarathonsAsync(userId, weekIdentifier, 10);
-                marathonList = (await _marathonRepo
-                    .GetWeeklyMarathonsForUserAsync(userId, weekIdentifier)).ToList();
-            }
-
-            return marathonList;
+            return await _marathonRepo.GetWeeklyMarathonsForUserAsync(userId, weekIdentifier);
         }
 
         public async Task<MarathonProgress?> GetCurrentProgressAsync(int marathonId)
@@ -99,11 +89,6 @@ namespace MovieApp.Logic.Services
 
         public async Task<bool> LogMovieAsync(int marathonId, int movieId, int correctAnswers)
         {
-            if (correctAnswers < PerfectQuizScore)
-            {
-                return false;
-            }
-
             int currentUserId = _currentUserService.UserId;
             MarathonProgress? marathonProgress = await _marathonRepo.GetUserProgressAsync(currentUserId, marathonId);
             if (marathonProgress is null)
@@ -160,7 +145,7 @@ namespace MovieApp.Logic.Services
 
         public Task<IEnumerable<LeaderboardEntry>> GetLeaderboardWithUsernamesAsync(int marathonId)
         {
-            return _marathonRepo.GetLeaderboardWithUsernamesAsync(marathonId);
+            return GetLeaderboardAsync(marathonId);
         }
     }
 }

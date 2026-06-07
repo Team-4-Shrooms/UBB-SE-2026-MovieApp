@@ -23,7 +23,7 @@ public sealed class BookingGroupViewModel
 
     public int     Count        => Seats.Count;
     public decimal TotalCost    => Count * Screening.TicketPrice;
-    public string  TotalDisplay => $"{TotalCost:F2} lei";
+    public string  TotalDisplay => $"€{TotalCost:F2}";
     public string  TimeDisplay  => Screening.ScreeningTime.ToString("ddd d MMM yyyy • HH:mm");
 
     public BookingGroupViewModel(ScreeningDetailsDto screening, IEnumerable<BookingItemViewModel> seats)

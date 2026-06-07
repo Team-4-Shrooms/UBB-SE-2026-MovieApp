@@ -118,12 +118,7 @@ public sealed partial class MarathonPage : Page
         var movie = this.ViewModel.Movies.FirstOrDefault(movie => movie.MovieId == movieId);
         this.QuizMovieTitle.Text = movie?.Title ?? "Movie";
 
-        var triviaRepository = App.Services.GetService<MovieApp.DataLayer.Interfaces.Repositories.ITriviaRepository>();
-        if (triviaRepository is null)
-        {
-            await ShowInfoAsync("Not available", "Trivia repository is not configured.");
-            return;
-        }
+        var triviaRepository = App.Services.GetRequiredService<MovieApp.DataLayer.Interfaces.Repositories.ITriviaRepository>();
 
         this._triviaViewModel = new MarathonTriviaViewModel(triviaRepository);
 

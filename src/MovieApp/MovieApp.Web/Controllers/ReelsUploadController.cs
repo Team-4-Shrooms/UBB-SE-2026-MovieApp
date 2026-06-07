@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -41,8 +41,15 @@ public class ReelsUploadController : Controller
     public async Task<IActionResult> Index()
     {
         ViewData[TitleKey] = "Upload Reel";
-        var movies = await _movieService.GetAllMoviesAsync();
-        ViewBag.AvailableMovies = movies;
+        try
+        {
+            var movies = await _movieService.GetAllMoviesAsync();
+            ViewBag.AvailableMovies = movies;
+        }
+        catch
+        {
+            ViewBag.AvailableMovies = Array.Empty<MovieApp.DataLayer.Models.Movie>();
+        }
 
         return View(new ReelUploadForm());
     }
@@ -64,10 +71,12 @@ public class ReelsUploadController : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        string tempPath = Path.GetTempFileName();
+        string? tempPath = null;
 
         try
         {
+            tempPath = Path.GetTempFileName();
+
             using (var stream = new FileStream(tempPath, FileMode.Create))
             {
                 await videoFile.CopyToAsync(stream);
@@ -96,7 +105,7 @@ public class ReelsUploadController : Controller
         }
         finally
         {
-            if (System.IO.File.Exists(tempPath))
+            if (tempPath != null && System.IO.File.Exists(tempPath))
             {
                 System.IO.File.Delete(tempPath);
             }

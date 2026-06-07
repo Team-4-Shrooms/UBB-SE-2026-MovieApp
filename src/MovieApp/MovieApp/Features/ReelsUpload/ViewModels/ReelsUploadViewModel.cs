@@ -19,6 +19,7 @@ namespace MovieApp.Features.ReelsUpload.ViewModels
     {
         private readonly IVideoStorageService videoStorageService;
         private readonly IMovieService movieService;
+        private readonly Microsoft.UI.Dispatching.DispatcherQueue? _dispatcherQueue;
 
         private const string UntitledName = "Untitled Reel";
         private const string VideoFileExtension = ".mp4";
@@ -34,8 +35,22 @@ namespace MovieApp.Features.ReelsUpload.ViewModels
             this.videoStorageService = videoStorageService;
             this.movieService = movieService;
             SuggestedMovies = new ObservableCollection<Movie>();
+            _dispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
 
             _ = LoadMoviesAsync();
+        }
+
+        private void RunOnUi(Action action)
+        {
+            var dispatcher = _dispatcherQueue ?? App.MainWindow?.DispatcherQueue ?? Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+            if (dispatcher != null && !dispatcher.HasThreadAccess)
+            {
+                dispatcher.TryEnqueue(() => action());
+            }
+            else
+            {
+                action();
+            }
         }
 
         [ObservableProperty]
@@ -67,28 +82,136 @@ namespace MovieApp.Features.ReelsUpload.ViewModels
             }
             catch (Exception exception)
             {
-                StatusMessage = $"Failed to load movies: {exception.Message}";
+                RunOnUi(() => {
+                    StatusMessage = $"Failed to load movies: {exception.Message}";
+                });
             }
+        }
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern IntPtr GetActiveWindow();
+
+        private void WriteLog(string message)
+        {
+            try
+            {
+                string logPath = @"d:\Personale\UBB-SE-2026-925-1\UBB-SE-2026-MovieApp\debug_picker.log";
+                File.AppendAllText(logPath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] {message}\r\n");
+            }
+            catch { }
         }
 
         [RelayCommand]
         private async Task SelectVideoFileAsync()
         {
-            Windows.Storage.Pickers.FileOpenPicker filePicker = new Windows.Storage.Pickers.FileOpenPicker();
-            filePicker.FileTypeFilter.Add(VideoFileExtension);
-
-            IntPtr windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
-            WinRT.Interop.InitializeWithWindow.Initialize(filePicker, windowHandle);
-
-            Windows.Storage.StorageFile selectedMovieFile = await filePicker.PickSingleFileAsync();
-            if (selectedMovieFile != null)
+            WriteLog("SelectVideoFileAsync started.");
+            try
             {
-                string tempDirectory = Path.GetTempPath();
-                string tempFilePath = Path.Combine(tempDirectory, selectedMovieFile.Name);
+                WriteLog("Creating FileOpenPicker...");
+                var filePicker = new Windows.Storage.Pickers.FileOpenPicker();
+                filePicker.FileTypeFilter.Add(VideoFileExtension);
+                WriteLog("FileOpenPicker created.");
 
-                File.Copy(selectedMovieFile.Path, tempFilePath, overwrite: true);
+                WriteLog("Getting MainWindow handle...");
+                IntPtr windowHandle = IntPtr.Zero;
+                try
+                {
+                    var window = App.MainWindow;
+                    if (window != null)
+                    {
+                        windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(window);
+                        WriteLog($"WindowNative returned handle: {windowHandle}");
+                    }
+                    else
+                    {
+                        WriteLog("App.MainWindow is null.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    WriteLog($"WindowNative.GetWindowHandle threw: {ex.Message}");
+                }
 
-                LocalVideoFilePath = tempFilePath;
+                if (windowHandle == IntPtr.Zero)
+                {
+                    try
+                    {
+                        windowHandle = System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle;
+                        WriteLog($"Process.GetCurrentProcess().MainWindowHandle returned: {windowHandle}");
+                    }
+                    catch (Exception ex)
+                    {
+                        WriteLog($"Process.MainWindowHandle threw: {ex.Message}");
+                    }
+                }
+
+                if (windowHandle == IntPtr.Zero)
+                {
+                    try
+                    {
+                        windowHandle = GetActiveWindow();
+                        WriteLog($"GetActiveWindow returned: {windowHandle}");
+                    }
+                    catch (Exception ex)
+                    {
+                        WriteLog($"GetActiveWindow threw: {ex.Message}");
+                    }
+                }
+
+                if (windowHandle == IntPtr.Zero)
+                {
+                    WriteLog("No valid window handle found. Aborting.");
+                    RunOnUi(() => {
+                        StatusMessage = "Error: Could not retrieve a valid window handle.";
+                    });
+                    return;
+                }
+
+                WriteLog("Initializing FileOpenPicker with window handle...");
+                WinRT.Interop.InitializeWithWindow.Initialize(filePicker, windowHandle);
+                WriteLog("Initialization completed.");
+
+                WriteLog("Calling PickSingleFileAsync...");
+                var selectedFile = await filePicker.PickSingleFileAsync();
+                WriteLog($"PickSingleFileAsync completed. selectedFile is null? {selectedFile == null}");
+
+                if (selectedFile != null)
+                {
+                    WriteLog("Queueing UI update...");
+                    RunOnUi(() => {
+                        WriteLog("UI update execution started.");
+                        try
+                        {
+                            WriteLog("Accessing selectedFile.Path...");
+                            string pickedPath = selectedFile.Path;
+                            WriteLog($"selectedFile.Path = {pickedPath}");
+
+                            WriteLog("Accessing selectedFile.Name...");
+                            string pickedName = selectedFile.Name;
+                            WriteLog($"selectedFile.Name = {pickedName}");
+
+                            WriteLog("Setting LocalVideoFilePath and StatusMessage...");
+                            LocalVideoFilePath = pickedPath;
+                            StatusMessage = $"Selected: {pickedName}";
+                            WriteLog("Properties updated successfully.");
+                        }
+                        catch (Exception ex)
+                        {
+                            WriteLog($"Exception inside UI update callback: {ex.Message}");
+                            StatusMessage = $"Error retrieving file details: {ex.Message}";
+                        }
+                    });
+                }
+                WriteLog("Calling GC.KeepAlive...");
+                GC.KeepAlive(filePicker);
+                WriteLog("SelectVideoFileAsync finished successfully.");
+            }
+            catch (Exception ex)
+            {
+                WriteLog($"Exception caught in SelectVideoFileAsync outer block: {ex.Message}\r\nStack Trace: {ex.StackTrace}");
+                RunOnUi(() => {
+                    StatusMessage = $"Could not open file picker: {ex.Message}";
+                });
             }
         }
 
@@ -139,15 +262,19 @@ namespace MovieApp.Features.ReelsUpload.ViewModels
 
                 Reel savedReel = await videoStorageService.UploadVideoAsync(request);
 
-                StatusMessage = $"Success! Reel uploaded with ID {savedReel.Id}.";
-                LocalVideoFilePath = string.Empty;
-                ReelTitle = string.Empty;
-                ReelCaption = string.Empty;
-                LinkedMovie = null;
+                RunOnUi(() => {
+                    StatusMessage = $"Success! Reel uploaded with ID {savedReel.Id}.";
+                    LocalVideoFilePath = string.Empty;
+                    ReelTitle = string.Empty;
+                    ReelCaption = string.Empty;
+                    LinkedMovie = null;
+                });
             }
             catch (Exception exception)
             {
-                StatusMessage = $"Upload Failed: {exception.Message}";
+                RunOnUi(() => {
+                    StatusMessage = $"Upload Failed: {exception.Message}";
+                });
             }
         }
 

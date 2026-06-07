@@ -152,12 +152,6 @@ builder.Services.AddScoped<ICommentRepository>(serviceProvider => serviceProvide
 builder.Services.AddScoped<PriceWatcherRepository>();
 builder.Services.AddScoped<IPriceWatcherRepository>(serviceProvider => serviceProvider.GetRequiredService<PriceWatcherRepository>());
 
-builder.Services.AddScoped<TriviaRepository>();
-builder.Services.AddScoped<ITriviaRepository>(serviceProvider => serviceProvider.GetRequiredService<TriviaRepository>());
-
-builder.Services.AddScoped<TriviaRewardRepository>();
-builder.Services.AddScoped<ITriviaRewardRepository>(serviceProvider => serviceProvider.GetRequiredService<TriviaRewardRepository>());
-
 builder.Services.AddScoped<AmbassadorRepository>();
 builder.Services.AddScoped<IAmbassadorRepository>(serviceProvider => serviceProvider.GetRequiredService<AmbassadorRepository>());
 
@@ -237,7 +231,7 @@ builder.Services.AddScoped<IVideoIngestionService, VideoIngestionService>();
 builder.Services.AddSingleton<ITournamentLogicService, TournamentLogicService>();
 
 // Infrastructure
-builder.Services.AddSingleton<IVideoDownloadService, VideoDownloadService>();
+builder.Services.AddSingleton<IVideoDownloadService>(_ => new VideoDownloadService(videoUploadDir, "/uploads/videos"));
 builder.Services.AddTransient<IYouTubeScraperService>(_ =>
     new YouTubeScraperService(config["YouTube:ApiKey"] ?? string.Empty));
 builder.Services.AddTransient<IWebScraperService>(serviceProvider =>

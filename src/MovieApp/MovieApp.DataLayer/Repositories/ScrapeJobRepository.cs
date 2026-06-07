@@ -141,6 +141,25 @@ namespace MovieApp.DataLayer.Repositories
         public async Task<int> InsertScrapedReelAsync(Reel reel)
         {
             reel.CreatedAt = DateTime.UtcNow;
+
+            var dbContext = (Microsoft.EntityFrameworkCore.DbContext)_context;
+
+            if (reel.Movie != null)
+            {
+                var trackedMovie = await dbContext.Set<Movie>().FindAsync(reel.Movie.Id);
+                if (trackedMovie == null)
+                    throw new InvalidOperationException($"Movie with ID {reel.Movie.Id} was not found.");
+                reel.Movie = trackedMovie;
+            }
+
+            if (reel.CreatorUser != null)
+            {
+                var trackedUser = await dbContext.Set<User>().FindAsync(reel.CreatorUser.Id);
+                if (trackedUser == null)
+                    throw new InvalidOperationException($"User with ID {reel.CreatorUser.Id} was not found.");
+                reel.CreatorUser = trackedUser;
+            }
+
             _context.Reels.Add(reel);
             await _context.SaveChangesAsync();
             return reel.Id;

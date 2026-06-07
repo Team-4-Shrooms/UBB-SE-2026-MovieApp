@@ -124,7 +124,7 @@ namespace MovieApp.Logic.Services
                     "The Snob" => extraReviews >= 10,
                     "Why so serious?" => fullyCompletedExtraReviews >= 50,
                     "The Joker" => comedyPercentage > 70,
-                    "The Godfather I" => totalReviews >= 5,
+                    "The Godfather I" => totalReviews >= 100,
                     "The Godfather II" => totalReviews >= 200,
                     "The Godfather III" => totalReviews >= 300,
                     _ => false

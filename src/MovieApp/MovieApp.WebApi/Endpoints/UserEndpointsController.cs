@@ -14,7 +14,6 @@ namespace MovieApp.WebApi.Endpoints;
 public sealed class UserEndpointsController : ControllerBase
 {
     private readonly IUserService _userService;
-    private readonly IPointService _pointService;
 
     public UserEndpointsController(IUserService userService)
     {

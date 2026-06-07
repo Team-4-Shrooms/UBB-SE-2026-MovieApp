@@ -107,7 +107,7 @@ namespace MovieApp.Logic.Features.PersonalityMatch
             Dictionary<int, double> scoreVector = new Dictionary<int, double>();
             foreach (UserMoviePreference preference in preferences)
             {
-                scoreVector[preference.Id] = (double)preference.Score;
+                scoreVector[preference.Movie.Id] = (double)preference.Score;
             }
             return scoreVector;
         }

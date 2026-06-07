@@ -43,7 +43,7 @@ namespace MovieApp.Web.Controllers
             {
                 Id = reel.Id,
                 Title = reel.Title,
-                VideoUrl = reel.VideoUrl.StartsWith("/") ? _webApiBaseUrl + reel.VideoUrl : reel.VideoUrl,
+                VideoUrl = (reel.VideoUrl != null && reel.VideoUrl.StartsWith("/")) ? _webApiBaseUrl + reel.VideoUrl : (reel.VideoUrl ?? string.Empty),
                 ThumbnailUrl = reel.ThumbnailUrl,
                 Caption = reel.Caption,
                 LikeCount = allLikeCounts.TryGetValue(reel.Id, out var count) ? count : 0,

@@ -52,6 +52,8 @@ namespace MovieApp.DataLayer
             await SeedMarathonProgressionsAsync();
             await SeedSlotMachineDataAsync();
             await SeedUserStatsAsync();
+            await SeedAdditionalScreeningsAsync();
+            await SeedBookingsAsync();
         }
 
         /// <summary>
@@ -77,54 +79,67 @@ namespace MovieApp.DataLayer
 
         private async Task SeedUsersAsync()
         {
-            if (await _context.Users.AnyAsync(u => u.Username != "admin"))
+            var usersToSeed = new List<User>
             {
-                return;
+                new User { Username = "User1", Email = "user1@movieapp.com", PasswordHash = "placeholder_hash_1", Balance = 50000m },
+                new User { Username = "Alice", Email = "alice@movieapp.com", PasswordHash = "placeholder_hash_2", Balance = 50000m },
+                new User { Username = "Bob", Email = "bob@movieapp.com", PasswordHash = "placeholder_hash_3", Balance = 50000m },
+                new User { Username = "Carol", Email = "carol@movieapp.com", PasswordHash = "placeholder_hash_4", Balance = 100m },
+                new User { Username = "Dave", Email = "dave@movieapp.com", PasswordHash = "placeholder_hash_5", Balance = 100m },
+                new User { Username = "Eve", Email = "eve@movieapp.com", PasswordHash = "placeholder_hash_6", Balance = 100m },
+                new User { Username = "CinephileMax", Email = "max@movieapp.com", PasswordHash = "placeholder_hash_max", Balance = 50000m },
+                new User { Username = "MovieBuffAlex", Email = "alex@movieapp.com", PasswordHash = "placeholder_hash_alex", Balance = 50000m }
+            };
+
+            foreach (var user in usersToSeed)
+            {
+                bool exists = await _context.Users.AnyAsync(u => u.Username == user.Username);
+                if (!exists)
+                {
+                    _context.Users.Add(user);
+                }
             }
 
-            _context.Users.AddRange(
-                new User
+            await _context.SaveChangesAsync();
+
+            // Seed profiles for Max and Alex to prevent null-reference errors in the web UI
+            var maxUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == "CinephileMax");
+            if (maxUser != null)
+            {
+                bool profileExists = await _context.UserProfiles.AnyAsync(p => p.User.Id == maxUser.Id);
+                if (!profileExists)
                 {
-                    Username = "User1",
-                    Email = "user1@movieapp.com",
-                    PasswordHash = "placeholder_hash_1",
-                    Balance = 50000m,
-                },
-                new User
+                    _context.UserProfiles.Add(new UserProfile
+                    {
+                        User = maxUser,
+                        TotalLikes = 85,
+                        TotalWatchTimeSeconds = 35000,
+                        AverageWatchTimeSeconds = 200 > 0 ? (decimal)35000 / 200 : 0m,
+                        TotalClipsViewed = 200,
+                        LikeToViewRatio = Math.Round((decimal)85 / 200, 2),
+                        LastUpdated = DateTime.UtcNow,
+                    });
+                }
+            }
+
+            var alexUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == "MovieBuffAlex");
+            if (alexUser != null)
+            {
+                bool profileExists = await _context.UserProfiles.AnyAsync(p => p.User.Id == alexUser.Id);
+                if (!profileExists)
                 {
-                    Username = "Alice",
-                    Email = "alice@movieapp.com",
-                    PasswordHash = "placeholder_hash_2",
-                    Balance = 50000m,
-                },
-                new User
-                {
-                    Username = "Bob",
-                    Email = "bob@movieapp.com",
-                    PasswordHash = "placeholder_hash_3",
-                    Balance = 50000m,
-                },
-                new User
-                {
-                    Username = "Carol",
-                    Email = "carol@movieapp.com",
-                    PasswordHash = "placeholder_hash_4",
-                    Balance = 100m,
-                },
-                new User
-                {
-                    Username = "Dave",
-                    Email = "dave@movieapp.com",
-                    PasswordHash = "placeholder_hash_5",
-                    Balance = 100m,
-                },
-                new User
-                {
-                    Username = "Eve",
-                    Email = "eve@movieapp.com",
-                    PasswordHash = "placeholder_hash_6",
-                    Balance = 100m,
-                });
+                    _context.UserProfiles.Add(new UserProfile
+                    {
+                        User = alexUser,
+                        TotalLikes = 92,
+                        TotalWatchTimeSeconds = 42000,
+                        AverageWatchTimeSeconds = 250 > 0 ? (decimal)42000 / 250 : 0m,
+                        TotalClipsViewed = 250,
+                        LikeToViewRatio = Math.Round((decimal)92 / 250, 2),
+                        LastUpdated = DateTime.UtcNow,
+                    });
+                }
+            }
 
             await _context.SaveChangesAsync();
         }
@@ -608,153 +623,169 @@ namespace MovieApp.DataLayer
 
         private async Task SeedReelsAsync()
         {
-            if (await _context.Reels.AnyAsync())
+            // 1. Delete all existing reels to ensure we only have local ones (clean slate)
+            var existingReels = await _context.Reels.ToListAsync();
+            if (existingReels.Any())
             {
-                return;
+                _context.Reels.RemoveRange(existingReels);
+                await _context.SaveChangesAsync();
             }
 
             User? user1 = await _context.Users.FirstOrDefaultAsync(user => user.Username == "User1");
-
             if (user1 is null)
             {
                 return;
             }
 
-            Movie? inception = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Inception");
-            Movie? darkKnight = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "The Dark Knight");
-            Movie? interstellar = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Interstellar");
-            Movie? matrix = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "The Matrix");
-            Movie? parasite = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Parasite");
-            Movie? laLaLand = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "La La Land");
-            Movie? whiplash = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Whiplash");
-
-            if (inception is null || darkKnight is null || interstellar is null ||
-                matrix is null || parasite is null || laLaLand is null || whiplash is null)
+            // 2. Fetch seeded movies to distribute the reels
+            var movies = await _context.Movies.ToListAsync();
+            if (movies.Count == 0)
             {
                 return;
             }
 
-            _context.Reels.AddRange(
-                new Reel
+            // 3. Resolve videos source directory by traversing up to the solution root
+            string searchDir = AppDomain.CurrentDomain.BaseDirectory;
+            string videosSourceDir = null;
+            while (!string.IsNullOrEmpty(searchDir))
+            {
+                string testDir = System.IO.Path.Combine(searchDir, "videos");
+                if (System.IO.Directory.Exists(testDir))
                 {
-                    Movie = inception,
-                    CreatorUser = user1,
-                    VideoUrl = "https://samplelib.com/lib/preview/mp4/sample-10s.mp4",
-                    ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg",
-                    Title = "Inception - Dream Within a Dream",
-                    Caption = "Mind-bending scene from Inception where reality bends",
-                    FeatureDurationSeconds = 45.5m,
-                    Source = "youtube",
-                    CreatedAt = DateTime.UtcNow.AddDays(-10),
-                },
-                new Reel
+                    videosSourceDir = testDir;
+                    break;
+                }
+                searchDir = System.IO.Path.GetDirectoryName(searchDir);
+            }
+
+            if (videosSourceDir == null)
+            {
+                // Fallback to directory traversal starting from CurrentDirectory
+                searchDir = System.IO.Directory.GetCurrentDirectory();
+                while (!string.IsNullOrEmpty(searchDir))
                 {
-                    Movie = inception,
-                    CreatorUser = user1,
-                    VideoUrl = "https://samplelib.com/lib/preview/mp4/sample-15s.mp4",
-                    ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg",
-                    Title = "Inception - Rotating Hallway Fight",
-                    Caption = "The iconic zero-gravity hallway fight sequence",
-                    FeatureDurationSeconds = 60.2m,
-                    Source = "youtube",
-                    CreatedAt = DateTime.UtcNow.AddDays(-9),
-                },
-                new Reel
+                    string testDir = System.IO.Path.Combine(searchDir, "videos");
+                    if (System.IO.Directory.Exists(testDir))
+                    {
+                        videosSourceDir = testDir;
+                        break;
+                    }
+                    searchDir = System.IO.Path.GetDirectoryName(searchDir);
+                }
+            }
+
+            if (videosSourceDir == null)
+            {
+                // If still not found, we cannot copy, but we shouldn't throw an error to prevent startup crash
+                return;
+            }
+
+            // 4. Resolve WebApi uploads/videos destination directory
+            string uploadDestinationDir = null;
+            searchDir = AppDomain.CurrentDomain.BaseDirectory;
+            while (!string.IsNullOrEmpty(searchDir))
+            {
+                // The WebApi project is located at src/MovieApp/MovieApp.WebApi
+                string testDir = System.IO.Path.Combine(searchDir, "src", "MovieApp", "MovieApp.WebApi", "wwwroot", "uploads", "videos");
+                if (System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(testDir))))) // check if src exists
                 {
-                    Movie = darkKnight,
-                    CreatorUser = user1,
-                    VideoUrl = "https://samplelib.com/lib/preview/mp4/sample-20s.mp4",
-                    ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg",
-                    Title = "The Dark Knight - Joker Interrogation",
-                    Caption = "Heath Ledger's legendary Joker interrogation scene",
-                    FeatureDurationSeconds = 55.0m,
-                    Source = "youtube",
-                    CreatedAt = DateTime.UtcNow.AddDays(-8),
-                },
-                new Reel
+                    uploadDestinationDir = testDir;
+                    break;
+                }
+                searchDir = System.IO.Path.GetDirectoryName(searchDir);
+            }
+
+            if (uploadDestinationDir == null)
+            {
+                searchDir = System.IO.Directory.GetCurrentDirectory();
+                while (!string.IsNullOrEmpty(searchDir))
                 {
-                    Movie = darkKnight,
-                    CreatorUser = user1,
-                    VideoUrl = "https://samplelib.com/lib/preview/mp4/sample-30s.mp4",
-                    ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg",
-                    Title = "The Dark Knight - Batmobile Chase",
-                    Caption = "Epic chase scene through Gotham streets",
-                    FeatureDurationSeconds = 70.8m,
-                    Source = "youtube",
-                    CreatedAt = DateTime.UtcNow.AddDays(-7),
-                },
-                new Reel
+                    string testDir = System.IO.Path.Combine(searchDir, "src", "MovieApp", "MovieApp.WebApi", "wwwroot", "uploads", "videos");
+                    if (System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(testDir)))))
+                    {
+                        uploadDestinationDir = testDir;
+                        break;
+                    }
+                    searchDir = System.IO.Path.GetDirectoryName(searchDir);
+                }
+            }
+
+            // Fallback: if we cannot find the exact src folder, look for any wwwroot/uploads/videos folder in the traversed path
+            if (uploadDestinationDir == null)
+            {
+                searchDir = AppDomain.CurrentDomain.BaseDirectory;
+                while (!string.IsNullOrEmpty(searchDir))
                 {
-                    Movie = interstellar,
-                    CreatorUser = user1,
-                    VideoUrl = "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
-                    ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg",
-                    Title = "Interstellar - Docking Scene",
-                    Caption = "The intense docking sequence with the spinning station",
-                    FeatureDurationSeconds = 90.3m,
-                    Source = "youtube",
-                    CreatedAt = DateTime.UtcNow.AddDays(-6),
-                },
-                new Reel
+                    string testDir = System.IO.Path.Combine(searchDir, "wwwroot", "uploads", "videos");
+                    if (System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(testDir))))
+                    {
+                        uploadDestinationDir = testDir;
+                        break;
+                    }
+                    searchDir = System.IO.Path.GetDirectoryName(searchDir);
+                }
+            }
+
+            if (uploadDestinationDir == null)
+            {
+                // Fallback to simple subfolder from app base if all else fails
+                uploadDestinationDir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wwwroot", "uploads", "videos");
+            }
+
+            System.IO.Directory.CreateDirectory(uploadDestinationDir);
+
+            // 5. Copy video files matching *_video.mp4 and add to Reels (sorted alphabetically)
+            var videoFiles = System.IO.Directory.Exists(videosSourceDir)
+                ? System.IO.Directory.GetFiles(videosSourceDir, "*_video.mp4")
+                    .Select(System.IO.Path.GetFileName)
+                    .Where(name => name != null)
+                    .Cast<string>()
+                    .ToList()
+                : new List<string>();
+
+            videoFiles.Sort(StringComparer.InvariantCultureIgnoreCase);
+
+            int movieIndex = 0;
+            for (int index = 0; index < videoFiles.Count; index++)
+            {
+                string fileName = videoFiles[index];
+                string sourceFile = System.IO.Path.Combine(videosSourceDir, fileName);
+                string destinationFile = System.IO.Path.Combine(uploadDestinationDir, fileName);
+
+                if (System.IO.File.Exists(sourceFile))
                 {
-                    Movie = interstellar,
-                    CreatorUser = user1,
-                    VideoUrl = "https://filesamples.com/samples/video/mp4/sample_640x360.mp4",
-                    ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg",
-                    Title = "Interstellar - Tesseract Scene",
-                    Caption = "Cooper in the 5th dimension tesseract",
-                    FeatureDurationSeconds = 80.0m,
-                    Source = "youtube",
-                    CreatedAt = DateTime.UtcNow.AddDays(-5),
-                },
-                new Reel
-                {
-                    Movie = matrix,
-                    CreatorUser = user1,
-                    VideoUrl = "https://filesamples.com/samples/video/mp4/sample_960x400_ocean_with_audio.mp4",
-                    ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BNzQzOTk3NTAtNDQ2Ny00Njc2LTk3M2QtN2FjYTJjNzQzYzQwXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg",
-                    Title = "The Matrix - Bullet Time",
-                    Caption = "The revolutionary bullet time effect scene",
-                    FeatureDurationSeconds = 35.5m,
-                    Source = "youtube",
-                    CreatedAt = DateTime.UtcNow.AddDays(-4),
-                },
-                new Reel
-                {
-                    Movie = parasite,
-                    CreatorUser = user1,
-                    VideoUrl = "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4",
-                    ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTAtZGYzMC00ODQ0LWI2YTMtYjQ5NDU3N2NmZDIzXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg",
-                    Title = "Parasite - Basement Reveal",
-                    Caption = "The shocking basement discovery scene",
-                    FeatureDurationSeconds = 50.0m,
-                    Source = "youtube",
-                    CreatedAt = DateTime.UtcNow.AddDays(-3),
-                },
-                new Reel
-                {
-                    Movie = laLaLand,
-                    CreatorUser = user1,
-                    VideoUrl = "https://archive.org/download/ElephantsDream/ed_1024_512kb.mp4",
-                    ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BMjA2OTYxNTY2Nl5BMl5BanBnXkFtZTgwNzg4OTA5OTE@._V1_.jpg",
-                    Title = "La La Land - Highway Opening",
-                    Caption = "The colorful highway opening dance number",
-                    FeatureDurationSeconds = 65.2m,
-                    Source = "youtube",
-                    CreatedAt = DateTime.UtcNow.AddDays(-2),
-                },
-                new Reel
-                {
-                    Movie = whiplash,
-                    CreatorUser = user1,
-                    VideoUrl = "https://media.w3.org/2010/05/sintel/trailer.mp4",
-                    ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BMjE4NDYxNTAxNV5BMl5BanBnXkFtZTgwNzM0NDM1MjE@._V1_.jpg",
-                    Title = "Whiplash - Final Performance",
-                    Caption = "The intense final drum performance",
-                    FeatureDurationSeconds = 75.0m,
-                    Source = "youtube",
-                    CreatedAt = DateTime.UtcNow.AddDays(-1),
-                });
+                    try
+                    {
+                        if (!System.IO.File.Exists(destinationFile))
+                        {
+                            System.IO.File.Copy(sourceFile, destinationFile, overwrite: true);
+                        }
+
+                        // Select a movie round-robin to associate the reel
+                        var associatedMovie = movies[movieIndex % movies.Count];
+                        movieIndex++;
+
+                        var newReel = new Reel
+                        {
+                            Movie = associatedMovie,
+                            CreatorUser = user1,
+                            VideoUrl = $"/uploads/videos/{fileName}",
+                            ThumbnailUrl = string.Empty,
+                            Title = $"{associatedMovie.Title} - Local Reel {fileName.Replace("_video.mp4", "")}",
+                            Caption = $"High quality local video clip showing moments from {associatedMovie.Title}.",
+                            FeatureDurationSeconds = 15.0m,
+                            Source = "upload",
+                            CreatedAt = DateTime.UtcNow.AddMinutes(-index),
+                        };
+
+                        _context.Reels.Add(newReel);
+                    }
+                    catch (Exception)
+                    {
+                        // Ignore individual file copy/save errors to be resilient on startup
+                    }
+                }
+            }
 
             await _context.SaveChangesAsync();
         }
@@ -1338,115 +1369,167 @@ namespace MovieApp.DataLayer
 
         private async Task SeedMovieReviewsAsync()
         {
-            if (await _context.MovieReviews.AnyAsync())
+            var invalidReviews = await _context.MovieReviews.Where(r => r.StarRating > 5m || r.StarRating < 1m).ToListAsync();
+            if (invalidReviews.Any())
             {
-                return;
+                foreach (var r in invalidReviews)
+                {
+                    r.StarRating = Math.Clamp(r.StarRating, 1m, 5m);
+                }
+
+                await _context.SaveChangesAsync();
             }
 
             User? seller1 = await _context.Users.FirstOrDefaultAsync(user => user.Username == "dummy1");
             User? seller2 = await _context.Users.FirstOrDefaultAsync(user => user.Username == "dummy2");
 
-            if (seller1 is null || seller2 is null)
+            if (seller1 != null && seller2 != null)
             {
-                return;
+                bool baseReviewsExist = await _context.MovieReviews.AnyAsync();
+                if (!baseReviewsExist)
+                {
+                    Movie? matrix = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "The Matrix");
+                    Movie? interstellar = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Interstellar");
+                    Movie? parasite = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Parasite");
+                    Movie? johnWick = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "John Wick");
+                    Movie? whiplash = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Whiplash");
+
+                    if (matrix != null && interstellar != null && parasite != null && johnWick != null && whiplash != null)
+                    {
+                        DateTime currentDate = DateTime.UtcNow;
+                        _context.MovieReviews.AddRange(
+                            new MovieReview { Movie = matrix, User = seller1, StarRating = 5m, Comment = "A mind-bending classic with unforgettable world-building.", CreatedAt = currentDate, },
+                            new MovieReview { Movie = matrix, User = seller2, StarRating = 4m, Comment = "Great action and ideas, but definitely not for everyone.", CreatedAt = currentDate, },
+                            new MovieReview { Movie = interstellar, User = seller1, StarRating = 5m, Comment = "Epic, emotional, and incredibly thought-provoking.", CreatedAt = currentDate, },
+                            new MovieReview { Movie = interstellar, User = seller2, StarRating = 4m, Comment = "Beautiful visuals and a satisfying emotional payoff.", CreatedAt = currentDate, },
+                            new MovieReview { Movie = parasite, User = seller1, StarRating = 5m, Comment = "Smart, tense, and darkly funny all the way through.", CreatedAt = currentDate, },
+                            new MovieReview { Movie = parasite, User = seller2, StarRating = 3m, Comment = "Surprisingly entertaining, but the pacing felt uneven.", CreatedAt = currentDate, },
+                            new MovieReview { Movie = johnWick, User = seller1, StarRating = 4m, Comment = "Non-stop style and killer action choreography.", CreatedAt = currentDate, },
+                            new MovieReview { Movie = johnWick, User = seller2, StarRating = 4m, Comment = "Solid thrills and great atmosphere; easy to binge.", CreatedAt = currentDate, },
+                            new MovieReview { Movie = whiplash, User = seller1, StarRating = 5m, Comment = "A brutal, addictive rivalry that stays with you.", CreatedAt = currentDate, },
+                            new MovieReview { Movie = whiplash, User = seller2, StarRating = 4m, Comment = "Fantastic performances and a soundtrack that demands attention.", CreatedAt = currentDate, }
+                        );
+                        await _context.SaveChangesAsync();
+                    }
+                }
             }
 
-            Movie? matrix = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "The Matrix");
-            Movie? interstellar = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Interstellar");
-            Movie? parasite = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Parasite");
-            Movie? johnWick = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "John Wick");
-            Movie? whiplash = await _context.Movies.FirstOrDefaultAsync(movie => movie.Title == "Whiplash");
+            User? maxUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == "CinephileMax");
+            User? alexUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == "MovieBuffAlex");
 
-            if (matrix is null || interstellar is null || parasite is null || johnWick is null || whiplash is null)
+            if (maxUser != null && alexUser != null)
             {
-                return;
+                // Delete existing dynamic reviews seeded for Max and Alex to allow regeneration with diverse ratings and comments
+                var existingDemoReviews = await _context.MovieReviews
+                    .Where(r => r.User.Id == maxUser.Id || r.User.Id == alexUser.Id)
+                    .ToListAsync();
+                if (existingDemoReviews.Any())
+                {
+                    _context.MovieReviews.RemoveRange(existingDemoReviews);
+                    await _context.SaveChangesAsync();
+                }
+
+                var movies = await _context.Movies.ToListAsync();
+                bool anyUpdated = false;
+                var random = new Random();
+
+                foreach (var movie in movies)
+                {
+                    bool hasReviews = await _context.MovieReviews.AnyAsync(r => r.Movie.Id == movie.Id);
+                    if (!hasReviews)
+                    {
+                        decimal rating1 = Math.Min((decimal)random.Next(1, 11), 5m);
+                        decimal rating2 = Math.Min((decimal)random.Next(1, 11), 5m);
+
+                        string[] lowComments1 = new[] {
+                            $"Disappointed by {movie.Title}. The plot was confusing and the pacing felt extremely slow.",
+                            $"Honestly, {movie.Title} didn't live up to the hype. Found it quite boring.",
+                            $"Could not finish {movie.Title}. Not my cup of tea at all."
+                        };
+                        string[] lowComments2 = new[] {
+                            $"Really didn't like {movie.Title}. Poor execution and weak performances.",
+                            $"Skip {movie.Title}. Total waste of time in my opinion.",
+                            $"{movie.Title} had a decent premise but failed to deliver on any level."
+                        };
+
+                        string[] midComments1 = new[] {
+                            $"Decent watch. {movie.Title} has some good moments, but could be paced better.",
+                            $"{movie.Title} was okay. Had potential but fell slightly flat in the middle.",
+                            $"An average film. {movie.Title} is worth a rent but not a repeat watch."
+                        };
+                        string[] midComments2 = new[] {
+                            $"Average experience. {movie.Title} has a few fun scenes but is mostly forgettable.",
+                            $"{movie.Title} is okay for a lazy weekend, nothing groundbreaking.",
+                            $"Some elements of {movie.Title} were good, but the screenplay was weak."
+                        };
+
+                        string[] highComments1 = new[] {
+                            $"Solid film. {movie.Title} has great acting and direction, definitely worth watching.",
+                            $"Really enjoyed {movie.Title}. Great storytelling and solid production values.",
+                            $"A very good movie. {movie.Title} keeps you engaged from start to finish."
+                        };
+                        string[] highComments2 = new[] {
+                            $"Absolutely loved {movie.Title}! An instant masterpiece that I would highly recommend.",
+                            $"Incredible! {movie.Title} exceeded all my expectations. Must watch!",
+                            $"{movie.Title} is a spectacular cinematic achievement. Loved every minute!"
+                        };
+
+                        string comment1 = rating1 switch
+                        {
+                            <= 2m => lowComments1[random.Next(lowComments1.Length)],
+                            <= 3m => midComments1[random.Next(midComments1.Length)],
+                            _     => highComments1[random.Next(highComments1.Length)],
+                        };
+
+                        string comment2 = rating2 switch
+                        {
+                            <= 2m => lowComments2[random.Next(lowComments2.Length)],
+                            <= 3m => midComments2[random.Next(midComments2.Length)],
+                            _     => highComments2[random.Next(highComments2.Length)],
+                        };
+
+                        var review1 = new MovieReview
+                        {
+                            Movie = movie,
+                            User = maxUser,
+                            StarRating = rating1,
+                            Comment = comment1,
+                            CreatedAt = DateTime.UtcNow.AddDays(-2),
+                        };
+
+                        var review2 = new MovieReview
+                        {
+                            Movie = movie,
+                            User = alexUser,
+                            StarRating = rating2,
+                            Comment = comment2,
+                            CreatedAt = DateTime.UtcNow.AddDays(-1),
+                        };
+
+                        _context.MovieReviews.AddRange(review1, review2);
+                        movie.Rating = Math.Min(5m, Math.Max(0m, Math.Round((rating1 + rating2) / 2m, 1)));
+                        anyUpdated = true;
+                    }
+                    else
+                    {
+                        var ratings = await _context.MovieReviews
+                            .Where(r => r.Movie.Id == movie.Id)
+                            .Select(r => r.StarRating)
+                            .ToListAsync();
+                        if (ratings.Any())
+                        {
+                            decimal average = ratings.Average();
+                            movie.Rating = Math.Min(5m, Math.Max(0m, Math.Round(average, 1)));
+                            anyUpdated = true;
+                        }
+                    }
+                }
+
+                if (anyUpdated)
+                {
+                    await _context.SaveChangesAsync();
+                }
             }
-
-            DateTime currentDate = DateTime.UtcNow;
-
-            _context.MovieReviews.AddRange(
-                new MovieReview
-                {
-                    Movie = matrix,
-                    User = seller1,
-                    StarRating = 5m,
-                    Comment = "A mind-bending classic with unforgettable world-building.",
-                    CreatedAt = currentDate,
-                },
-                new MovieReview
-                {
-                    Movie = matrix,
-                    User = seller2,
-                    StarRating = 4m,
-                    Comment = "Great action and ideas, but definitely not for everyone.",
-                    CreatedAt = currentDate,
-                },
-                new MovieReview
-                {
-                    Movie = interstellar,
-                    User = seller1,
-                    StarRating = 5m,
-                    Comment = "Epic, emotional, and incredibly thought-provoking.",
-                    CreatedAt = currentDate,
-                },
-                new MovieReview
-                {
-                    Movie = interstellar,
-                    User = seller2,
-                    StarRating = 4m,
-                    Comment = "Beautiful visuals and a satisfying emotional payoff.",
-                    CreatedAt = currentDate,
-                },
-                new MovieReview
-                {
-                    Movie = parasite,
-                    User = seller1,
-                    StarRating = 5m,
-                    Comment = "Smart, tense, and darkly funny all the way through.",
-                    CreatedAt = currentDate,
-                },
-                new MovieReview
-                {
-                    Movie = parasite,
-                    User = seller2,
-                    StarRating = 3m,
-                    Comment = "Surprisingly entertaining, but the pacing felt uneven.",
-                    CreatedAt = currentDate,
-                },
-                new MovieReview
-                {
-                    Movie = johnWick,
-                    User = seller1,
-                    StarRating = 4m,
-                    Comment = "Non-stop style and killer action choreography.",
-                    CreatedAt = currentDate,
-                },
-                new MovieReview
-                {
-                    Movie = johnWick,
-                    User = seller2,
-                    StarRating = 4m,
-                    Comment = "Solid thrills and great atmosphere; easy to binge.",
-                    CreatedAt = currentDate,
-                },
-                new MovieReview
-                {
-                    Movie = whiplash,
-                    User = seller1,
-                    StarRating = 5m,
-                    Comment = "A brutal, addictive rivalry that stays with you.",
-                    CreatedAt = currentDate,
-                },
-                new MovieReview
-                {
-                    Movie = whiplash,
-                    User = seller2,
-                    StarRating = 4m,
-                    Comment = "Fantastic performances and a soundtrack that demands attention.",
-                    CreatedAt = currentDate,
-                });
-
-            await _context.SaveChangesAsync();
         }
 
         private async Task SeedEquipmentAsync()
@@ -1840,6 +1923,7 @@ namespace MovieApp.DataLayer
             foreach (var e in zeroCapacityEvents)
             {
                 e.Capacity = 100;
+                e.MaxCapacity = 100;
             }
 
             // Fix users with 0 or low balance to enable marketplace testing
@@ -2174,6 +2258,93 @@ namespace MovieApp.DataLayer
 
             _context.Marathons.AddRange(eliteScifi, eliteAction);
             await _context.SaveChangesAsync();
+
+            await SeedAdditionalMarathonsAsync();
+        }
+
+        private async Task SeedAdditionalMarathonsAsync()
+        {
+            DateTime now = DateTime.UtcNow;
+            string currentWeek = $"{now.Year}-W{System.Globalization.ISOWeek.GetWeekOfYear(now):D2}";
+
+            if (!await _context.Marathons.AnyAsync(m => m.Title == "Superhero Showdown"))
+            {
+                Movie? avengers = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Avengers: Endgame");
+                Movie? ironMan = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Iron Man");
+                Movie? joker = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Joker");
+                Movie? darkKnight2 = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Dark Knight");
+
+                _context.Marathons.Add(new Marathon
+                {
+                    Title = "Superhero Showdown",
+                    Description = "Marvel meets DC — the biggest superhero films that defined a generation.",
+                    Theme = "Superhero",
+                    PosterUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
+                    IsActive = true,
+                    WeekScoping = currentWeek,
+                    Movies = new List<Movie>(new[] { avengers, ironMan, joker, darkKnight2 }.OfType<Movie>()),
+                });
+                await _context.SaveChangesAsync();
+            }
+
+            if (!await _context.Marathons.AnyAsync(m => m.Title == "Drama Legends"))
+            {
+                Movie? shawshank = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Shawshank Redemption");
+                Movie? forrest = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Forrest Gump");
+                Movie? titanic = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Titanic");
+                Movie? laLaLand = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "La La Land");
+
+                _context.Marathons.Add(new Marathon
+                {
+                    Title = "Drama Legends",
+                    Description = "Timeless dramas that moved audiences to tears and left a permanent mark on cinema.",
+                    Theme = "Drama",
+                    PosterUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
+                    IsActive = true,
+                    WeekScoping = currentWeek,
+                    Movies = new List<Movie>(new[] { shawshank, forrest, titanic, laLaLand }.OfType<Movie>()),
+                });
+                await _context.SaveChangesAsync();
+            }
+
+            if (!await _context.Marathons.AnyAsync(m => m.Title == "Horror Night"))
+            {
+                Movie? conjuring = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Conjuring");
+                Movie? getOut = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Get Out");
+                Movie? quietPlace = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "A Quiet Place");
+
+                _context.Marathons.Add(new Marathon
+                {
+                    Title = "Horror Night",
+                    Description = "Three modern horror masterpieces — watch with the lights on.",
+                    Theme = "Horror",
+                    PosterUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/wVYREutTvI2tmxr6ujrHT704wGF.jpg",
+                    IsActive = true,
+                    WeekScoping = currentWeek,
+                    Movies = new List<Movie>(new[] { conjuring, getOut, quietPlace }.OfType<Movie>()),
+                });
+                await _context.SaveChangesAsync();
+            }
+
+            if (!await _context.Marathons.AnyAsync(m => m.Title == "Auteur's Cut"))
+            {
+                Movie? whiplash = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Whiplash");
+                Movie? grandBudapest = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Grand Budapest Hotel");
+                Movie? fightClub = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Fight Club");
+                Movie? socialNetwork = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Social Network");
+
+                _context.Marathons.Add(new Marathon
+                {
+                    Title = "Auteur's Cut",
+                    Description = "Four films where a director's singular vision is undeniable — Chazelle, Anderson, Fincher.",
+                    Theme = "Auteur",
+                    PosterUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/AwkbpAzh6hEU6oPFphrMXO7YAQG.jpg",
+                    IsActive = true,
+                    WeekScoping = currentWeek,
+                    Movies = new List<Movie>(new[] { whiplash, grandBudapest, fightClub, socialNetwork }.OfType<Movie>()),
+                });
+                await _context.SaveChangesAsync();
+            }
         }
 
         private async Task SeedMarathonProgressionsAsync()
@@ -2304,18 +2475,164 @@ namespace MovieApp.DataLayer
 
         private async Task SeedUserStatsAsync()
         {
-            bool exists = await _context.UserStats.AnyAsync(user => user.UserId == 1);
+            List<int> allUserIds = await _context.Users.Select(u => u.Id).ToListAsync();
+            List<int> existingStatUserIds = await _context.UserStats.Select(s => s.UserId).ToListAsync();
 
+            List<UserStats> toAdd = allUserIds
+                .Except(existingStatUserIds)
+                .Select(uid => new UserStats
+                {
+                    UserId = uid,
+                    TotalPoints = 1000,
+                    WeeklyScore = 200,
+                })
+                .ToList();
+
+            if (toAdd.Count > 0)
+            {
+                _context.UserStats.AddRange(toAdd);
+                await _context.SaveChangesAsync();
+            }
+
+            // Ensure existing stats have enough points to demo battles
+            List<UserStats> lowPointStats = await _context.UserStats
+                .Where(s => s.TotalPoints < 100)
+                .ToListAsync();
+
+            foreach (UserStats s in lowPointStats)
+            {
+                s.TotalPoints = 1000;
+                s.WeeklyScore = 200;
+            }
+
+            if (lowPointStats.Count > 0)
+                await _context.SaveChangesAsync();
+        }
+
+        private async Task SeedAdditionalScreeningsAsync()
+        {
+            var demoEvent = await _context.Events.FirstOrDefaultAsync(e => e.Title == "Demo Screening Event");
+            if (demoEvent is null)
+            {
+                return;
+            }
+
+            var darkKnight = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Dark Knight");
+            var interstellar = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "Interstellar");
+            var matrix = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "The Matrix");
+            var laLaLand = await _context.Movies.FirstOrDefaultAsync(m => m.Title == "La La Land");
+
+            if (darkKnight == null || interstellar == null || matrix == null || laLaLand == null)
+            {
+                return;
+            }
+
+            var hallB = await _context.Rooms.FirstOrDefaultAsync(r => r.Name == "Hall B (IMAX)");
+            var hallC = await _context.Rooms.FirstOrDefaultAsync(r => r.Name == "Hall C (Premium)");
+            var hallD = await _context.Rooms.FirstOrDefaultAsync(r => r.Name == "Hall D (Small)");
+            var hallE = await _context.Rooms.FirstOrDefaultAsync(r => r.Name == "Hall E (Standard)");
+
+            if (hallB == null || hallC == null || hallD == null || hallE == null)
+            {
+                return;
+            }
+
+            bool exists = await _context.Screenings.AnyAsync(s => s.RoomId == hallB.Id || s.RoomId == hallC.Id);
             if (!exists)
             {
-                var stats = new UserStats
-                {
-                    TotalPoints = 10,
-                    WeeklyScore = 5,
-                    UserId = 1
-                };
+                _context.Screenings.AddRange(
+                    new Screening
+                    {
+                        Id = 0,
+                        EventId = demoEvent.Id,
+                        MovieId = darkKnight.Id,
+                        RoomId = hallB.Id,
+                        ScreeningTime = DateTime.UtcNow.AddDays(1),
+                        TicketPrice = 15.00m,
+                    },
+                    new Screening
+                    {
+                        Id = 0,
+                        EventId = demoEvent.Id,
+                        MovieId = interstellar.Id,
+                        RoomId = hallC.Id,
+                        ScreeningTime = DateTime.UtcNow.AddDays(2),
+                        TicketPrice = 20.00m,
+                    },
+                    new Screening
+                    {
+                        Id = 0,
+                        EventId = demoEvent.Id,
+                        MovieId = matrix.Id,
+                        RoomId = hallD.Id,
+                        ScreeningTime = DateTime.UtcNow.AddDays(3),
+                        TicketPrice = 10.00m,
+                    },
+                    new Screening
+                    {
+                        Id = 0,
+                        EventId = demoEvent.Id,
+                        MovieId = laLaLand.Id,
+                        RoomId = hallE.Id,
+                        ScreeningTime = DateTime.UtcNow.AddDays(4),
+                        TicketPrice = 12.00m,
+                    }
+                );
 
-                _context.UserStats.Add(stats);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task SeedBookingsAsync()
+        {
+            if (await _context.Bookings.AnyAsync())
+            {
+                return;
+            }
+
+            var maxUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == "CinephileMax");
+            var alexUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == "MovieBuffAlex");
+            var user1 = await _context.Users.FirstOrDefaultAsync(u => u.Username == "User1");
+            var alice = await _context.Users.FirstOrDefaultAsync(u => u.Username == "Alice");
+            var bob = await _context.Users.FirstOrDefaultAsync(u => u.Username == "Bob");
+
+            if (maxUser == null || alexUser == null || user1 == null || alice == null || bob == null)
+            {
+                return;
+            }
+
+            var screenings = await _context.Screenings.ToListAsync();
+            if (!screenings.Any())
+            {
+                return;
+            }
+
+            var bookings = new List<Booking>();
+            var screening1 = screenings.FirstOrDefault();
+
+            if (screening1 != null)
+            {
+                bookings.Add(new Booking { ScreeningId = screening1.Id, UserId = maxUser.Id, Row = 2, Column = 3, BookedAt = DateTime.UtcNow.AddHours(-5), });
+                bookings.Add(new Booking { ScreeningId = screening1.Id, UserId = maxUser.Id, Row = 2, Column = 4, BookedAt = DateTime.UtcNow.AddHours(-5), });
+                bookings.Add(new Booking { ScreeningId = screening1.Id, UserId = alexUser.Id, Row = 3, Column = 5, BookedAt = DateTime.UtcNow.AddHours(-4), });
+                bookings.Add(new Booking { ScreeningId = screening1.Id, UserId = alexUser.Id, Row = 3, Column = 6, BookedAt = DateTime.UtcNow.AddHours(-4), });
+                bookings.Add(new Booking { ScreeningId = screening1.Id, UserId = user1.Id, Row = 1, Column = 1, BookedAt = DateTime.UtcNow.AddHours(-6), });
+                bookings.Add(new Booking { ScreeningId = screening1.Id, UserId = alice.Id, Row = 1, Column = 2, BookedAt = DateTime.UtcNow.AddHours(-6), });
+                bookings.Add(new Booking { ScreeningId = screening1.Id, UserId = bob.Id, Row = 4, Column = 4, BookedAt = DateTime.UtcNow.AddHours(-3), });
+            }
+
+            if (screenings.Count > 1)
+            {
+                var screening2 = screenings[1];
+                bookings.Add(new Booking { ScreeningId = screening2.Id, UserId = maxUser.Id, Row = 4, Column = 5, BookedAt = DateTime.UtcNow.AddHours(-2), });
+                bookings.Add(new Booking { ScreeningId = screening2.Id, UserId = alexUser.Id, Row = 5, Column = 5, BookedAt = DateTime.UtcNow.AddHours(-2), });
+                bookings.Add(new Booking { ScreeningId = screening2.Id, UserId = alice.Id, Row = 3, Column = 3, BookedAt = DateTime.UtcNow.AddHours(-3), });
+                bookings.Add(new Booking { ScreeningId = screening2.Id, UserId = bob.Id, Row = 3, Column = 4, BookedAt = DateTime.UtcNow.AddHours(-3), });
+            }
+
+            if (bookings.Any())
+            {
+                _context.Bookings.AddRange(bookings);
                 await _context.SaveChangesAsync();
             }
         }

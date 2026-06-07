@@ -90,16 +90,28 @@ namespace MovieApp.DataLayer.Repositories
 
         public async Task<IEnumerable<Marathon>> GetWeeklyMarathonsForUserAsync(int userId, string weekString)
         {
-            List<Marathon> weeklyMarathons = await _context.Marathons
-                .Where(marathon => marathon.WeekScoping == weekString)
+            List<int> joinedIds = await _context.MarathonProgressions
+                .Where(p => p.UserId == userId)
+                .Select(p => p.MarathonId)
                 .ToListAsync();
-            return weeklyMarathons;
+
+            if (joinedIds.Count == 0)
+                return Enumerable.Empty<Marathon>();
+
+            return await _context.Marathons
+                .Where(m => joinedIds.Contains(m.Id))
+                .ToListAsync();
         }
 
         public async Task AssignWeeklyMarathonsAsync(int userId, string weekString, int count = 10)
         {
+            List<int> joinedIds = await _context.MarathonProgressions
+                .Where(p => p.UserId == userId)
+                .Select(p => p.MarathonId)
+                .ToListAsync();
+
             List<Marathon> availableMarathons = await _context.Marathons
-                .Where(marathon => marathon.WeekScoping == weekString && marathon.IsActive)
+                .Where(m => m.IsActive && !joinedIds.Contains(m.Id))
                 .Take(count)
                 .ToListAsync();
 

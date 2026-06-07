@@ -38,6 +38,8 @@ public sealed class SlotMachineEndpointsController : ControllerBase
     [HttpPost("spin/{userId:int}")]
     public async Task<IActionResult> Spin(int userId)
     {
+        if (this._currentUserService.UserId != userId)
+            return Forbid();
         var spinResult = await this._slotMachineService.SpinAsync(userId);
         return Ok(spinResult.ToDto());
     }
@@ -45,6 +47,8 @@ public sealed class SlotMachineEndpointsController : ControllerBase
     [HttpPost("bonus-spin/{userId:int}")]
     public async Task<IActionResult> GrantBonusSpin(int userId)
     {
+        if (this._currentUserService.UserId != userId)
+            return Forbid();
         bool wasGranted = await this._slotMachineService.GrantBonusSpinForEventParticipationAsync(userId);
         return Ok(wasGranted);
     }
@@ -52,6 +56,8 @@ public sealed class SlotMachineEndpointsController : ControllerBase
     [HttpPost("login-streak/{userId:int}")]
     public async Task<IActionResult> RecordLoginStreak(int userId)
     {
+        if (this._currentUserService.UserId != userId)
+            return Forbid();
         bool wasRecorded = await this._slotMachineService.RecordLoginAndCheckStreakAsync(userId);
         return Ok(wasRecorded);
     }
@@ -59,6 +65,8 @@ public sealed class SlotMachineEndpointsController : ControllerBase
     [HttpPost("streak-spin/{userId:int}")]
     public async Task<IActionResult> GrantStreakSpin(int userId)
     {
+        if (this._currentUserService.UserId != userId)
+            return Forbid();
         bool wasGranted = await this._slotMachineService.GrantStreakSpinAsync(userId);
         return Ok(wasGranted);
     }
@@ -136,7 +144,7 @@ public sealed class SlotMachineEndpointsController : ControllerBase
             return Forbid();
         }
 
-        //await this._slotMachineService.GrantJackpotDiscountAsync(requestBody.UserId, requestBody.MovieId);
+        await this._slotMachineService.GrantJackpotDiscountAsync(requestBody.UserId, requestBody.MovieId);
         return Ok();
     }
 }

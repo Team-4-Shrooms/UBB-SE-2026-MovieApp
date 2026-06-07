@@ -5,6 +5,28 @@
     var details = Model.Details;
     var rows = details.Rows;
     var columns = details.Columns;
+
+    string GetSeatQualityClass(int row, int col, int totalRows, int totalCols)
+    {
+        int tooCloseRowLimit = (int)Math.Max(1, totalRows * 0.2);
+        if (row <= tooCloseRowLimit)
+        {
+            return "seat-poor";
+        }
+
+        int optimalRowStart = (int)Math.Ceiling(totalRows * 0.35);
+        int optimalRowEnd = (int)Math.Ceiling(totalRows * 0.7);
+        int optimalColStart = (int)Math.Ceiling(totalCols * 0.3);
+        int optimalColEnd = (int)Math.Ceiling(totalCols * 0.7);
+
+        if (row >= optimalRowStart && row <= optimalRowEnd &&
+            col >= optimalColStart && col <= optimalColEnd)
+        {
+            return "seat-optimal";
+        }
+
+        return "seat-standard";
+    }
 }
 
 <div class="container mt-5">
@@ -37,7 +59,7 @@
                 <div class="card-body p-4 p-md-5">
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2">@details.EventTitle</span>
-                        <h4 class="mb-0 fw-bold" style="color:#b5800e;">@details.TicketPrice.ToString("F2") lei <small class="fw-normal" style="color:#8a8480;">/ seat</small></h4>
+                        <h4 class="mb-0 fw-bold" style="color:#b5800e;">€@details.TicketPrice.ToString("F2") <small class="fw-normal" style="color:#8a8480;">/ seat</small></h4>
                     </div>
                     <h1 class="mb-3" style="font-size:1.8rem; font-weight:800; color:#1c1917;">@details.MovieTitle</h1>
                     <div class="row g-3 mb-3">
@@ -94,11 +116,8 @@
                                 continue;
                             }
 
-                            var cssClass = "seat";
-                            if (!seat.IsAvailable)
-                            {
-                                cssClass += " seat-taken";
-                            }
+                            var qualityClass = GetSeatQualityClass(row, column, rows, columns);
+                            var cssClass = seat.IsAvailable ? $"seat {qualityClass}" : "seat seat-taken";
 
                             <button type="button"
                                     class="@cssClass"
@@ -114,8 +133,10 @@
                 }
             </div>
 
-            <div class="legend d-flex justify-content-center gap-4 mb-4 small">
-                <div><span class="legend-box legend-available"></span> Available</div>
+            <div class="legend d-flex justify-content-center gap-4 mb-4 small flex-wrap">
+                <div><span class="legend-box seat-poor"></span> Front Row (Poor)</div>
+                <div><span class="legend-box seat-standard"></span> Standard View</div>
+                <div><span class="legend-box seat-optimal"></span> Sweet Spot (Optimal)</div>
                 <div><span class="legend-box legend-selected"></span> Selected</div>
                 <div><span class="legend-box legend-taken"></span> Taken</div>
             </div>
@@ -127,7 +148,7 @@
                 </div>
                 <div class="text-end">
                     <div class="text-muted small">Total</div>
-                    <div class="fw-bold fs-5"><span id="selectedSeatsCount">0</span> × @details.TicketPrice.ToString("F2") lei = <span id="selectedSeatsTotal" class="text-success">0.00 lei</span></div>
+                    <div class="fw-bold fs-5"><span id="selectedSeatsCount">0</span> × €@details.TicketPrice.ToString("F2") = <span id="selectedSeatsTotal" class="text-success">€0.00</span></div>
                 </div>
             </div>
 
@@ -153,21 +174,60 @@
         border-radius: 8px 8px 4px 4px;
         border: 1px solid #d6d6d6;
         background: #ffffff;
-        font-size: 11px; color: #888;
+        font-size: 11px;
         cursor: pointer;
         transition: all 0.15s ease;
     }
-    .seat:hover:not(.seat-taken):not(.seat-selected) {
+    .seat.seat-poor {
+        border-color: #ffcccc;
+        background: #ffe6e6;
+        color: #d9534f;
+    }
+    .legend-box.seat-poor {
+        border-color: #ffcccc;
+        background: #ffe6e6;
+    }
+    .seat.seat-poor:hover:not(.seat-taken):not(.seat-selected) {
+        background: #fcd8d8;
+        border-color: #d9534f;
+        transform: translateY(-2px);
+    }
+    .seat.seat-optimal {
+        border-color: #ccffcc;
+        background: #e6ffe6;
+        color: #5cb85c;
+        box-shadow: 0 0 5px rgba(92, 184, 92, 0.2);
+    }
+    .legend-box.seat-optimal {
+        border-color: #ccffcc;
+        background: #e6ffe6;
+    }
+    .seat.seat-optimal:hover:not(.seat-taken):not(.seat-selected) {
+        background: #d4fcd4;
+        border-color: #5cb85c;
+        transform: translateY(-2px);
+    }
+    .seat.seat-standard {
+        border-color: #d6d6d6;
+        background: #ffffff;
+        color: #888;
+    }
+    .legend-box.seat-standard {
+        border-color: #d6d6d6;
+        background: #ffffff;
+    }
+    .seat.seat-standard:hover:not(.seat-taken):not(.seat-selected) {
         background: #e3f2fd; border-color: #2575fc;
         transform: translateY(-2px);
     }
     .seat-selected {
-        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-        border-color: #2575fc; color: #ffffff; font-weight: bold;
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%) !important;
+        border-color: #2575fc !important; color: #ffffff !important; font-weight: bold;
     }
     .seat-taken {
-        background: #f5f5f5; color: #ccc;
+        background: #f5f5f5 !important; color: #ccc !important;
         cursor: not-allowed; text-decoration: line-through;
+        border-color: #d6d6d6 !important;
     }
     .legend-box {
         display: inline-block; width: 14px; height: 14px;
@@ -225,7 +285,7 @@
                 ? 'None'
                 : keys.map(k => { const p = k.split(','); return 'R' + p[0] + 'C' + p[1]; }).join(', ');
             const sum = keys.length * unitPrice;
-            total.textContent = sum.toFixed(2) + ' lei';
+            total.textContent = '€' + sum.toFixed(2);
             confirm.disabled = keys.length === 0;
         }
     })();

@@ -70,7 +70,22 @@ public sealed class VideoStorageEndpointsController : ControllerBase
     [HttpPost("reels")]
     public async Task<IActionResult> UploadVideoAsync([FromBody] MovieApp.Logic.Features.ReelsUpload.ReelUploadRequest request)
     {
-        var reel = await _storageService.UploadVideoAsync(request);
-        return Ok(reel);
+        try
+        {
+            var reel = await _storageService.UploadVideoAsync(request);
+            return Ok(reel.ToDto());
+        }
+        catch (FileNotFoundException ex)
+        {
+            return BadRequest($"Video file not found on server: {ex.FileName}");
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Upload failed: {ex.Message}");
+        }
     }
 }

@@ -12,7 +12,7 @@ public sealed class ScreeningCardViewModel
     public string EventLocation  => Details.EventLocation;
     public string RoomName       => Details.RoomName;
     public string TimeDisplay    => Details.ScreeningTime.ToString("ddd d MMM yyyy • HH:mm");
-    public string PriceDisplay   => $"{Details.TicketPrice:F2} lei";
+    public string PriceDisplay   => $"€{Details.TicketPrice:F2}";
 
     public ScreeningCardViewModel(ScreeningDetailsDto details) => Details = details;
 }

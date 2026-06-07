@@ -37,7 +37,7 @@ public partial class ScreeningViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(TotalCostDisplay))]
     private decimal _totalCost;
 
-    public string TotalCostDisplay => $"{TotalCost:F2} lei";
+    public string TotalCostDisplay => $"€{TotalCost:F2}";
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(StatusMessageVisibility))]

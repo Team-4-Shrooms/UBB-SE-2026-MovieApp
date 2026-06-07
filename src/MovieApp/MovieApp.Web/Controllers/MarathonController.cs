@@ -110,6 +110,15 @@ public sealed class MarathonController : Controller
         return RedirectToAction(nameof(Details), new { id });
     }
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> LogMovie(int marathonId, int movieId)
+    {
+        bool success = await _marathonService.LogMovieAsync(marathonId, movieId, correctAnswersCount: 3);
+        TempData["StatusMessage"] = success ? "Movie marked as watched!" : "Could not log movie.";
+        return RedirectToAction(nameof(Details), new { id = marathonId });
+    }
+
     [HttpGet]
     public async Task<IActionResult> Leaderboard(int id)
     {

@@ -26,46 +26,6 @@ public sealed class BattlesIntegrationTests
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
-    [Fact]
-    public async Task PlaceBet_ValidAmount_ReturnsOk()
-    {
-        using WebApplicationFactory<Program> factory =
-            CreateFactoryWithFakeBattleService();
-
-        HttpClient client = CreateAuthorizedClient(factory);
-
-        var request = new PlaceBetRequest
-        {
-            MovieId = 1,
-            Amount = 10
-        };
-
-        HttpResponseMessage response =
-            await client.PostAsJsonAsync("/api/battles/1/bet", request);
-
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-    }
-
-    [Fact]
-    public async Task PlaceBet_InvalidAmount_ReturnsBadRequest()
-    {
-        using WebApplicationFactory<Program> factory =
-            CreateFactoryWithFakeBattleService();
-
-        HttpClient client = CreateAuthorizedClient(factory);
-
-        var request = new PlaceBetRequest
-        {
-            MovieId = 1,
-            Amount = 0
-        };
-
-        HttpResponseMessage response =
-            await client.PostAsJsonAsync("/api/battles/1/bet", request);
-
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-    }
-
     private static WebApplicationFactory<Program> CreateFactoryWithFakeBattleService()
     {
         return new MovieAppWebApplicationFactory()

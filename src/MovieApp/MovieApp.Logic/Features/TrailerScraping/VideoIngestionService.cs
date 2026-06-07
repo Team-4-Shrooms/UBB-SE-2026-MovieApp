@@ -68,7 +68,7 @@ namespace MovieApp.Logic.Features.TrailerScraping
             {
                 Movie = new Movie { Id = movieId },
                 CreatorUser = new User { Id = DefaultCreatorUserId },
-                VideoUrl = localPath,
+                VideoUrl = this.downloader.GetPublicUrl(localPath),
                 Title = DefaultTrailerTitle,
                 Caption = string.Empty,
                 ThumbnailUrl = string.Empty,
@@ -147,7 +147,7 @@ namespace MovieApp.Logic.Features.TrailerScraping
                             {
                                 Movie = movie,
                                 CreatorUser = new User { Id = DefaultCreatorUserId },
-                                VideoUrl = localMp4Path,
+                                VideoUrl = this.downloader.GetPublicUrl(localMp4Path),
                                 ThumbnailUrl = video.ThumbnailUrl,
                                 Title = video.Title,
                                 Caption = string.Format(CaptionFormat, movie.Title, video.ChannelTitle, video.VideoUrl),
