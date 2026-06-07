@@ -45,7 +45,7 @@ namespace MovieApp
             var services = new ServiceCollection();
 
             // Direct DB context — still used by some pages pending full proxy migration
-            var connectionString = "Server=localhost\\SQLEXPRESS;Database=MovieApp;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True;";
+            var connectionString = "Server=localhost;Database=MovieApp;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True;";
             // Transient lifetime prevents concurrent-operation errors: WinUI has no DI scope
             // boundary, so Scoped behaves like Singleton and two async repo calls on the same
             // context instance throw InvalidOperationException.
@@ -82,7 +82,7 @@ namespace MovieApp
             services.AddSingleton<ICurrentUserService>(authProvider);
 
             // HTTP client + ApiClient
-            var httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:4544/") };
+            var httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:5100/") };
             services.AddSingleton(httpClient);
             services.AddSingleton<ApiClient>();
 
